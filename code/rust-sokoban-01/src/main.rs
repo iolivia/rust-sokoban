@@ -1,6 +1,20 @@
 use ggez;
 use ggez::{conf, event, Context, GameResult};
 
+// Components
+#[derive(Debug, Component)]
+#[storage(VecStorage)]
+pub struct Position {
+    x: f32,
+    y: f32,
+}
+
+#[derive(Debug, Component)]
+#[storage(VecStorage)]
+pub struct Renderable {
+    path: String
+}
+
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
 // things shortly.
