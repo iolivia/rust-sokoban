@@ -13,28 +13,8 @@ ECS (Entity Component System) is an architectural pattern for writing games whic
 Because of this separation of data vs behaviour, ECS is a really good fit for Rust.
 
 ## How can we apply ECS to our game?
-Let's think for a moment how we are going to structure our game. This is how a classic Sokoban game looks like.
 
-![Sokoban](./sokoban.gif)
 
-Let take a first stab at defining some entities and components.
-
-Entities:
-* Player
-* Wall
-* Floor
-* Box
-* Box spot
-
-Components:
-* Position
-* Renderable
-
-Systems
-* Rendering
-* Input
-
-We will also be using a tile based map, 32x32 tiles.
 
 ## How are we going to use ECS in Rust?
 The good news is that there are a bunch of ECS crates in Rust, and we've chosen to use `specs` which is one of the most popular ones. 

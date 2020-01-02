@@ -123,7 +123,7 @@ pub fn main() -> GameResult {
 
 You should see something like this.
 
-![Screenshot](./01_window.png)
+![Screenshot](./images/window.png)
 
 Now let's walk through the concepts that we see in this first code in `main.rs`:
 * **importing from dependencies** - hopefully this should be a familiar concept, but to bring types and namespaces into the scope from our dependent packages (or crates) we simply `use` them. for example: `use ggez;` to bring everything from the main ggez namespace
