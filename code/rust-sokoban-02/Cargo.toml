@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 ggez = "0.5.1"
+specs = { version = "0.15.0", features = ["specs-derive"] }

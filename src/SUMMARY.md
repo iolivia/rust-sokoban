@@ -5,5 +5,6 @@
     - [Rust & ECS](./01_ecs.md)
     - [Architecture](./01_architecture.md)
 - [Chapter 2: Basic game](./02_.md)
+    - [First components](./02_components.md)
 
 

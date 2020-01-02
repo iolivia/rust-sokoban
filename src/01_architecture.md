@@ -36,4 +36,6 @@ We are then going to have the following entities, made up by the following compo
     * Position
     * Renderable
 
+You might have noticed that we have only discussed the E and C in ECS, but fear not, we will implement the systems as we go. 
+
 Now that we have a plan, let's get to implementing in the next chapter!

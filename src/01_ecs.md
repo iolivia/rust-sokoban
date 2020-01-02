@@ -10,25 +10,5 @@ ECS (Entity Component System) is an architectural pattern for writing games whic
 * **Entities** - entities are made up of multiple components, for example a player might be made up by Position, Renderable & Movement, while the floor might just be Position & Renderable since it doesn't move. Entities are pretty much just dummy containers of one or more components with a unique identifier.
 * **Systems**: systems use entities and components and contain behaviour and logic based on that data. For example, you could have a rendering system which just iterates through all entities which contain renderable components and draws all of them. The key here is that the components themselves don't contain any behaviour, instead they use a system to interpret the data and act.
 
-Because of this separation of data vs behaviour, ECS is a really good fit for Rust.
-
-## How can we apply ECS to our game?
-
-
-
-## How are we going to use ECS in Rust?
-The good news is that there are a bunch of ECS crates in Rust, and we've chosen to use `specs` which is one of the most popular ones. 
-
-Let's go ahead and declare our two components now.
-
-The Position component will just have x and y coordinates.
-
-```rust
-#[derive(Debug, Component)]
-#[storage(VecStorage)]
-pub struct Position {
-    x: f32,
-    y: f32,
-}
-```
+Because of this separation of data vs behaviour, ECS is a really good fit for Rust. In the next section we are going to look at how we will apply ECS to our game.
 

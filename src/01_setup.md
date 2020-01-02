@@ -47,19 +47,11 @@ Hello, world!
 ## Making it a game
 At this point we just have a basic Rust project, but now let's make it a game! In the interest of time we will not be building the game engine itself, so we'll pick one of the existing off the shelf options. We are going to be using [ggez](https://github.com/ggez/ggez) and the main reasons for this are: it's really beginner friendly, I have been using it a lot so I feel comfortable teaching something in it and it's actually quite good for simple 2D games.
 
-We'll add 3 main dependecies to our project:
-* ggez
-* specs
-* rand
-
-In `Cargo.toml` add the following lines. 
+Let add ggez as one of our dependencies in `Cargo.toml`.
 
 ```toml
 [dependencies]
 ggez = "0.5.1"
-specs = "0.15.1"
-specs-derive = "0.4.0"
-rand = "0.7.2"
 ```
 
 Then run `cargo run` again and you should see something like this. It should take slightly longer this time as it will be fetching these new dependencies from [crates.io](https://crates.io), then compiling them and finally linking them into our lib.
@@ -67,13 +59,9 @@ Then run `cargo run` again and you should see something like this. It should tak
 ```
 cargo run
     Updating crates.io index
-    Downloaded rayon v1.3.0
-    Downloaded rayon-core v1.7.0
-    Downloaded crossbeam-queue v0.2.1
+    Downloaded ....
     ....
-    Compiling cfg-if v0.1.10
-    Compiling libc v0.2.66
-    Compiling autocfg v0.1.7
+    Compiling ....
     ....
     Finished dev [unoptimized + debuginfo] target(s) in 2m 15s
     Running `.../rust-sokoban/target/debug/rust-sokoban`
