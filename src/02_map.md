@@ -1,3 +1,71 @@
+# Map
+
+It's time to create our first basic map. The basic idea is:
+* we'll start with a 10x10 grid of tiles
+* we'll put walls on the borders
+* we'll put the player at 5,5
+* we'll put one box at 7,7
+* we'll put the box spot at 8,2
+* floors everywhere else
+
+Here is the code to generate this basic map.
+
+```rust
+pub fn create_map(world: &mut World) {
+    let width = 10;
+    let height = 10;
+
+    for x in 0..=width {
+        for y in 0..=height {
+            // create walls on the borders
+            if x == 0 || x == width || y == 0 || y == height {
+                create_wall(
+                    world,
+                    Position {
+                        x: TILE_WIDTH * x as f32,
+                        y: TILE_WIDTH * y as f32,
+                    },
+                );
+            } else {
+                // check if it's any other type of entity
+                let create = match (x, y) {
+                    (5, 5) => create_player,
+                    (7, 7) => create_box,
+                    (8, 2) => create_box_spot,
+                    _ => create_floor,
+                };
+                create(
+                    world,
+                    Position {
+                        x: TILE_WIDTH * x as f32,
+                        y: TILE_WIDTH * y as f32,
+                    },
+                );
+            }
+        }
+    }
+}
+
+// Initialize the level - replace the dummy implementation
+// of initialize level we had before
+pub fn initialize_level(world: &mut World) {
+    create_map(world);
+}
+```
+
+There are a few new things here:
+* for loops with ranges - ` for x in 0..=width` this is much like a regular for loop where we go from 0 to width (the `=` means it's inclusive)
+* matches - matches are like if else statements on steroids. with a match we can do much more complex pattern match, in this case we are matching the x and y values and we return a different function reference. 
+ 
+If we run this code we should now see a pretty map.
+
+![Screenshot of map](./images/window_map.png)
+
+Next up we'll spend some time making our code nicer, moving things around and starting on the input system so we can move our player around. Come along for the ride!
+
+Full code below. 
+
+```rust
 use ggez;
 use ggez::graphics;
 use ggez::graphics::DrawParam;
@@ -225,3 +293,4 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+```
