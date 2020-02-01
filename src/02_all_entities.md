@@ -1,3 +1,179 @@
+# All components
+
+It's time to finalize our list of components and entities. We won't spend too much time thinking about what goes in them for now, the goal is to have all of them so we can make our level map.
+
+Here are all our components.
+
+```rust
+// Components
+#[derive(Debug, Component)]
+#[storage(VecStorage)]
+pub struct Position {
+    x: f32,
+    y: f32,
+}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Renderable {
+    path: String,
+}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Wall {}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Player {}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Box {}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct BoxSpot {}
+
+// Register components with the world (added all new components here)
+pub fn register_components(world: &mut World) {
+    world.register::<Position>();
+    world.register::<Renderable>();
+    world.register::<Player>();
+    world.register::<Wall>();
+    world.register::<Box>();
+    world.register::<BoxSpot>();
+}
+```
+
+Notice how we created a Wall component so we can distinguish the walls from the other entities. This will also help us if the wall has some special properties (or behaviour), we could use this marker component to enforce that the player can't go through walls for example. We also need to add the wall component to the wall entity creation. 
+
+```rust
+pub fn create_wall(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(position)
+        .with(Renderable {
+            path: "/images/wall.png".to_string(),
+        })
+        .with(Wall {})
+        .build();
+}
+```
+
+Now we can go ahead and create similar factory functions for all entities. There is some duplication here but we won't worry about that for now.
+
+```rust
+// Create a wall entity
+pub fn create_wall(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(position)
+        .with(Renderable {
+            path: "/images/wall.png".to_string(),
+        })
+        .with(Wall {})
+        .build();
+}
+
+pub fn create_floor(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(position)
+        .with(Renderable {
+            path: "/images/floor.png".to_string(),
+        })
+        .build();
+}
+
+pub fn create_box(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(position)
+        .with(Renderable {
+            path: "/images/box.png".to_string(),
+        })
+        .with(Box {})
+        .build();
+}
+
+pub fn create_box_spot(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(position)
+        .with(Renderable {
+            path: "/images/box_spot.png".to_string(),
+        })
+        .with(BoxSpot {})
+        .build();
+}
+
+pub fn create_player(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(position)
+        .with(Renderable {
+            path: "/images/player.png".to_string(),
+        })
+        .with(Player {})
+        .build();
+}
+```
+
+Finally, let's write some test code to initialize our level with one entity of each type. This way we'll be able to test that we've set up everything correctly. 
+
+```rust
+...
+const TILE_WIDTH: f32 = 32.0;
+...
+
+// Initialize the level
+pub fn initialize_level(world: &mut World) {
+    create_wall(
+        world,
+        Position {
+            x: TILE_WIDTH * 0.0,
+            y: 0.0,
+        },
+    );
+    create_player(
+        world,
+        Position {
+            x: TILE_WIDTH * 1.0,
+            y: 0.0,
+        },
+    );
+    create_box(
+        world,
+        Position {
+            x: TILE_WIDTH * 2.0,
+            y: 0.0,
+        },
+    );
+    create_box_spot(
+        world,
+        Position {
+            x: TILE_WIDTH * 3.0,
+            y: 0.0,
+        },
+    );
+    create_floor(
+        world,
+        Position {
+            x: TILE_WIDTH * 4.0,
+            y: 0.0,
+        },
+    );
+}
+```
+
+And if we run this we should now see one entity of each type. 
+
+![Screenshot one of each entity](./images/window_one_of_each_entity.png)
+
+Full code below. 
+
+```rust
 use ggez;
 use ggez::graphics;
 use ggez::graphics::DrawParam;
@@ -224,3 +400,5 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+
+```

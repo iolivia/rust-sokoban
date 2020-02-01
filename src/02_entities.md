@@ -2,13 +2,24 @@
 
 So now we have our two components `Position` and `Renderable`, but we need to create entities. For this we're going to need our first assets. Feel free to create your own here or just use the assets in this book!
 
-Floor tile
+## Assets
 
 ![Floor tile](./images/floor.png)
-
-Wall tile
+Floor tile
 
 ![Wall tile](./images/wall.png)
+Wall tile
+
+![Player tile](./images/player.png)
+Player tile
+
+![Box tile](./images/box.png)
+Box tile
+
+![Box tile](./images/box_spot.png)
+Box spot tile
+
+## Resources
 
 First let's add the images to our project. We'll add a `resources` folder which will hold the images and any other configuration or assets we might have. It should look like this.
 
@@ -20,6 +31,9 @@ First let's add the images to our project. We'll add a `resources` folder which 
 -- images
 --- floor.png
 --- wall.png
+--- player.png
+--- box.png
+--- box_spot.png
 -- main.rs
 ```
 
