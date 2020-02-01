@@ -8,7 +8,7 @@ Now, since this sounds almost a bit too good to be true, how can Rust provide mu
 ECS (Entity Component System) is an architectural pattern for writing games which follows the composition over inheritance principle. It's based on 3 main ideas:
 * **Components** - data-only structs which hold different characteristics of entities: some examples of components: Position, Renderable, Movement, etc. The key part here is that this is pure data, no behaviour.
 * **Entities** - entities are made up of multiple components, for example a player might be made up by Position, Renderable & Movement, while the floor might just be Position & Renderable since it doesn't move. Entities are pretty much just dummy containers of one or more components with a unique identifier.
-* **Systems**: systems use entities and components and contain behaviour and logic based on that data. For example, you could have a rendering system which just iterates through all entities which contain renderable components and draws all of them. The key here is that the components themselves don't contain any behaviour, instead they use a system to interpret the data and act.
+* **Systems** - systems use entities and components and contain behaviour and logic based on that data. For example, you could have a rendering system which just iterates through all entities which contain renderable components and draws all of them. The key here is that the components themselves don't contain any behaviour, instead they use a system to interpret the data and act.
 
-Because of this separation of data vs behaviour, ECS is a really good fit for Rust. In the next section we are going to look at how we will apply ECS to our game.
+Because of this separation of data vs behaviour, ECS is a really good fit for Rust and the ownership model. In the next section we are going to look at how we will apply ECS to our game.
 

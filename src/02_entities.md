@@ -128,5 +128,5 @@ pub fn main() -> GameResult {
 }
 ```
 
-If you run this, you'll notice the wall doesn't actually appear on the screen. But there are no errors either. What's happenning is that we haven't done anything to render yet. In the next section we'll be writing our first system, the rendering
+If you run this, you'll notice the wall doesn't actually appear on the screen. But there are no errors either. What's happenning is that we haven't done anything to render yet. In the next section we'll be writing our first system, the rendering system.
 
