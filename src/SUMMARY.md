@@ -10,5 +10,6 @@
     - [First system](./02_system.md)
     - [All entities](./02_all_entities.md)
     - [Map](./02_map.md)
-
+- [Chapter 3: Commands](./03_.md)
+    - [Input](./03_input.md)
 
