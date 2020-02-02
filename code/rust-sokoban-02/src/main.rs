@@ -170,34 +170,24 @@ pub fn create_player(world: &mut World, position: Position) {
 pub fn create_map(world: &mut World) {
     let width = 10;
     let height = 10;
+    let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
 
     for x in 0..=width {
         for y in 0..=height {
-            // create walls on the borders
-            if x == 0 || x == width || y == 0 || y == height {
-                create_wall(
-                    world,
-                    Position {
-                        x: TILE_WIDTH * x as f32,
-                        y: TILE_WIDTH * y as f32,
-                    },
-                );
-            } else {
-                // check if it's any other type of entity
-                let create = match (x, y) {
-                    (5, 5) => create_player,
-                    (7, 7) => create_box,
-                    (8, 2) => create_box_spot,
-                    _ => create_floor,
-                };
-                create(
-                    world,
-                    Position {
-                        x: TILE_WIDTH * x as f32,
-                        y: TILE_WIDTH * y as f32,
-                    },
-                );
-            }
+            let create = match (x, y) {
+                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (5, 5) => create_player,
+                (7, 7) => create_box,
+                (8, 2) => create_box_spot,
+                _ => create_floor,
+            };
+            create(
+                world,
+                Position {
+                    x: TILE_WIDTH * (x + offset_x) as f32,
+                    y: TILE_WIDTH * (y + offset_y) as f32,
+                },
+            );
         }
     }
 }

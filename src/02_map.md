@@ -61,6 +61,38 @@ If we run this code we should now see a pretty map.
 
 ![Screenshot of map](./images/window_map.png)
 
+One final touch, let's make the map a bit more centered. I took this opportunity to also refactor and simplify `create_map`. Now handing the borders is also done part of the match so we were able to simplify the code. Notice how we are now using a fancier match where we match on `(x, y)` with a condition: `if x == 0 || x == width || y == 0 || y == height`.
+
+
+```rust
+pub fn create_map(world: &mut World) {
+    let width = 10;
+    let height = 10;
+    let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
+
+    for x in 0..=width {
+        for y in 0..=height {
+            let create = match (x, y) {
+                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (5, 5) => create_player,
+                (7, 7) => create_box,
+                (8, 2) => create_box_spot,
+                _ => create_floor,
+            };
+            create(
+                world,
+                Position {
+                    x: TILE_WIDTH * (x + offset_x) as f32,
+                    y: TILE_WIDTH * (y + offset_y) as f32,
+                },
+            );
+        }
+    }
+}
+```
+
+![Screenshot of map](./images/window_map_centered.png)
+
 Next up we'll spend some time making our code nicer, moving things around and starting on the input system so we can move our player around. Come along for the ride!
 
 Full code below. 
@@ -238,34 +270,24 @@ pub fn create_player(world: &mut World, position: Position) {
 pub fn create_map(world: &mut World) {
     let width = 10;
     let height = 10;
+    let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
 
     for x in 0..=width {
         for y in 0..=height {
-            // create walls on the borders
-            if x == 0 || x == width || y == 0 || y == height {
-                create_wall(
-                    world,
-                    Position {
-                        x: TILE_WIDTH * x as f32,
-                        y: TILE_WIDTH * y as f32,
-                    },
-                );
-            } else {
-                // check if it's any other type of entity
-                let create = match (x, y) {
-                    (5, 5) => create_player,
-                    (7, 7) => create_box,
-                    (8, 2) => create_box_spot,
-                    _ => create_floor,
-                };
-                create(
-                    world,
-                    Position {
-                        x: TILE_WIDTH * x as f32,
-                        y: TILE_WIDTH * y as f32,
-                    },
-                );
-            }
+            let create = match (x, y) {
+                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (5, 5) => create_player,
+                (7, 7) => create_box,
+                (8, 2) => create_box_spot,
+                _ => create_floor,
+            };
+            create(
+                world,
+                Position {
+                    x: TILE_WIDTH * (x + offset_x) as f32,
+                    y: TILE_WIDTH * (y + offset_y) as f32,
+                },
+            );
         }
     }
 }
