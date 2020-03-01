@@ -44,7 +44,7 @@ Now let's write the function to create the floor entity.
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -72,6 +72,7 @@ use std::path;
 pub struct Position {
     x: f32,
     y: f32,
+    z: f32
 }
 
 #[derive(Component)]
@@ -113,7 +114,7 @@ pub fn register_components(world: &mut World) {
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })

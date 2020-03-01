@@ -91,7 +91,7 @@ The index syntax works but I find it less readable than the destructuring, espec
 
 You can read more about [joins](https://specs.amethyst.rs/docs/tutorials/08_join.html) in the specs book. 
 
-Finally, let's implement the graphics bits: loading images and drawing them. Here is the final code.
+Finally, let's implement the graphics bits: loading images and drawing them. Here is the code for the system.
 
 
 ```rust
@@ -128,12 +128,51 @@ There are a few new Rust tips in here:
 * `.clone()` - notice when we create a new image we pass the context and `renderable.path.clone()`. This simply means we make a copy of `renderable.path` and that is what we pass to the function. If we remove the clone the error we get is `   |                                                  ^^^^^^^^^^^^^^^ move occurs because renderable.path has type std::string::String, which does not implement the Copy trait`. This means the compiler will never attempt to copy a string, the copying will always have to be explicit and this is why we call `clone` ourselves
 * `.expect` - notice we call `.expect("expected image");` after we try to load the image. That is because the `new` function returns a `GameResult<Image>`, which underneath is simply `Result<Image, GameError>;`. Results are one of the nicest things about Rust and it gives us a nice way of dealing with failure and success. For example, in this case this signature means that when we call `new` we will either get an `Image` if everything goes well, but if it doesn't we'll get a `GameError`. This is great because we don't need to deal with exceptions, you can read more about results in the [Error handling chapter](https://doc.rust-lang.org/book/ch09-00-error-handling.html) of the rust book.
 
+This system will get all components and render each of them. There is only one issue with this implementation, and it's that it will not respect the z position of the entities. This means that we will render in the order in which entities get added to our storage rather than the intentional order we want to layer floors with players and boxes and walls. So let's go ahead and sort our entities by the z positions. We'll still use join for the intial step, but we'll add the sorting after that before we iterate. Here's how that code looks like. 
+
+```rust
+// System implementation
+impl<'a> System<'a> for RenderingSystem<'a> {
+    // Data
+    type SystemData = (ReadStorage<'a, Position>, ReadStorage<'a, Renderable>);
+
+    fn run(&mut self, data: Self::SystemData) {
+        let (positions, renderables) = data;
+
+        // Clearing the screen (this gives us the backround colour)
+        graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
+
+        // Get all the renderables with their positions and sort by the position z
+        // This will allow us to have entities layered visually.
+        let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
+        rendering_data.sort_by(|&a, &b| a.0.z.partial_cmp(&b.0.z).expect("expected comparison"));
+
+        // Iterate through all pairs of positions & renderables, load the image
+        // and draw it at the specified position.
+        for (position, renderable) in rendering_data.iter() {
+            // Load the image
+            let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
+
+            // draw
+            let draw_params = DrawParam::new().dest(na::Point2::new(position.x, position.y));
+            graphics::draw(self.context, &image, draw_params).expect("expected render");
+        }
+
+        // Finally, present the context, this will actually display everything
+        // on the screen.
+        graphics::present(self.context).expect("expected to present");
+    }
+}
+```
+
 Finally, let's run the code and we should see our first wall being rendered. Full code below.
 
 ![Screenshot window with wall](./images/window_wall.png)
 
 ```rust
 use ggez;
+use ggez::event::KeyCode;
+use ggez::event::KeyMods;
 use ggez::graphics;
 use ggez::graphics::DrawParam;
 use ggez::graphics::Image;
@@ -145,12 +184,15 @@ use specs::{
 
 use std::path;
 
+const TILE_WIDTH: f32 = 32.0;
+
 // Components
 #[derive(Debug, Component)]
 #[storage(VecStorage)]
 pub struct Position {
     x: f32,
     y: f32,
+    z: f32
 }
 
 #[derive(Component)]
@@ -158,6 +200,22 @@ pub struct Position {
 pub struct Renderable {
     path: String,
 }
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Wall {}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Player {}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Box {}
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct BoxSpot {}
 
 // Systems
 pub struct RenderingSystem<'a> {
@@ -173,11 +231,16 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         let (positions, renderables) = data;
 
         // Clearing the screen (this gives us the backround colour)
-        graphics::clear(self.context, graphics::Color::new(1.0, 1.0, 1.0, 1.0));
+        graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
-        // // Iterate through all pairs of positions & renderables, load the image
-        // // and draw it at the specified position.
-        for (position, renderable) in (&positions, &renderables).join() {
+        // Get all the renderables with their positions and sort by the position z
+        // This will allow us to have entities layered visually.
+        let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
+        rendering_data.sort_by(|&a, &b| a.0.z.partial_cmp(&b.0.z).expect("expected comparison"));
+
+        // Iterate through all pairs of positions & renderables, load the image
+        // and draw it at the specified position.
+        for (position, renderable) in rendering_data.iter() {
             // Load the image
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
 
@@ -217,28 +280,115 @@ impl event::EventHandler for Game {
 
         Ok(())
     }
+
+    fn key_down_event(
+        &mut self,
+        _context: &mut Context,
+        keycode: KeyCode,
+        keymod: KeyMods,
+        repeat: bool,
+    ) {
+        println!(
+            "Key pressed: {:?}, modifier {:?}, repeat: {}",
+            keycode, keymod, repeat
+        );
+    }
 }
 
 // Register components with the world
 pub fn register_components(world: &mut World) {
     world.register::<Position>();
     world.register::<Renderable>();
+    world.register::<Player>();
+    world.register::<Wall>();
+    world.register::<Box>();
+    world.register::<BoxSpot>();
 }
 
 // Create a wall entity
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
+        })
+        .with(Wall {})
+        .build();
+}
+
+pub fn create_floor(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(Position {z: 5.0, ..position})
+        .with(Renderable {
+            path: "/images/floor.png".to_string(),
         })
         .build();
 }
 
+pub fn create_box(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(Position {z: 10.0, ..position})
+        .with(Renderable {
+            path: "/images/box.png".to_string(),
+        })
+        .with(Box {})
+        .build();
+}
+
+pub fn create_box_spot(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(Position {z: 9.0, ..position})
+        .with(Renderable {
+            path: "/images/box_spot.png".to_string(),
+        })
+        .with(BoxSpot {})
+        .build();
+}
+
+pub fn create_player(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(Position {z: 10.0, ..position})
+        .with(Renderable {
+            path: "/images/player.png".to_string(),
+        })
+        .with(Player {})
+        .build();
+}
+
+pub fn create_map(world: &mut World) {
+    let width = 10;
+    let height = 10;
+    let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
+
+    for x in 0..=width {
+        for y in 0..=height {
+            let create = match (x, y) {
+                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (5, 5) => create_player,
+                (7, 7) => create_box,
+                (8, 2) => create_box_spot,
+                _ => create_floor,
+            };
+            create(
+                world,
+                Position {
+                    x: TILE_WIDTH * (x + offset_x) as f32,
+                    y: TILE_WIDTH * (y + offset_y) as f32,
+                    z: 0.0 // we will get the z from the factory functions
+                },
+            );
+        }
+    }
+}
+
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
-    create_wall(world, Position { x: 0.0, y: 0.0 });
+    create_map(world);
 }
 
 pub fn main() -> GameResult {

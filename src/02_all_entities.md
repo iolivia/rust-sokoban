@@ -11,6 +11,7 @@ Here are all our components.
 pub struct Position {
     x: f32,
     y: f32,
+    z: f32
 }
 
 #[derive(Component)]
@@ -52,7 +53,7 @@ Notice how we created a Wall component so we can distinguish the walls from the 
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -68,7 +69,7 @@ Now we can go ahead and create similar factory functions for all entities. There
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -79,7 +80,7 @@ pub fn create_wall(world: &mut World, position: Position) {
 pub fn create_floor(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 5.0, ..position})
         .with(Renderable {
             path: "/images/floor.png".to_string(),
         })
@@ -194,6 +195,7 @@ const TILE_WIDTH: f32 = 32.0;
 pub struct Position {
     x: f32,
     y: f32,
+    z: f32
 }
 
 #[derive(Component)]
@@ -234,9 +236,14 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // Clearing the screen (this gives us the backround colour)
         graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
-        // // Iterate through all pairs of positions & renderables, load the image
-        // // and draw it at the specified position.
-        for (position, renderable) in (&positions, &renderables).join() {
+        // Get all the renderables with their positions and sort by the position z
+        // This will allow us to have entities layered visually.
+        let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
+        rendering_data.sort_by(|&a, &b| a.0.z.partial_cmp(&b.0.z).expect("expected comparison"));
+
+        // Iterate through all pairs of positions & renderables, load the image
+        // and draw it at the specified position.
+        for (position, renderable) in rendering_data.iter() {
             // Load the image
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
 
@@ -292,7 +299,7 @@ pub fn register_components(world: &mut World) {
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -303,7 +310,7 @@ pub fn create_wall(world: &mut World, position: Position) {
 pub fn create_floor(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 5.0, ..position})
         .with(Renderable {
             path: "/images/floor.png".to_string(),
         })
@@ -313,7 +320,7 @@ pub fn create_floor(world: &mut World, position: Position) {
 pub fn create_box(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/box.png".to_string(),
         })
@@ -324,7 +331,7 @@ pub fn create_box(world: &mut World, position: Position) {
 pub fn create_box_spot(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 9.0, ..position})
         .with(Renderable {
             path: "/images/box_spot.png".to_string(),
         })
@@ -335,7 +342,7 @@ pub fn create_box_spot(world: &mut World, position: Position) {
 pub fn create_player(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/player.png".to_string(),
         })

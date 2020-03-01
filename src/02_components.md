@@ -19,6 +19,7 @@ Now let's define our first two components. The position component holds the x an
 pub struct Position {
     x: f32,
     y: f32,
+    z: f32
 }
 
 #[derive(Component)]

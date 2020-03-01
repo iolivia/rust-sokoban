@@ -8,7 +8,7 @@ use ggez::graphics::Image;
 use ggez::nalgebra as na;
 use ggez::{conf, event, Context, GameResult};
 use specs::{
-    join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt, Read, Write,
+    join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt, Write,
 };
 
 use std::path;
@@ -21,6 +21,7 @@ const TILE_WIDTH: f32 = 32.0;
 pub struct Position {
     x: f32,
     y: f32,
+    z: f32
 }
 
 #[derive(Component)]
@@ -67,9 +68,15 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // Clearing the screen (this gives us the backround colour)
         graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
-        // // Iterate through all pairs of positions & renderables, load the image
-        // // and draw it at the specified position.
-        for (position, renderable) in (&positions, &renderables).join() {
+        // Get all the renderables with their positions and sort by the position z
+        // This will allow us to have entities layered visually.
+        let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
+        rendering_data.sort_by(|&a, &b| a.0.z.partial_cmp(&b.0.z).expect("expected comparison"));
+
+        // Iterate through all pairs of positions & renderables, load the image
+        // and draw it at the specified position.
+        for (position, renderable) in rendering_data.iter() {
+
             // Load the image
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
 
@@ -113,6 +120,8 @@ impl<'a> System<'a> for InputSystem {
 
             position.x += TILE_WIDTH * x_tile_offset as f32;
             position.y += TILE_WIDTH * y_tile_offset as f32;
+
+            println!("position {:?}", position);
         }
     }
 }
@@ -179,11 +188,18 @@ pub fn register_resources(world: &mut World) {
     world.insert(InputQueue::default())
 }
 
+// Z positions
+// Wall: 10
+// Floor: 5
+// Box: 10
+// Box spot: 9
+// Player: 10
+
 // Create a wall entity
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -194,7 +210,7 @@ pub fn create_wall(world: &mut World, position: Position) {
 pub fn create_floor(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 5.0, ..position})
         .with(Renderable {
             path: "/images/floor.png".to_string(),
         })
@@ -204,7 +220,7 @@ pub fn create_floor(world: &mut World, position: Position) {
 pub fn create_box(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/box.png".to_string(),
         })
@@ -215,7 +231,7 @@ pub fn create_box(world: &mut World, position: Position) {
 pub fn create_box_spot(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 9.0, ..position})
         .with(Renderable {
             path: "/images/box_spot.png".to_string(),
         })
@@ -226,7 +242,7 @@ pub fn create_box_spot(world: &mut World, position: Position) {
 pub fn create_player(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(position)
+        .with(Position {z: 10.0, ..position})
         .with(Renderable {
             path: "/images/player.png".to_string(),
         })
@@ -253,6 +269,7 @@ pub fn create_map(world: &mut World) {
                 Position {
                     x: TILE_WIDTH * (x + offset_x) as f32,
                     y: TILE_WIDTH * (y + offset_y) as f32,
+                    z: 0.0 // we will get the z from the factory functions
                 },
             );
         }
