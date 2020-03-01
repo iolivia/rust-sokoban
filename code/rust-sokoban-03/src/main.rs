@@ -1,3 +1,4 @@
+use specs::NullStorage;
 use specs::WriteStorage;
 use ggez;
 use ggez::event::KeyCode;
@@ -45,6 +46,14 @@ pub struct Box {}
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct BoxSpot {}
+
+#[derive(Component, Default)]
+#[storage(NullStorage)]
+pub struct Movable;
+
+#[derive(Component, Default)]
+#[storage(NullStorage)]
+pub struct Immovable;
 
 // Resources
 #[derive(Default)]
@@ -181,6 +190,8 @@ pub fn register_components(world: &mut World) {
     world.register::<Wall>();
     world.register::<Box>();
     world.register::<BoxSpot>();
+    world.register::<Movable>();
+    world.register::<Immovable>();
 }
 
 // Register resources
@@ -204,6 +215,7 @@ pub fn create_wall(world: &mut World, position: Position) {
             path: "/images/wall.png".to_string(),
         })
         .with(Wall {})
+        .with(Immovable)
         .build();
 }
 
@@ -225,6 +237,7 @@ pub fn create_box(world: &mut World, position: Position) {
             path: "/images/box.png".to_string(),
         })
         .with(Box {})
+        .with(Movable)
         .build();
 }
 
@@ -247,6 +260,7 @@ pub fn create_player(world: &mut World, position: Position) {
             path: "/images/player.png".to_string(),
         })
         .with(Player {})
+        .with(Movable)
         .build();
 }
 

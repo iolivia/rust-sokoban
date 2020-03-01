@@ -133,6 +133,9 @@ Pretty cool! Here's how it should look like. Full code below.
 
 ![Moving player](./images/moving_player.gif)
 
+Notice we can go through walls and boxes. We'll fix that up in the next section.
+
+
 ```rust
 use specs::WriteStorage;
 use ggez;
