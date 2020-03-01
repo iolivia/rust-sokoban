@@ -15,7 +15,7 @@ use std::path;
 const TILE_WIDTH: f32 = 32.0;
 
 // Components
-#[derive(Debug, Component)]
+#[derive(Debug, Component, Clone, Copy)]
 #[storage(VecStorage)]
 pub struct Position {
     x: f32,
@@ -108,19 +108,6 @@ impl event::EventHandler for Game {
 
         Ok(())
     }
-
-    fn key_down_event(
-        &mut self,
-        _context: &mut Context,
-        keycode: KeyCode,
-        keymod: KeyMods,
-        repeat: bool,
-    ) {
-        println!(
-            "Key pressed: {:?}, modifier {:?}, repeat: {}",
-            keycode, keymod, repeat
-        );
-    }
 }
 
 // Register components with the world
@@ -199,24 +186,30 @@ pub fn create_map(world: &mut World) {
     let width = 10;
     let height = 10;
     let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
+    let no_op = |_world: &mut World, _position: Position| {};
 
     for x in 0..=width {
         for y in 0..=height {
+
+            // Create the position at which to create something on the map
+            let position = Position {
+                x: TILE_WIDTH * (x + offset_x) as f32,
+                y: TILE_WIDTH * (y + offset_y) as f32,
+                z: 0.0 // we will get the z from the factory functions
+            };
+
+            // Figure out what object we should create
             let create = match (x, y) {
                 (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
                 (5, 5) => create_player,
                 (7, 7) => create_box,
                 (8, 2) => create_box_spot,
-                _ => create_floor,
+                _ => no_op,
             };
-            create(
-                world,
-                Position {
-                    x: TILE_WIDTH * (x + offset_x) as f32,
-                    y: TILE_WIDTH * (y + offset_y) as f32,
-                    z: 0.0 // we will get the z from the factory functions
-                },
-            );
+
+            // Create floor and create the special objects
+            create_floor(world, position);
+            create(world, position);
         }
     }
 }

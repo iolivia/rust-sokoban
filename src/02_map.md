@@ -6,7 +6,7 @@ It's time to create our first basic map. The basic idea is:
 * we'll put the player at 5,5
 * we'll put one box at 7,7
 * we'll put the box spot at 8,2
-* floors everywhere else
+* floors for the whole map
 
 Here is the code to generate this basic map.
 
@@ -92,9 +92,62 @@ pub fn create_map(world: &mut World) {
 }
 ```
 
+This code works but has a small subtle bug. We are not creating floors below the player, box or box spots. The player and the box will move, and when they do we'll notice there is no floor beneath them. So we need to make sure we have floors everywhere.
+
+Here's some code with the fix.
+
+```rust
+// Adding Clone and Copy here to our Position struct 
+// to be able to get implicit copies, otherwise we'll have to
+// call clone all over the place.
+#[derive(Debug, Component, Clone, Copy)]
+#[storage(VecStorage)]
+pub struct Position {
+    x: f32,
+    y: f32,
+    z: f32
+}
+
+// Here is the updated implementation of create_map. The biggest difference is that
+// now for every map position we call create_floor along with any other create for
+// other objects.
+pub fn create_map(world: &mut World) {
+    let width = 10;
+    let height = 10;
+    let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
+    let no_op = |_world: &mut World, _position: Position| {};
+
+    for x in 0..=width {
+        for y in 0..=height {
+
+            // Create the position at which to create something on the map
+            let position = Position {
+                x: TILE_WIDTH * (x + offset_x) as f32,
+                y: TILE_WIDTH * (y + offset_y) as f32,
+                z: 0.0 // we will get the z from the factory functions
+            };
+
+            // Figure out what object we should create
+            let create = match (x, y) {
+                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (5, 5) => create_player,
+                (7, 7) => create_box,
+                (8, 2) => create_box_spot,
+                _ => no_op,
+            };
+
+            // Create floor and create the special objects
+            create_floor(world, position);
+            create(world, position);
+        }
+    }
+}
+```
+
+
 ![Screenshot of map](./images/window_map_centered.png)
 
-Next up we'll spend some time making our code nicer, moving things around and starting on the input system so we can move our player around. Come along for the ride!
+Next up we'll start working on the gameplay, making the player move and so on. Come along for the ride!
 
 Full code below. 
 
@@ -114,7 +167,7 @@ use std::path;
 const TILE_WIDTH: f32 = 32.0;
 
 // Components
-#[derive(Debug, Component)]
+#[derive(Debug, Component, Clone, Copy)]
 #[storage(VecStorage)]
 pub struct Position {
     x: f32,
@@ -278,23 +331,30 @@ pub fn create_map(world: &mut World) {
     let width = 10;
     let height = 10;
     let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
+    let no_op = |_world: &mut World, _position: Position| {};
 
     for x in 0..=width {
         for y in 0..=height {
+
+            // Create the position at which to create something on the map
+            let position = Position {
+                x: TILE_WIDTH * (x + offset_x) as f32,
+                y: TILE_WIDTH * (y + offset_y) as f32,
+                z: 0.0 // we will get the z from the factory functions
+            };
+
+            // Figure out what object we should create
             let create = match (x, y) {
                 (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
                 (5, 5) => create_player,
                 (7, 7) => create_box,
                 (8, 2) => create_box_spot,
-                _ => create_floor,
+                _ => no_op,
             };
-            create(
-                world,
-                Position {
-                    x: TILE_WIDTH * (x + offset_x) as f32,
-                    y: TILE_WIDTH * (y + offset_y) as f32,
-                },
-            );
+
+            // Create floor and create the special objects
+            create_floor(world, position);
+            create(world, position);
         }
     }
 }
