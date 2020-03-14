@@ -1,3 +1,4 @@
+use specs::Entities;
 use specs::NullStorage;
 use specs::WriteStorage;
 use ggez;
@@ -107,30 +108,66 @@ impl<'a> System<'a> for InputSystem {
     // Data
     type SystemData = (
         Write<'a, InputQueue>, 
+        Entities<'a>, 
         WriteStorage<'a, Position>, 
-        ReadStorage<'a, Player>
+        ReadStorage<'a, Player>,
+        ReadStorage<'a, Movable>,
+        ReadStorage<'a, Immovable>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut input_queue, mut positions, players) = data;
 
-        for (position, _player) in (&mut positions, &players).join() {
+        let (mut input_queue, entities, mut positions, players, movables, immovables) = data;
+        
+        for (position, _player) in (&positions, &players).join() {
             // Get the first key pressed
             let key = input_queue.keys_pressed.pop();
 
+            // get all the movables and immovables
+            let mut mov = (&entities, &positions, &movables)
+                .join()
+                .collect::<Vec<_>>();
+                
+            let mut immov = (&entities, &positions, &immovables)
+                .join()
+                .collect::<Vec<_>>();
+
+            // keep only the movables that matter
+            mov.retain(|&t| match key {
+                Some(key) if key == KeyCode::Up => t.1.y < position.y && t.1.x == position.x,
+                Some(key) if key == KeyCode::Down => t.1.y > position.y && t.1.x == position.x, 
+                Some(key) if key == KeyCode::Left => t.1.x < position.x && t.1.y == position.y,
+                Some(key) if key == KeyCode::Right => t.1.x > position.x && t.1.y == position.y,
+                _ => false
+            });
+            
+            // keep only the immovables that matter
+            immov.retain(|&t| match key {
+                Some(key) if key == KeyCode::Up => t.1.y < position.y && t.1.x == position.x,
+                Some(key) if key == KeyCode::Down => t.1.y > position.y && t.1.x == position.x,
+                Some(key) if key == KeyCode::Left => t.1.x < position.x && t.1.y == position.y,
+                Some(key) if key == KeyCode::Right => t.1.x > position.x && t.1.y == position.y,
+                _ => false
+            });
+
+            if mov.len() > 0 {
+                println!("mov {:?}", mov.len());
+            }
+
+            if immov.len() > 0 {
+                println!("immov {:?}", immov.len());
+            }
+
             // Apply the key to the position
-            let (x_tile_offset, y_tile_offset) = match key {
-                Some(KeyCode::Up) => (0, -1),
-                Some(KeyCode::Down) => (0, 1),
-                Some(KeyCode::Left) => (-1, 0),
-                Some(KeyCode::Right) => (1, 0),
-                _ => (0, 0)
-            };
-
-            position.x += TILE_WIDTH * x_tile_offset as f32;
-            position.y += TILE_WIDTH * y_tile_offset as f32;
-
-            println!("position {:?}", position);
+            // let (x_tile_offset, y_tile_offset) = match key {
+            //     Some(KeyCode::Up) => (0, -1),
+            //     Some(KeyCode::Down) => (0, 1),
+            //     Some(KeyCode::Left) => (-1, 0),
+            //     Some(KeyCode::Right) => (1, 0),
+            //     _ => (0, 0)
+            // };
+            // position.x += TILE_WIDTH * x_tile_offset as f32;
+            // position.y += TILE_WIDTH * y_tile_offset as f32;
         }
     }
 }
