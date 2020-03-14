@@ -11,6 +11,8 @@ use specs::{
 use std::path;
 
 const TILE_WIDTH: f32 = 32.0;
+const MAP_WIDTH: u8 = 10;
+const MAP_HEIGHT: u8 = 10;
 
 // Components
 #[derive(Debug, Component, Clone, Copy)]
@@ -183,13 +185,11 @@ pub fn create_player(world: &mut World, position: Position) {
 }
 
 pub fn create_map(world: &mut World) {
-    let width = 10;
-    let height = 10;
     let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
     let no_op = |_world: &mut World, _position: Position| {};
 
-    for x in 0..=width {
-        for y in 0..=height {
+    for x in 0..=MAP_WIDTH {
+        for y in 0..=MAP_HEIGHT {
 
             // Create the position at which to create something on the map
             let position = Position {
@@ -200,7 +200,8 @@ pub fn create_map(world: &mut World) {
 
             // Figure out what object we should create
             let create = match (x, y) {
-                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (x, y) if x == 0 || x == MAP_WIDTH || y == 0 || y == MAP_HEIGHT => create_wall,
+
                 (5, 5) => create_player,
                 (7, 7) => create_box,
                 (8, 2) => create_box_spot,
