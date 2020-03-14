@@ -128,72 +128,85 @@ impl<'a> System<'a> for InputSystem {
         let (mut input_queue, entities, mut positions, players, movables, immovables) = data;
         
         let mut to_move = Vec::new();
+        
         for (position, _player) in (&positions, &players).join() {
             // Get the first key pressed
-            let key = input_queue.keys_pressed.pop();
+            if let Some(key) = input_queue.keys_pressed.pop() {
 
-            if key.is_none() {
-                return;
-            }
-            
-            // get all the movables and immovables
-            let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
-                .join()
-                .collect::<Vec<_>>()
-                .into_iter()
-                .map(|t| ((t.2.x, t.2.y), t.0.id()))
-                .collect::<HashMap<_, _>>();
-            let mut immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
-                .join()
-                .collect::<Vec<_>>()
-                .into_iter()
-                .map(|t| ((t.2.x, t.2.y), t.0.id()))
-                .collect::<HashMap<_, _>>();
+                // get all the movables and immovables
+                let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
+                    .join()
+                    .collect::<Vec<_>>()
+                    .into_iter()
+                    .map(|t| ((t.2.x, t.2.y), t.0.id()))
+                    .collect::<HashMap<_, _>>();
+                let mut immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
+                    .join()
+                    .collect::<Vec<_>>()
+                    .into_iter()
+                    .map(|t| ((t.2.x, t.2.y), t.0.id()))
+                    .collect::<HashMap<_, _>>();
 
-            // Now iterate through current position to the end of the map
-            // on the correct axis and check what needs to move.
-            // TODO for now we are always going right.
-            println!("going from {} to {}", position.x, MAP_WIDTH+MAP_OFFSET_X);
-            for x in position.x..=MAP_WIDTH+MAP_OFFSET_X {
-                let pos = (x, position.y);
+                // Now iterate through current position to the end of the map
+                // on the correct axis and check what needs to move.
+                // TODO for now we are always going right.
+                println!("going from {} to {}", position.x, MAP_WIDTH+MAP_OFFSET_X);
+                let (start, end, is_x) = match key {
+                    KeyCode::Up => (position.y, MAP_OFFSET_Y, false),
+                    KeyCode::Down => (position.y, MAP_HEIGHT + MAP_OFFSET_Y, false),
+                    KeyCode::Left => (position.x, MAP_OFFSET_X, true),
+                    KeyCode::Right => (position.x, MAP_WIDTH + MAP_OFFSET_X, true),
+                    _ => panic!("unknown key")
+                };
 
-                // find a movable
-                // if it exists, we try to move it and continue
-                // if it doesn't exist, we continue and try to find an immovable instead
-                match mov.get(&pos) {
-                    Some(id) => {
-                        to_move.push(id.clone());
-                        println!("found mov {}", id);
-                    }
-                    None => {
-                        println!("didn't find mov");
+                let range = if start < end {
+                    (start..=end).collect::<Vec<_>>()
+                } else {
+                    (end..=start).rev().collect::<Vec<_>>()
+                };
 
-                        // find an immovable
-                        // if it exists, we need to stop and not move anything
-                        // if it doesn't exist, we stop because we found a gap
-                        match immov.get(&pos) {
-                            Some(id) => { 
-                                to_move.clear();
-                                println!("found immov {}, clearing", id);
-                            },
-                            None => {
-                                println!("didn't find immov");
-                                break;
+                for x_or_y in range {
+                    let pos = if is_x {
+                        (x_or_y, position.y)
+                    } else {
+                        (position.x, x_or_y)
+                    };
+
+                    // find a movable
+                    // if it exists, we try to move it and continue
+                    // if it doesn't exist, we continue and try to find an immovable instead
+                    match mov.get(&pos) {
+                        Some(id) => {
+                            to_move.push((key, id.clone()));
+                            println!("found mov {}", id);
+                        }
+                        None => {
+                            println!("didn't find mov");
+
+                            // find an immovable
+                            // if it exists, we need to stop and not move anything
+                            // if it doesn't exist, we stop because we found a gap
+                            match immov.get(&pos) {
+                                Some(id) => { 
+                                    to_move.clear();
+                                    println!("found immov {}, clearing", id);
+                                },
+                                None => {
+                                    println!("didn't find immov");
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            // what we will move
-            println!("to_move {:?}", to_move);
+                // what we will move
+                println!("to_move {:?}", to_move);
+            }
         }
 
         // Now actually move what needs to be moved
-        for id in to_move {
-
-            let key = KeyCode::Right;
-
+        for (key, id) in to_move {
             let position = positions.get_mut(entities.entity(id));
             if let Some(position) = position {
                 match key {
