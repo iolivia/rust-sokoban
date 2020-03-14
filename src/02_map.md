@@ -84,7 +84,7 @@ pub fn create_map(world: &mut World) {
                 Position {
                     x: TILE_WIDTH * (x + offset_x) as f32,
                     y: TILE_WIDTH * (y + offset_y) as f32,
-                    z: 0.0 // we will get the z from the factory functions
+                    z: 0 // we will get the z from the factory functions
                 },
             );
         }
@@ -103,9 +103,9 @@ Here's some code with the fix.
 #[derive(Debug, Component, Clone, Copy)]
 #[storage(VecStorage)]
 pub struct Position {
-    x: f32,
-    y: f32,
-    z: f32
+    x: u8,
+    y: u8,
+    z: u8
 }
 
 // Here is the updated implementation of create_map. The biggest difference is that
@@ -124,7 +124,7 @@ pub fn create_map(world: &mut World) {
             let position = Position {
                 x: TILE_WIDTH * (x + offset_x) as f32,
                 y: TILE_WIDTH * (y + offset_y) as f32,
-                z: 0.0 // we will get the z from the factory functions
+                z: 0 // we will get the z from the factory functions
             };
 
             // Figure out what object we should create
@@ -170,9 +170,9 @@ const TILE_WIDTH: f32 = 32.0;
 #[derive(Debug, Component, Clone, Copy)]
 #[storage(VecStorage)]
 pub struct Position {
-    x: f32,
-    y: f32,
-    z: f32
+    x: u8,
+    y: u8,
+    z: u8
 }
 
 #[derive(Component)]
@@ -276,7 +276,7 @@ pub fn register_components(world: &mut World) {
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -287,7 +287,7 @@ pub fn create_wall(world: &mut World, position: Position) {
 pub fn create_floor(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 5.0, ..position})
+        .with(Position {z: 5, ..position})
         .with(Renderable {
             path: "/images/floor.png".to_string(),
         })
@@ -297,7 +297,7 @@ pub fn create_floor(world: &mut World, position: Position) {
 pub fn create_box(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/box.png".to_string(),
         })
@@ -308,7 +308,7 @@ pub fn create_box(world: &mut World, position: Position) {
 pub fn create_box_spot(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 9.0, ..position})
+        .with(Position {z: 9, ..position})
         .with(Renderable {
             path: "/images/box_spot.png".to_string(),
         })
@@ -319,7 +319,7 @@ pub fn create_box_spot(world: &mut World, position: Position) {
 pub fn create_player(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/player.png".to_string(),
         })
@@ -340,7 +340,7 @@ pub fn create_map(world: &mut World) {
             let position = Position {
                 x: TILE_WIDTH * (x + offset_x) as f32,
                 y: TILE_WIDTH * (y + offset_y) as f32,
-                z: 0.0 // we will get the z from the factory functions
+                z: 0 // we will get the z from the factory functions
             };
 
             // Figure out what object we should create

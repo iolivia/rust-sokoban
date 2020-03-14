@@ -111,9 +111,11 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         for (position, renderable) in (&positions, &renderables).join() {
             // Load the image
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
-
+            let x = position.x as f32 * TILE_WIDTH;
+            let y = position.y as f32 * TILE_WIDTH;
+            
             // draw
-            let draw_params = DrawParam::new().dest(na::Point2::new(position.x, position.y));
+            let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 
@@ -152,9 +154,11 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         for (position, renderable) in rendering_data.iter() {
             // Load the image
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
-
+            let x = position.x as f32 * TILE_WIDTH;
+            let y = position.y as f32 * TILE_WIDTH;
+            
             // draw
-            let draw_params = DrawParam::new().dest(na::Point2::new(position.x, position.y));
+            let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 
@@ -190,9 +194,9 @@ const TILE_WIDTH: f32 = 32.0;
 #[derive(Debug, Component)]
 #[storage(VecStorage)]
 pub struct Position {
-    x: f32,
-    y: f32,
-    z: f32
+    x: u8,
+    y: u8,
+    z: u8
 }
 
 #[derive(Component)]
@@ -243,9 +247,11 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         for (position, renderable) in rendering_data.iter() {
             // Load the image
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
-
+            let x = position.x as f32 * TILE_WIDTH;
+            let y = position.y as f32 * TILE_WIDTH;
+            
             // draw
-            let draw_params = DrawParam::new().dest(na::Point2::new(position.x, position.y));
+            let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 
@@ -309,7 +315,7 @@ pub fn register_components(world: &mut World) {
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -320,7 +326,7 @@ pub fn create_wall(world: &mut World, position: Position) {
 pub fn create_floor(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 5.0, ..position})
+        .with(Position {z: 5, ..position})
         .with(Renderable {
             path: "/images/floor.png".to_string(),
         })
@@ -330,7 +336,7 @@ pub fn create_floor(world: &mut World, position: Position) {
 pub fn create_box(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/box.png".to_string(),
         })
@@ -341,7 +347,7 @@ pub fn create_box(world: &mut World, position: Position) {
 pub fn create_box_spot(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 9.0, ..position})
+        .with(Position {z: 9, ..position})
         .with(Renderable {
             path: "/images/box_spot.png".to_string(),
         })
@@ -352,7 +358,7 @@ pub fn create_box_spot(world: &mut World, position: Position) {
 pub fn create_player(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/player.png".to_string(),
         })
@@ -379,7 +385,7 @@ pub fn create_map(world: &mut World) {
                 Position {
                     x: TILE_WIDTH * (x + offset_x) as f32,
                     y: TILE_WIDTH * (y + offset_y) as f32,
-                    z: 0.0 // we will get the z from the factory functions
+                    z: 0 // we will get the z from the factory functions
                 },
             );
         }

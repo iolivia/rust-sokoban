@@ -17,9 +17,9 @@ Now let's define our first two components. The position component holds the x an
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Position {
-    x: f32,
-    y: f32,
-    z: f32
+    x: u8,
+    y: u8,
+    z: u8
 }
 
 #[derive(Component)]

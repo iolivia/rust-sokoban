@@ -41,7 +41,7 @@ Next, we'll add:
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/wall.png".to_string(),
         })
@@ -55,7 +55,7 @@ pub fn create_wall(world: &mut World, position: Position) {
 pub fn create_box(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/box.png".to_string(),
         })
@@ -69,7 +69,7 @@ pub fn create_box(world: &mut World, position: Position) {
 pub fn create_player(world: &mut World, position: Position) {
     world
         .create_entity()
-        .with(Position {z: 10.0, ..position})
+        .with(Position {z: 10, ..position})
         .with(Renderable {
             path: "/images/player.png".to_string(),
         })
@@ -78,5 +78,23 @@ pub fn create_player(world: &mut World, position: Position) {
         .build();
 }
 ```
+
+Now let's think of a few examples that illustrate our requirements for movement. This will help us understand how we need to change the implementation of the input system to use `Movable` and `Immovable` correctly.
+
+Scenarios:
+1. `(player, floor)` and `RIGHT` pressed -> player should move to the right
+1. `(player, wall)` and `RIGHT` pressed -> player should not move to the right
+1. `(player, box, floor)` and `RIGHT` pressed -> player should move to the right, box should move to the right
+1. `(player, box, wall)` and `RIGHT` pressed -> nothing should move
+1. `(player, box, box, floor)` and `RIGHT` pressed -> player, box1 and box2 should all move one to the right
+1. `(player, box, box, wall)` and `RIGHT` pressed -> nothing should move
+
+A few observations we can make based on this:
+* the collision/movement detection should happen all at once for all objects involved - for example, for scenario 6 if we processed one item at a time, we would move the player, we would move the first box, and when we get to the second box we realize we cannot move it, and we'd have to roll back all our movement actions, which will not work. So for every input, we must figure out all the objects involved and holistically decide if the action is possible or not.
+* a chain of movables with an empty spot can move (empty spot in this case means something neither movable or immovable)
+* a chain of movables with an immovable spot cannot move
+* even though all examples were moving to the right, the rules should generalize for any movement and the key pressed should just influence how we find the chain
+
+
 
 
