@@ -95,8 +95,8 @@ impl<'a> System<'a> for RenderingSystem<'a> {
 
             // Load the image
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
-            let x = position.x as f32 * TILE_WIDTH;
-            let y = position.y as f32 * TILE_WIDTH;
+            let x = (MAP_OFFSET_X + position.x) as f32 * TILE_WIDTH;
+            let y = (MAP_OFFSET_Y + position.y) as f32 * TILE_WIDTH;
             
             // draw
             let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
@@ -149,13 +149,11 @@ impl<'a> System<'a> for InputSystem {
 
                 // Now iterate through current position to the end of the map
                 // on the correct axis and check what needs to move.
-                // TODO for now we are always going right.
-                println!("going from {} to {}", position.x, MAP_WIDTH+MAP_OFFSET_X);
                 let (start, end, is_x) = match key {
-                    KeyCode::Up => (position.y, MAP_OFFSET_Y, false),
-                    KeyCode::Down => (position.y, MAP_HEIGHT + MAP_OFFSET_Y, false),
-                    KeyCode::Left => (position.x, MAP_OFFSET_X, true),
-                    KeyCode::Right => (position.x, MAP_WIDTH + MAP_OFFSET_X, true),
+                    KeyCode::Up => (position.y, 0, false),
+                    KeyCode::Down => (position.y, MAP_HEIGHT, false),
+                    KeyCode::Left => (position.x, 0, true),
+                    KeyCode::Right => (position.x, MAP_WIDTH, true),
                     _ => panic!("unknown key")
                 };
 
@@ -358,8 +356,8 @@ pub fn create_map(world: &mut World) {
 
             // Create the position at which to create something on the map
             let position = Position {
-                x: x + MAP_OFFSET_X,
-                y: y + MAP_OFFSET_Y,
+                x: x,
+                y: y,
                 z: 0 // we will get the z from the factory functions
             };
 
