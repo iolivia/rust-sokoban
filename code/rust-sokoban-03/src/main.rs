@@ -368,6 +368,7 @@ pub fn create_map(world: &mut World) {
                 (x, y) if x == 0 || x == MAP_WIDTH || y == 0 || y == MAP_HEIGHT => create_wall,
                 (5, 5) => create_player,
                 (6, 5) => create_box,
+                (7, 5) => create_box,
                 (8, 2) => create_box_spot,
                 _ => no_op,
             };
