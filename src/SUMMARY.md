@@ -13,4 +13,5 @@
 - [Chapter 3: Gameplay](./03_.md)
     - [Moving the player](./03_input.md)
     - [Pushing boxes](./03_movement.md)
+    - [Winning](./03_winning.md)
 
