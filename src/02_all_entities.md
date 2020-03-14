@@ -126,6 +126,8 @@ Finally, let's write some test code to initialize our level with one entity of e
 ```rust
 ...
 const TILE_WIDTH: f32 = 32.0;
+const MAP_WIDTH: u8 = 10;
+const MAP_HEIGHT: u8 = 10;
 ...
 
 // Initialize the level
@@ -188,6 +190,8 @@ use specs::{
 use std::path;
 
 const TILE_WIDTH: f32 = 32.0;
+const MAP_WIDTH: u8 = 10;
+const MAP_HEIGHT: u8 = 10;
 
 // Components
 #[derive(Debug, Component)]

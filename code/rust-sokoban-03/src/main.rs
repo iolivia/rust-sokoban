@@ -12,10 +12,16 @@ use ggez::{conf, event, Context, GameResult};
 use specs::{
     join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt, Write,
 };
+use specs::world::Index;
 
 use std::path;
+use std::collections::HashMap;
 
 const TILE_WIDTH: f32 = 32.0;
+const MAP_WIDTH: u8 = 10;
+const MAP_HEIGHT: u8 = 10;
+const MAP_OFFSET_X: u8 = 4;
+const MAP_OFFSET_Y: u8 = 3;
 
 // Components
 #[derive(Debug, Component, Clone, Copy)]
@@ -121,55 +127,83 @@ impl<'a> System<'a> for InputSystem {
 
         let (mut input_queue, entities, mut positions, players, movables, immovables) = data;
         
+        let mut to_move = Vec::new();
         for (position, _player) in (&positions, &players).join() {
             // Get the first key pressed
             let key = input_queue.keys_pressed.pop();
 
-            // get all the movables and immovables
-            let mut mov = (&entities, &positions, &movables)
-                .join()
-                .collect::<Vec<_>>();
-                
-            let mut immov = (&entities, &positions, &immovables)
-                .join()
-                .collect::<Vec<_>>();
-
-            // keep only the movables that matter
-            mov.retain(|&t| match key {
-                Some(key) if key == KeyCode::Up => t.1.y < position.y && t.1.x == position.x,
-                Some(key) if key == KeyCode::Down => t.1.y > position.y && t.1.x == position.x, 
-                Some(key) if key == KeyCode::Left => t.1.x < position.x && t.1.y == position.y,
-                Some(key) if key == KeyCode::Right => t.1.x > position.x && t.1.y == position.y,
-                _ => false
-            });
+            if key.is_none() {
+                return;
+            }
             
-            // keep only the immovables that matter
-            immov.retain(|&t| match key {
-                Some(key) if key == KeyCode::Up => t.1.y < position.y && t.1.x == position.x,
-                Some(key) if key == KeyCode::Down => t.1.y > position.y && t.1.x == position.x,
-                Some(key) if key == KeyCode::Left => t.1.x < position.x && t.1.y == position.y,
-                Some(key) if key == KeyCode::Right => t.1.x > position.x && t.1.y == position.y,
-                _ => false
-            });
+            // get all the movables and immovables
+            let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
+                .join()
+                .collect::<Vec<_>>()
+                .into_iter()
+                .map(|t| ((t.2.x, t.2.y), t.0.id()))
+                .collect::<HashMap<_, _>>();
+            let mut immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
+                .join()
+                .collect::<Vec<_>>()
+                .into_iter()
+                .map(|t| ((t.2.x, t.2.y), t.0.id()))
+                .collect::<HashMap<_, _>>();
 
-            if mov.len() > 0 {
-                println!("mov {:?}", mov.len());
+            // Now iterate through current position to the end of the map
+            // on the correct axis and check what needs to move.
+            // TODO for now we are always going right.
+            println!("going from {} to {}", position.x, MAP_WIDTH+MAP_OFFSET_X);
+            for x in position.x..=MAP_WIDTH+MAP_OFFSET_X {
+                let pos = (x, position.y);
+
+                // find a movable
+                // if it exists, we try to move it and continue
+                // if it doesn't exist, we continue and try to find an immovable instead
+                match mov.get(&pos) {
+                    Some(id) => {
+                        to_move.push(id.clone());
+                        println!("found mov {}", id);
+                    }
+                    None => {
+                        println!("didn't find mov");
+
+                        // find an immovable
+                        // if it exists, we need to stop and not move anything
+                        // if it doesn't exist, we stop because we found a gap
+                        match immov.get(&pos) {
+                            Some(id) => { 
+                                to_move.clear();
+                                println!("found immov {}, clearing", id);
+                            },
+                            None => {
+                                println!("didn't find immov");
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
-            if immov.len() > 0 {
-                println!("immov {:?}", immov.len());
-            }
+            // what we will move
+            println!("to_move {:?}", to_move);
+        }
 
-            // Apply the key to the position
-            // let (x_tile_offset, y_tile_offset) = match key {
-            //     Some(KeyCode::Up) => (0, -1),
-            //     Some(KeyCode::Down) => (0, 1),
-            //     Some(KeyCode::Left) => (-1, 0),
-            //     Some(KeyCode::Right) => (1, 0),
-            //     _ => (0, 0)
-            // };
-            // position.x += TILE_WIDTH * x_tile_offset as f32;
-            // position.y += TILE_WIDTH * y_tile_offset as f32;
+        // Now actually move what needs to be moved
+        for id in to_move {
+
+            let key = KeyCode::Right;
+
+            let position = positions.get_mut(entities.entity(id));
+            if let Some(position) = position {
+                match key {
+                    KeyCode::Up => position.y -= 1,
+                    KeyCode::Down => position.y += 1,
+                    KeyCode::Left => position.x -= 1,
+                    KeyCode::Right => position.x += 1,
+                    _ => ()
+                }
+            }
         }
     }
 }
@@ -304,26 +338,23 @@ pub fn create_player(world: &mut World, position: Position) {
 }
 
 pub fn create_map(world: &mut World) {
-    let width = 10;
-    let height = 10;
-    let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
     let no_op = |_world: &mut World, _position: Position| {};
 
-    for x in 0..=width {
-        for y in 0..=height {
+    for x in 0..=MAP_WIDTH {
+        for y in 0..=MAP_HEIGHT {
 
             // Create the position at which to create something on the map
             let position = Position {
-                x: x + offset_x,
-                y: y + offset_y,
+                x: x + MAP_OFFSET_X,
+                y: y + MAP_OFFSET_Y,
                 z: 0 // we will get the z from the factory functions
             };
 
             // Figure out what object we should create
             let create = match (x, y) {
-                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (x, y) if x == 0 || x == MAP_WIDTH || y == 0 || y == MAP_HEIGHT => create_wall,
                 (5, 5) => create_player,
-                (7, 7) => create_box,
+                (6, 5) => create_box,
                 (8, 2) => create_box_spot,
                 _ => no_op,
             };

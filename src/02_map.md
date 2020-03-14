@@ -12,11 +12,8 @@ Here is the code to generate this basic map.
 
 ```rust
 pub fn create_map(world: &mut World) {
-    let width = 10;
-    let height = 10;
-
-    for x in 0..=width {
-        for y in 0..=height {
+    for x in 0..=MAP_WIDTH {
+        for y in 0..=MAP_HEIGHT {
             // create walls on the borders
             if x == 0 || x == width || y == 0 || y == height {
                 create_wall(
@@ -54,7 +51,7 @@ pub fn initialize_level(world: &mut World) {
 ```
 
 There are a few new things here:
-* for loops with ranges - ` for x in 0..=width` this is much like a regular for loop where we go from 0 to width (the `=` means it's inclusive)
+* for loops with ranges - ` for x in 0..=MAP_WIDTH` this is much like a regular for loop where we go from 0 to width (the `=` means it's inclusive)
 * matches - matches are like if else statements on steroids. with a match we can do much more complex pattern match, in this case we are matching the x and y values and we return a different function reference. 
  
 If we run this code we should now see a pretty map.
@@ -66,14 +63,13 @@ One final touch, let's make the map a bit more centered. I took this opportunity
 
 ```rust
 pub fn create_map(world: &mut World) {
-    let width = 10;
-    let height = 10;
     let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
 
-    for x in 0..=width {
-        for y in 0..=height {
+    for x in 0..=MAP_WIDTH {
+        for y in 0..=MAP_HEIGHT {
             let create = match (x, y) {
-                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (x, y) if x == 0 || x == MAP_WIDTH || y == 0 || y == MAP_HEIGHT => create_wall,
+
                 (5, 5) => create_player,
                 (7, 7) => create_box,
                 (8, 2) => create_box_spot,
@@ -112,13 +108,11 @@ pub struct Position {
 // now for every map position we call create_floor along with any other create for
 // other objects.
 pub fn create_map(world: &mut World) {
-    let width = 10;
-    let height = 10;
     let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
     let no_op = |_world: &mut World, _position: Position| {};
 
-    for x in 0..=width {
-        for y in 0..=height {
+    for x in 0..=MAP_WIDTH {
+        for y in 0..=MAP_HEIGHT {
 
             // Create the position at which to create something on the map
             let position = Position {
@@ -129,7 +123,8 @@ pub fn create_map(world: &mut World) {
 
             // Figure out what object we should create
             let create = match (x, y) {
-                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (x, y) if x == 0 || x == MAP_WIDTH || y == 0 || y == MAP_HEIGHT => create_wall,
+
                 (5, 5) => create_player,
                 (7, 7) => create_box,
                 (8, 2) => create_box_spot,
@@ -165,6 +160,8 @@ use specs::{
 use std::path;
 
 const TILE_WIDTH: f32 = 32.0;
+const MAP_WIDTH: u8 = 10;
+const MAP_HEIGHT: u8 = 10;
 
 // Components
 #[derive(Debug, Component, Clone, Copy)]
@@ -328,13 +325,11 @@ pub fn create_player(world: &mut World, position: Position) {
 }
 
 pub fn create_map(world: &mut World) {
-    let width = 10;
-    let height = 10;
     let (offset_x, offset_y) = (4, 3); // make the map somewhat centered
     let no_op = |_world: &mut World, _position: Position| {};
 
-    for x in 0..=width {
-        for y in 0..=height {
+    for x in 0..=MAP_WIDTH {
+        for y in 0..=MAP_HEIGHT {
 
             // Create the position at which to create something on the map
             let position = Position {
@@ -345,7 +340,8 @@ pub fn create_map(world: &mut World) {
 
             // Figure out what object we should create
             let create = match (x, y) {
-                (x, y) if x == 0 || x == width || y == 0 || y == height => create_wall,
+                (x, y) if x == 0 || x == MAP_WIDTH || y == 0 || y == MAP_HEIGHT => create_wall,
+
                 (5, 5) => create_player,
                 (7, 7) => create_box,
                 (8, 2) => create_box_spot,
