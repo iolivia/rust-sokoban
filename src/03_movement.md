@@ -1,3 +1,215 @@
+# Pushing boxes
+
+In the previous chapter we got our player moving, but he is going through walls and boxes, not really interacting with the environment. In this section we'll add some logic for more intelligent player movement.
+
+First, we need to make our code slightly more generic. If you remember the previous chapter we were operating on players to figure out where we should move them, but we'll also need to move boxes. Also in the future we might want to introduce another movable kind of object, so let's try to build something with that in mind. What we'll do in true ECS spirit we will use a marker component to tell us which entities are movable and which aren't. For example, players and boxes are movable, while walls are immovable. Box spots are kind of irrelevant here because they do not move, but they also shouldn't affect the movement of players or boxes, so box spots will not have either of these components. 
+
+Here are our two new components, nothing too new apart from two minor things:
+* we are using `NullStorage` which is slightly more efficient than using `VecStorage` since these two components will not have any fields, and are just used as markers
+* we are implementing Default because that is a requirement for using NullStorage
+* adding the two new compoennts to our register_components function
+
+```rust
+#[derive(Component, Default)]
+#[storage(NullStorage)]
+pub struct Movable;
+
+#[derive(Component, Default)]
+#[storage(NullStorage)]
+pub struct Immovable;
+
+...
+pub fn register_components(world: &mut World) {
+    world.register::<Position>();
+    world.register::<Renderable>();
+    world.register::<Player>();
+    world.register::<Wall>();
+    world.register::<Box>();
+    world.register::<BoxSpot>();
+    world.register::<Movable>();
+    world.register::<Immovable>();
+}
+```
+
+Next, we'll add:
+* with(Movable) to players and boxes
+* with(Immovable) to walls
+* do nothing with floors and box spots (as mentioned before they should not be part of our movement/collision system since they are inconsequential to the movement)
+
+```rust
+// Create a wall entity
+pub fn create_wall(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(Position {z: 10, ..position})
+        .with(Renderable {
+            path: "/images/wall.png".to_string(),
+        })
+        .with(Wall {})
+        .with(Immovable)
+        .build();
+}
+
+...
+
+pub fn create_box(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(Position {z: 10, ..position})
+        .with(Renderable {
+            path: "/images/box.png".to_string(),
+        })
+        .with(Box {})
+        .with(Movable)
+        .build();
+}
+
+...
+
+pub fn create_player(world: &mut World, position: Position) {
+    world
+        .create_entity()
+        .with(Position {z: 10, ..position})
+        .with(Renderable {
+            path: "/images/player.png".to_string(),
+        })
+        .with(Player {})
+        .with(Movable)
+        .build();
+}
+```
+
+Now let's think of a few examples that illustrate our requirements for movement. This will help us understand how we need to change the implementation of the input system to use `Movable` and `Immovable` correctly.
+
+Scenarios:
+1. `(player, floor)` and `RIGHT` pressed -> player should move to the right
+1. `(player, wall)` and `RIGHT` pressed -> player should not move to the right
+1. `(player, box, floor)` and `RIGHT` pressed -> player should move to the right, box should move to the right
+1. `(player, box, wall)` and `RIGHT` pressed -> nothing should move
+1. `(player, box, box, floor)` and `RIGHT` pressed -> player, box1 and box2 should all move one to the right
+1. `(player, box, box, wall)` and `RIGHT` pressed -> nothing should move
+
+A few observations we can make based on this:
+* the collision/movement detection should happen all at once for all objects involved - for example, for scenario 6 if we processed one item at a time, we would move the player, we would move the first box, and when we get to the second box we realize we cannot move it, and we'd have to roll back all our movement actions, which will not work. So for every input, we must figure out all the objects involved and holistically decide if the action is possible or not.
+* a chain of movables with an empty spot can move (empty spot in this case means something neither movable or immovable)
+* a chain of movables with an immovable spot cannot move
+* even though all examples were moving to the right, the rules should generalize for any movement and the key pressed should just influence how we find the chain
+
+So given this, let's start implementing this logic. Let's thing about the logical pieces we need. Some initial ideas:
+1. **find all the movable and immovable entities** - this is so we can figure out if they are affected by the movement
+2. **figure out which way to move based on a key** - we've kind of figured this out in the previous section already, basically a bunch of +1/-1 operations based on the key enum
+3. **iterate through all positions between the player and the end of the map** on the correct axis based on the direction - for example, if we press right, we need to go from player.x to map_width, if we press up we need to go from 0 to player.y
+4. **for every tile in this sequence** we need to:
+    * if the tile is movable, continue and remember this tile
+    * if the tile is not movable, stop and don't move anything 
+    * if the tile is neither movable or immovable, move all the tiles we've remembered so far
+
+
+Great, so let's write down some of this code.
+
+```rust
+// get all movable entities into a map (x,y) -> entity_id
+let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
+    .join()
+    .collect::<Vec<_>>()
+    .into_iter()
+    .map(|t| ((t.2.x, t.2.y), t.0.id()))
+    .collect::<HashMap<_, _>>();
+```
+
+This piece of code looks a bit intimidating but is quite simple. First we grab all entities which have a movable component and a position component and join them (this should be familiar by now). We then map that Tuple3 into a (x,y) -> entity_id, and finally we convert that to a HashMap so we can index by x and y. As I mentioned previously the fast indexing is crucial so we can quickly check every position in the sequence. 
+
+We then do the same for immovable entities, the code is exactly the same except we join by immovables instead.
+
+```rust
+let mut immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
+    .join()
+    .collect::<Vec<_>>()
+    .into_iter()
+    .map(|t| ((t.2.x, t.2.y), t.0.id()))
+    .collect::<HashMap<_, _>>();
+```
+
+Next, we figure out what that sequence of tiles is based on the key that was just pressed.
+
+```rust
+let (start, end, is_x) = match key {
+    KeyCode::Up => (position.y, 0, false),
+    KeyCode::Down => (position.y, MAP_HEIGHT, false),
+    KeyCode::Left => (position.x, 0, true),
+    KeyCode::Right => (position.x, MAP_WIDTH, true),
+    _ => continue
+};
+```
+
+This code will give us a start and an end and will also tell us if we are about to iterate horizontally (if is_x is true) or vertically. There is a small problem though. Normally we'd do a range `start..=end`, but if `start > end` like it is when we're going left or up this code won't work and the range generated will be empty, so we will not iterate through anything. This is because the range function will check if start <= end and if it's not, it will return an empty iterator. It's not a big deal, but we do need to write some code to handle it. 
+
+```rust
+let range = if start < end {
+    (start..=end).collect::<Vec<_>>()
+} else {
+    (end..=start).rev().collect::<Vec<_>>()
+};
+```
+
+This code will give us a range which is either increasing or decreasing based on the direction we need to go. 
+
+Finally, we iterate through this range and add the logic for movable/immovable we described above. As a reminder, we need to:
+    * if the tile is movable, continue and remember this tile
+    * if the tile is not movable, stop and don't move anything 
+    * if the tile is neither movable or immovable, move all the tiles we've remembered so far
+
+```rust
+for x_or_y in range {
+    let pos = if is_x {
+        (x_or_y, position.y)
+    } else {
+        (position.x, x_or_y)
+    };
+
+    // find a movable
+    // if it exists, we try to move it and continue
+    // if it doesn't exist, we continue and try to find an immovable instead
+    match mov.get(&pos) {
+        Some(id) => to_move.push((key, id.clone())),
+        None => {
+            // find an immovable
+            // if it exists, we need to stop and not move anything
+            // if it doesn't exist, we stop because we found a gap
+            match immov.get(&pos) {
+                Some(id) => to_move.clear(),
+                None => break
+            }
+        }
+    }
+}
+```
+
+This will add all the things to be moved into a vector `to_move`. Now all we need to do is process those actions. 
+
+```rust
+// Now actually move what needs to be moved
+for (key, id) in to_move {
+    let position = positions.get_mut(entities.entity(id));
+    if let Some(position) = position {
+        match key {
+            KeyCode::Up => position.y -= 1,
+            KeyCode::Down => position.y += 1,
+            KeyCode::Left => position.x -= 1,
+            KeyCode::Right => position.x += 1,
+            _ => ()
+        }
+    }
+}
+```
+
+And here is the code in action.
+
+![Sokoban moving boxes](./images/moving_boxes.gif)
+
+Final code below.
+
+```rust
 use specs::Entities;
 use specs::NullStorage;
 use specs::WriteStorage;
@@ -395,3 +607,11 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+```
+
+
+
+
+
+
+

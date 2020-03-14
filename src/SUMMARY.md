@@ -12,5 +12,5 @@
     - [Map](./02_map.md)
 - [Chapter 3: Gameplay](./03_.md)
     - [Moving the player](./03_input.md)
-    - [Generic movement](./03_collisions.md)
+    - [Pushing boxes](./03_movement.md)
 

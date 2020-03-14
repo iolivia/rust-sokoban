@@ -97,19 +97,17 @@ impl<'a> System<'a> for InputSystem {
 
         for (position, _player) in (&mut positions, &players).join() {
             // Get the first key pressed
-            let key = input_queue.keys_pressed.pop();
+            if let Some(key) = input_queue.keys_pressed.pop() {
 
-            // Apply the key to the position
-            let (x_tile_offset, y_tile_offset) = match key {
-                Some(KeyCode::Up) => (0, -1),
-                Some(KeyCode::Down) => (0, 1),
-                Some(KeyCode::Left) => (-1, 0),
-                Some(KeyCode::Right) => (1, 0),
-                _ => (0, 0)
-            };
-
-            position.x += TILE_WIDTH * x_tile_offset as f32;
-            position.y += TILE_WIDTH * y_tile_offset as f32;
+                // Apply the key to the position
+                match key {
+                    KeyCode::Up => position.y -= 1,
+                    KeyCode::Down => position.y += 1,
+                    KeyCode::Left => position.x -= 1,
+                    KeyCode::Right => position.x += 1,
+                    _ => ()
+                }
+            }
         }
     }
 }
