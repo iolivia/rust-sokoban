@@ -269,6 +269,52 @@ impl<'a> System<'a> for InputSystem {
     }
 }
 
+pub struct GameplayStateSystem {}
+
+// System implementation
+impl<'a> System<'a> for GameplayStateSystem {
+    // Data
+    type SystemData = (
+        Write<'a, Gameplay>, 
+        ReadStorage<'a, Position>,
+        ReadStorage<'a, Box>,
+        ReadStorage<'a, BoxSpot>,
+    );
+
+    fn run(&mut self, data: Self::SystemData) {
+
+        let (
+            mut gameplay_state,
+            positions,
+            boxes,
+            box_spots
+        ) = data;
+
+        // get all boxes indexed by position
+        let mut boxes_by_position: HashMap<(u8, u8), &Box> = (&positions, &boxes)
+            .join()
+            .collect::<Vec<_>>()
+            .into_iter()
+            .map(|t| ((t.0.x, t.0.y), t.1))
+            .collect::<HashMap<_, _>>();
+
+        // loop through all box spots and check if there is a corresponding
+        // box at that position.
+        for (_box_spot, position) in (&box_spots, &positions).join() {
+            if boxes_by_position.contains_key(&(position.x, position.y)) {
+                // continue
+            } else {
+                gameplay_state.state = GameplayState::Playing;
+                return;
+            }
+        }
+
+        // if we made it this far, then all box spots have boxes on them, and
+        // therefore the game has been won.
+        gameplay_state.state = GameplayState::Won;
+    }
+}
+
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
 // things shortly.
@@ -289,6 +335,13 @@ impl event::EventHandler for Game {
             is.run_now(&self.world);
         }
 
+        // Run gameplay state system
+        {
+            let mut gss = GameplayStateSystem {};
+            gss.run_now(&self.world);
+        }
+
+        
         Ok(())
     }
 
