@@ -14,4 +14,5 @@
     - [Moving the player](./03_input.md)
     - [Pushing boxes](./03_movement.md)
     - [Winning](./03_winning.md)
+    - [Counting moves](./03_moves.md)
 

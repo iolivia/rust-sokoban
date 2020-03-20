@@ -1,3 +1,99 @@
+# Counting moves
+
+Now that the player can win, we want to count how many moves it took them to win. This will allow us to have a leaderboard later if we choose to and give the player an indication of how well they did based on the minimum number of moves that lead to a win. 
+
+We could simply count every time a key has been pressed. But that doesn't quite work because then we'll be counting also when the player tries to move, but hits a wall. So what we really want is to count when our moving logic decides the player must move. 
+
+Let's first add the number of moves as a field to our gameplay object.
+
+```rust
+#[derive(Default)]
+pub struct Gameplay {
+    pub state: GameplayState,
+    pub moves_count: u32 // number of moves we will be keeping track of
+}
+```
+
+Now let's add the increment to the number of moves into the input system.
+
+```rust
+// System implementation
+impl<'a> System<'a> for InputSystem {
+    // Data
+    type SystemData = (
+        Write<'a, InputQueue>, 
+        Write<'a, Gameplay>,  // added gameplay here
+        Entities<'a>, 
+        WriteStorage<'a, Position>, 
+        ReadStorage<'a, Player>,
+        ReadStorage<'a, Movable>,
+        ReadStorage<'a, Immovable>,
+    );
+
+    fn run(&mut self, data: Self::SystemData) {
+
+        let (
+            mut input_queue, 
+            mut gameplay, // added gameplay here
+            entities, 
+            mut positions, 
+            players, 
+            movables, 
+            immovables
+        ) = data;
+        
+        let mut to_move = Vec::new();
+        
+        // ....
+        
+        // We've just moved, so let's increase the number of moves
+        if to_move.len() > 0 {
+            gameplay.moves_count += 1;
+        }
+
+        // Now actually move what needs to be moved
+        for (key, id) in to_move {
+            // ....
+        }
+    }
+}
+```
+
+And finally, let's render the number of moves below the gameplay state in the rendering system.
+
+```rust
+impl<'a> System<'a> for RenderingSystem<'a> {
+    // Data
+    type SystemData = (
+        Read<'a, Gameplay>,
+        ReadStorage<'a, Position>, 
+        ReadStorage<'a, Renderable>
+    );
+
+    fn run(&mut self, data: Self::SystemData) {
+        let (gameplay, positions, renderables) = data;
+
+        // ...
+
+        // Render any text 
+        self.draw_text(&gameplay.state.to_string(), 525.0, 80.0);
+        self.draw_text(&gameplay.moves_count.to_string(), 525.0, 100.0); // render the moves count
+
+        // Finally, present the context, this will actually display everything
+        // on the screen.
+        graphics::present(self.context).expect("expected to present");
+    }
+}
+```
+
+Here's how it looks on the screen. Notice how when we try to go through the wall on the right the number of moves doesn't go up because we only move if movement has actually happenned not only if a key was pressed.
+
+![Counting moves](./images/moves.gif)
+
+
+Here is the final code.
+
+```rust
 use specs::Entities;
 use specs::NullStorage;
 use specs::WriteStorage;
@@ -515,3 +611,4 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+```
