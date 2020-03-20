@@ -1,3 +1,120 @@
+# Map loading
+
+We have been creating the map of the level procedurally for now, which means we have a couple of loops and we decide in code what goes where. That works to start with but we probably want something better as we scale to more complex levels. 
+
+First step, let's try to load a level based on a 2d map that looks like this.
+
+```
+5 5 1 1 1 1 1 5
+1 1 1 0 0 0 1 5
+1 4 2 0 3 0 1 5
+1 1 1 0 0 4 1 5 
+1 4 1 1 3 0 1 5
+1 0 1 0 0 0 1 1
+1 3 0 3 0 0 4 1
+1 0 0 0 0 0 0 1
+1 1 1 1 1 1 1 1
+
+where:
+- 0 is an empty spot
+- 1 is a wall
+- 2 is the player
+- 3 is a box
+- 4 is a box spot
+- 5 is nothing: used for the outer edges of the map
+```
+
+Let's make a string for this, eventually we can load from a file but for simplicity let's go with a constant in the code for now.
+
+
+```rust
+const MAP: &'static str = 
+    "
+    5 5 1 1 1 1 1 5
+    1 1 1 0 0 0 1 5
+    1 4 2 0 3 0 1 5
+    1 1 1 0 0 4 1 5 
+    1 4 1 1 3 0 1 5
+    1 0 1 0 0 0 1 1
+    1 3 0 3 0 0 4 1
+    1 0 0 0 0 0 0 1
+    1 1 1 1 1 1 1 1
+    ";
+```
+
+Now let's write a function to load the map - this is very similar to our initial create_map except now it also does some string manipulation.
+
+```rust
+pub fn load_map(world: &mut World, map_string: String) {
+    // read all lines
+    let rows: Vec<&str> = map_string
+        .trim()
+        .split('\n')
+        .map(|x| x.trim())
+        .collect();
+
+    for (y, row) in rows.iter().enumerate() {
+        let columns: Vec<&str> = row.split(' ').collect();
+        
+        for (x, column) in columns.iter().enumerate() {
+
+            // Create the position at which to create something on the map
+            let position = Position {
+                x: x as u8,
+                y: y as u8,
+                z: 0 // we will get the z from the factory functions
+            };
+            
+            // Figure out what object we should create
+            match *column {
+                "0" => create_floor(world, position),
+                "1" => {
+                    create_floor(world, position);
+                    create_wall(world, position);
+                },
+                "2" => {
+                    create_floor(world, position);
+                    create_player(world, position);
+                },
+                "3" => {
+                    create_floor(world, position);
+                    create_box(world, position);
+                },
+                "4" => {
+                    create_floor(world, position);
+                    create_box_spot(world, position);
+                },
+                "5" => (),
+                c => panic!("unrecognized map item {}", c)
+            }
+        }
+    }
+}
+```
+
+And finally, let's replace the way we intiialize the level to use this map and remove `create_map` since we don't need it anymore.
+
+```rust
+// Initialize the level
+pub fn initialize_level(world: &mut World) {
+    load_map(world, MAP.to_string());
+}
+```
+
+And update our constants to match our new map (ideally this would be calculated based on the map but for now we'll keep them as constants).
+
+```rust
+const MAP_WIDTH: u8 = 8;
+const MAP_HEIGHT: u8 = 9;
+```
+
+Here's how that looks, now we can actually play a game that looks like Sokoban.
+
+![Level](./images/level.gif)
+
+And here is the full code.
+
+```rust
 use specs::Entities;
 use specs::NullStorage;
 use specs::WriteStorage;
@@ -544,3 +661,4 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+```

@@ -15,4 +15,5 @@
     - [Pushing boxes](./03_movement.md)
     - [Winning](./03_winning.md)
     - [Counting moves](./03_moves.md)
+    - [Map loading](./03_game.md)
 
