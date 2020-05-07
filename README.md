@@ -8,6 +8,10 @@ This repository hosts the Rust Sokoban book and source code used in the book. It
 ## :running: How to?
 
 ### Host the book locally
+If not already done, install mdbook.
+```
+$ cargo install mdbook
+```
 
 Serve the book and navigate to http://localhost:3000/ in your local browser.
 ```
