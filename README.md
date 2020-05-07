@@ -1,13 +1,15 @@
 # Rust sokoban
 
 ## :dart: What is it?
-This repository hosts the Rust Sokoban book and source code used in the book. It's using (mdbook)[https://github.com/rust-lang/mdBook].
+This repository hosts the Rust Sokoban book and source code used in the book. It's using [mdbook](https://github.com/rust-lang/mdBook).
 
 ![Demo](src/images/movement.gif)
 
 ## :running: How to?
 
 ### Host the book locally
+
+Serve the book and navigate to http://localhost:3000/ in your local browser.
 ```
 $ mdbook serve
 ```
@@ -15,7 +17,7 @@ $ mdbook serve
 ### Run the code locally
 ```
 $ cd code/rust-sokoban-01
-$ cargo run
+$ cargo run --release
 ```
 
 ## :muscle: Contributing
