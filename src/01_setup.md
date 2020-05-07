@@ -1,23 +1,23 @@
 # Project setup
 
-You'll first need to have Rust installed. Install `rustup` from [here](https://www.rust-lang.org/tools/install). After that you should be able to check everything is installed correctly using these two commands. The versions shouldn't matter too much.
+Let's install [rustup](https://www.rust-lang.org/tools/install), this will install Rust and the Rust compiler for us. Now let's check everything is installed correctly using these two commands; the versions shouldn't matter too much so if yours are different don't worry about it.
 
 ```
-> rustc --version
+$ rustc --version
 rustc 1.40.0
-> cargo --version
+$ cargo --version
 cargo 1.40.0
 ```
 
 ## Creating a project
 
-Cargo can help you create a project in a nice one liner. Feel free to change `rust-sokoban` to something else, it's just the name of our project and it shouldn't affect the examples in the book. 
+Cargo is Rust's package manager, and we will use it to create our game project. Change into a directory where you'd like the game to live and run the following command, with this we will be creating a new project called `rust-sokoban` using cargo. 
 
 ```
-cargo init rust-sokoban
+$ cargo init rust-sokoban
 ```
 
-It should then look like this.
+After the command has run you should see the following folder structure.  
 
 ```
 - Cargo.toml
@@ -25,19 +25,10 @@ It should then look like this.
 -- main.rs
 ```
 
-Add a .gitignore file like [this one](https://github.com/github/gitignore/blob/master/Rust.gitignore).
+We can now run `cargo run` in this directory and we should see something like this.
 
 ```
-- Cargo.toml
-- .gitignore
-- src
--- main.rs
-```
-
-And then run `cargo run` in this directory you should see something like this.
-
-```
-> cargo run
+$ cargo run
    Compiling rust-sokoban v0.1.0
     Finished dev [unoptimized + debuginfo] target(s) in 1.30s
      Running `../rust-sokoban/target/debug/rust-sokoban`
@@ -45,7 +36,7 @@ Hello, world!
 ```
 
 ## Making it a game
-At this point we just have a basic Rust project, but now let's make it a game! In the interest of time we will not be building the game engine itself, so we'll pick one of the existing off the shelf options. We are going to be using [ggez](https://github.com/ggez/ggez) and the main reasons for this are: it's really beginner friendly, I have been using it a lot so I feel comfortable teaching something in it and it's actually quite good for simple 2D games.
+It's time to make this basic hello world project into a game! We are going to be using [ggez](https://github.com/ggez/ggez) and the main reasons for this are: it's really beginner friendly, I have been using it a lot so I feel comfortable teaching something in it and it's actually quite good for simple 2D games.
 
 Let add ggez as one of our dependencies in `Cargo.toml`.
 
