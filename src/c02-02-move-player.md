@@ -8,8 +8,8 @@ The first step for making our player move is to start listening to input events.
 Let's start listening to key events.
 
 ```rust
-{{#include ../code/rust-sokoban-05/src/main.rs:153:160}}
-{{#include ../code/rust-sokoban-05/src/main.rs:164}}
+{{#include ../code/rust-sokoban-05/src/main.rs:155:162}}
+{{#include ../code/rust-sokoban-05/src/main.rs:166}}
 ```
 
 If we run this we should see the print lines in the console.
@@ -27,23 +27,23 @@ Key pressed: Left
 Next up we'll add a resource, which is the specs way of sharing some state across systems which isn't part of your world. We'll use a resource for modelling the input queue of key presses, since that doesn't really fit into our existing components/entities model.
 
 ```rust
-{{#include ../code/rust-sokoban-05/src/main.rs:47:50}}
+{{#include ../code/rust-sokoban-05/src/main.rs:48:52}}
 ```
 
 And then we'll push the new key presses into the queue when `key_down_event` is called.
 
 ```rust
-{{#include ../code/rust-sokoban-05/src/main.rs:153:164}}
+{{#include ../code/rust-sokoban-05/src/main.rs:155:166}}
 ```
 
 Finally, we need to register the resources into specs like we did for components.
 
 ```rust
 // Registering resources
-{{#include ../code/rust-sokoban-05/src/main.rs:177:179}}
+{{#include ../code/rust-sokoban-05/src/main.rs:179:181}}
 
 // Registering resources in main
-{{#include ../code/rust-sokoban-05/src/main.rs:293:311}}
+{{#include ../code/rust-sokoban-05/src/main.rs:295:312}}
 ```
 
 ## Input system
@@ -51,22 +51,22 @@ Finally, we need to register the resources into specs like we did for components
 Using this code we have a resource that is a continuous queue of input key presses. Next up, we'll start processing these inputs in a system.
 
 ```rust
-{{#include ../code/rust-sokoban-05/src/main.rs:92:119}}
+{{#include ../code/rust-sokoban-05/src/main.rs:94:121}}
 ```
 
 Finally we need to run the system in our update loop.
 
 ```rust
-{{#include ../code/rust-sokoban-05/src/main.rs:133:141}}
+{{#include ../code/rust-sokoban-05/src/main.rs:135:143}}
 ```
 
 The input system is pretty simple, it grabs all the players and positions (we should only have one player but this code doesn't need to care about that, it could in theory work if we have multiple players that we want to control with the same input). And then for every player and position combination, it will grab the first key pressed and remove it from the input queue. It will then figure out what is the required transformation - for example if we press up we want to move one tile up and so on, and then applies this position update.
 
-Pretty cool! Here's how it should look like. Full code below.
+Pretty cool! Here's how it should look like. Notice we can go through walls and boxes. We'll fix that up in the next section when we add the movable component.
+
+Full code below.
 
 ![Moving player](./images/input.gif)
-
-Notice we can go through walls and boxes. We'll fix that up in the next section when we add the movable component.
 
 ```rust
 {{#include ../code/rust-sokoban-05/src/main.rs}}

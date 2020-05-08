@@ -1,4 +1,4 @@
-# Chapter 1: Introduction
+# Chapter 1: Base game
 Welcome to **Rust Sokoban**! 
 
 ## What is Rust Sokoban?
@@ -28,4 +28,4 @@ Now that we got the intro out of the way, let's get started making our first gam
 
 
 _______
-Made with 🦀 and 🧡 by [@oliviff](https://twitter.com/oliviff) | code @ [TODO](https://github.com/)
+Made with 🦀 and 🧡 by [@oliviff](https://twitter.com/oliviff)
