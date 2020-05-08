@@ -1,5 +1,6 @@
 use ggez;
 use ggez::{conf, event, Context, GameResult};
+use std::path;
 
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
