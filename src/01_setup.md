@@ -98,7 +98,7 @@ A trait is much like an interface in other languages, it allows us to associate 
 {{#include ../code/rust-sokoban-01/src/main.rs:9:23}}
 ```
 
-> **_MORE:_**  Read more about traits [here](https://doc.rust-lang.org/1.30.0/book/2018-edition/ch10-02-traits.html).
+> **_MORE:_**  Read more about traits [here](https://doc.rust-lang.org/book/ch10-02-traits.html).
 
 
 ### Functions
