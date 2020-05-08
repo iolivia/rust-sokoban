@@ -1,0 +1,94 @@
+name: Code Samples Compile
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  rust-sokoban-01:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-01 && cargo check
+
+  rust-sokoban-02:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-02 && cargo check
+
+  rust-sokoban-03:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-03 && cargo check
+
+  rust-sokoban-04:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-04 && cargo check
+
+  rust-sokoban-05:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-05 && cargo check
+
+  rust-sokoban-06:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-06 && cargo check
+
+  rust-sokoban-07:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-07 && cargo check
+
+  rust-sokoban-034-copy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-034\ copy && cargo check
