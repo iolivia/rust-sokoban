@@ -21,7 +21,7 @@ In order for specs to be happy we have to tell it ahead of time what components 
 ## Creating entities
 An entity is simply a numeric identifier tied to a set of components. So the way we'll create entities is by simply specifying which components they contain.
 
-This is how the wall entity would look.
+This is how entity creation looks now.
 
 ```rust
 {{#include ../code/rust-sokoban-02/src/main.rs:71:124}}

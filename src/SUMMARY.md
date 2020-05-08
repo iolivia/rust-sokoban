@@ -1,12 +1,12 @@
 # Summary
 
-- [Base game](./01_.md)
-    - [Project setup](./01_setup.md)
-    - [Entity Component System](./01_ecs_.md)
-    - [Components and entities](./02_components.md)
-    - [Rendering system](./02_system.md)
-- [Gameplay](./02_.md)
-    - [Map loading](./03_game.md)
-    - [Moving the player](./03_input.md)
-    - [Pushing boxes](./03_movement.md)
+- [Base game](./c01-00-intro.md)
+    - [Project setup](./c01-01-setup.md)
+    - [Entity Component System](./c01-02-ecs.md)
+    - [Components and entities](./c01-03-entities-components.md)
+    - [Rendering system](./c01-04-rendering.md)
+- [Gameplay](./c02-00-intro.md)
+    - [Map loading](./c02-01-map-loading.md)
+    - [Moving the player](./c02-02-move-player.md)
+    - [Pushing boxes](./c02-03-push-box.md)
 
