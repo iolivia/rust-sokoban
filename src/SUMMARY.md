@@ -9,4 +9,5 @@
     - [Map loading](./c02-01-map-loading.md)
     - [Moving the player](./c02-02-move-player.md)
     - [Pushing boxes](./c02-03-push-box.md)
+    - [Modules](./c02-04-modules.md)
 
