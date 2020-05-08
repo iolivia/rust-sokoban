@@ -1,4 +1,3 @@
-use ggez;
 use ggez::{conf, event, Context, GameResult};
 use std::path;
 

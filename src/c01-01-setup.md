@@ -80,7 +80,7 @@ Hopefully this should be a familiar concept from other languages you might know,
 
 ```rust
 // this will import conf, event, Context and GameResult from the ggez namespace
-{{#include ../code/rust-sokoban-01/src/main.rs:2}}
+{{#include ../code/rust-sokoban-01/src/main.rs:1}}
 ```
 
 ### Declaring a struct
@@ -102,7 +102,7 @@ A trait is much like an interface in other languages, it allows us to associate 
 
 
 ### Functions
-We are also learning how to declare functions in Rust. 
+We are also learning how to declare functions in Rust.
 
 ```rust
 {{#include ../code/rust-sokoban-01/src/main.rs:14:17}}
