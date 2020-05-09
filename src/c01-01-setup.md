@@ -61,6 +61,10 @@ cargo run
     Hello, world!
 ```
 
+> **_NOTE:_** If you're following this guide on Ubuntu, you might need to install a few
+more dependencies. If this step fails and you see errors related to `alsa` and `libudev`, install them by running
+```sudo apt-get install libudev-dev libasound2-dev```.
+
 Now let's actually use ggez in the main file and set up our window. This is just the simplest example of a ggez program that will give us a window with nothing else. Copy and paste this into the `main.rs` file and run again.
 
 ```rust
