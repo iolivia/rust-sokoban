@@ -82,6 +82,17 @@ jobs:
     - name: Build
       run: cd code/rust-sokoban-07 && cargo check
 
+  rust-sokoban-08:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - run: sudo apt-get install libudev-dev libasound2-dev
+    - name: Build
+      run: cd code/rust-sokoban-08 && cargo check
+
   rust-sokoban-034-copy:
     runs-on: ubuntu-latest
     steps:
