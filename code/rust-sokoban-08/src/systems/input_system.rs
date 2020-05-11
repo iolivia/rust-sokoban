@@ -1,6 +1,6 @@
 use crate::components::*;
 use crate::constants::*;
-use crate::resources::InputQueue;
+use crate::resources::{InputQueue, Gameplay};
 use ggez::event::KeyCode;
 use specs::world::Index;
 use specs::{Entities, Join, ReadStorage, System, Write, WriteStorage};
@@ -13,6 +13,7 @@ impl<'a> System<'a> for InputSystem {
     // Data
     type SystemData = (
         Write<'a, InputQueue>,
+        Write<'a, Gameplay>,
         Entities<'a>,
         WriteStorage<'a, Position>,
         ReadStorage<'a, Player>,
@@ -21,7 +22,7 @@ impl<'a> System<'a> for InputSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut input_queue, entities, mut positions, players, movables, immovables) = data;
+        let (mut input_queue, mut gameplay, entities, mut positions, players, movables, immovables) = data;
 
         let mut to_move = Vec::new();
 
@@ -82,6 +83,11 @@ impl<'a> System<'a> for InputSystem {
                     }
                 }
             }
+        }
+
+        // We've just moved, so let's increase the number of moves
+        if to_move.len() > 0 {
+            gameplay.moves_count += 1;
         }
 
         // Now actually move what needs to be moved
