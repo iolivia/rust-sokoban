@@ -18,6 +18,7 @@ jobs:
             rust-sokoban-05,
             rust-sokoban-06,
             rust-sokoban-07,
+            rust-sokoban-08,
             rust-sokoban-034\ copy,
           ]
     steps:
