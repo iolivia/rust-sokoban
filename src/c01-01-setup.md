@@ -20,9 +20,9 @@ $ cargo init rust-sokoban
 After the command has run you should see the following folder structure.
 
 ```
-- Cargo.toml
-- src
--- main.rs
+├── Cargo.toml
+└── src
+    └── main.rs
 ```
 
 We can now run `cargo run` in this directory and we should see something like this.
