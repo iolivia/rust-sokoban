@@ -38,7 +38,7 @@ Hello, world!
 ## Making it a game
 It's time to make this basic hello world project into a game! We are going to use [ggez](https://ggez.rs/) which is one of the popular 2D game engines out there.
 
-Remember that `Cargo.toml` file we saw in our directory? That file is used for dependency management, so if we want to use any Rust crates we'll have to add them there. Let add [ggez](https://github.com/ggez/ggez) as one of our dependencies.
+Remember that `Cargo.toml` file we saw in our directory? That file is used for dependency management, so if we want to use any Rust crates we'll have to add them there. Let's add [ggez](https://github.com/ggez/ggez) as one of our dependencies.
 
 > **_MORE:_**  Read more about Cargo and toml files [here](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html).
 
