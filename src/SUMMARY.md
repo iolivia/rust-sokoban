@@ -10,4 +10,5 @@
     - [Moving the player](./c02-02-move-player.md)
     - [Pushing boxes](./c02-03-push-box.md)
     - [Modules](./c02-04-modules.md)
+    - [Gameplay](./c02-05-gameplay.md)
 
