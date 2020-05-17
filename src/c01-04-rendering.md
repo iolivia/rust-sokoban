@@ -9,7 +9,7 @@ First we'll define the `RenderingSystem` struct, it will need access to the ggez
 {{#include ../code/rust-sokoban-03/src/main.rs:47:49}}
 ```
 
-Now let's implement the System trait for our Rendering system. This doesn't do anything yet, we're just setting up the scaffolding. The definition of SystemData means that we will have access to the storage of position and renderable components, and the fact that it's read storage means we only get immutable access, which is exactly what we need. 
+Now let's implement the System trait for our Rendering system. This doesn't do anything yet, we're just setting up the scaffolding. The definition of SystemData means that we will have access to the storage of position and renderable components, and the fact that it's read storage means we only get immutable access, which is exactly what we need.
 
 ```rust
 {{#include ../code/rust-sokoban-03/src/main.rs:51:57}}
@@ -39,7 +39,7 @@ Here is the implementation of the rendering system. It does a few things:
 
 ## Add some test entities
 
-Let's create some test entities to make sure things are working correctly. 
+Let's create some test entities to make sure things are working correctly.
 
 ```rust
 {{#include ../code/rust-sokoban-03/src/main.rs:179:204}}
