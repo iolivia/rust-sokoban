@@ -11,13 +11,13 @@ cargo 1.40.0
 
 ## Creating a project
 
-Cargo is Rust's package manager, and we will use it to create our game project. Change into a directory where you'd like the game to live and run the following command, with this we will be creating a new project called `rust-sokoban` using cargo. 
+Cargo is Rust's package manager, and we will use it to create our game project. Change into a directory where you'd like the game to live and run the following command, with this we will be creating a new project called `rust-sokoban` using cargo.
 
 ```
 $ cargo init rust-sokoban
 ```
 
-After the command has run you should see the following folder structure.  
+After the command has run you should see the following folder structure.
 
 ```
 - Cargo.toml
@@ -36,7 +36,7 @@ Hello, world!
 ```
 
 ## Making it a game
-It's time to make this basic hello world project into a game! We are going to use [ggez](https://ggez.rs/) which is one of the popular 2D game engines out there. 
+It's time to make this basic hello world project into a game! We are going to use [ggez](https://ggez.rs/) which is one of the popular 2D game engines out there.
 
 Remember that `Cargo.toml` file we saw in our directory? That file is used for dependency management, so if we want to use any Rust crates we'll have to add them there. Let add [ggez](https://github.com/ggez/ggez) as one of our dependencies.
 
@@ -79,7 +79,7 @@ You should see something like this.
 
 Now that we have our basic window, let's delve into the code we have in main and understand the underlying Rust concepts and syntax.
 
-### Importing 
+### Importing
 Hopefully this should be a familiar concept from other languages you might know, but to bring types and namespaces into the scope from our dependent packages (or crates) we simply `use` them.
 
 ```rust
