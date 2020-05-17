@@ -1,5 +1,5 @@
 # Components and entities
-In this section we will create our components, we'll see how to create entities and register everything to keep specs happy. 
+In this section we will create our components, we'll see how to create entities and register everything to keep specs happy.
 
 ## Defining components
 Let's start by defining components. We previously discussed Position, Renderable and Movement - we'll skip movement for now. We will also need some components to identify each entity - for example we will need a Wall component so we can identify an entity as a wall by the fact that it has a wall component.
