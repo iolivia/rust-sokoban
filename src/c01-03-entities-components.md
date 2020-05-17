@@ -58,3 +58,5 @@ Finally, let's tie everything together. We'll need to create a specs::World obje
 ```rust
 {{#include ../code/rust-sokoban-02/src/main.rs}}
 ```
+
+> **_NOTE:_** Running now will report some warnings in the console about "unused import(s)" and "field is never read". Don't worry about these just yet. We'll fix them in the coming chapters.
