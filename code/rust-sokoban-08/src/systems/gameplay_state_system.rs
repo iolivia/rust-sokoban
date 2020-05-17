@@ -12,7 +12,7 @@ impl<'a> System<'a> for GamePlayStateSystem {
     // Data
     type SystemData = (
         Write<'a, Gameplay>,
-        WriteStorage<'a, Position>,
+        ReadStorage<'a, Position>,
         ReadStorage<'a, Box>,
         ReadStorage<'a, BoxSpot>,
     );
