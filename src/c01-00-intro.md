@@ -1,5 +1,5 @@
 # Chapter 1: Base game
-Welcome to **Rust Sokoban**! 
+Welcome to **Rust Sokoban**!
 
 ## What is Rust Sokoban?
 Rust Sokoban is an extended tutorial on making a [Sokoban](https://en.wikipedia.org/wiki/Sokoban) copy in Rust. We'll use an existing 2D game engine, pre-made assets and by the end we'll have a fully working game.
