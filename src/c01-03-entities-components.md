@@ -40,7 +40,6 @@ You might have noticed we are referencing the assets we will be using above in t
 Let's add the images to our project. We'll add a `resources` folder which will hold the images and any other configuration or assets we might have. It should look like this.
 
 ```
-├── Cargo.toml
 ├── resources
 │   └── images
 │       ├── box.png
@@ -48,8 +47,9 @@ Let's add the images to our project. We'll add a `resources` folder which will h
 │       ├── floor.png
 │       ├── player.png
 │       └── wall.png
-└── src
-    └── main.rs
+├── src
+│   └── main.rs
+└── Cargo.toml
 ```
 
 ## World creation
