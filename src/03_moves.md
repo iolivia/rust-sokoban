@@ -1,8 +1,8 @@
 # Counting moves
 
-Now that the player can win, we want to count how many moves it took them to win. This will allow us to have a leaderboard later if we choose to and give the player an indication of how well they did based on the minimum number of moves that lead to a win. 
+Now that the player can win, we want to count how many moves it took them to win. This will allow us to have a leaderboard later if we choose to and give the player an indication of how well they did based on the minimum number of moves that lead to a win.
 
-We could simply count every time a key has been pressed. But that doesn't quite work because then we'll be counting also when the player tries to move, but hits a wall. So what we really want is to count when our moving logic decides the player must move. 
+We could simply count every time a key has been pressed. But that doesn't quite work because then we'll be counting also when the player tries to move, but hits a wall. So what we really want is to count when our moving logic decides the player must move.
 
 Let's first add the number of moves as a field to our gameplay object.
 
@@ -21,10 +21,10 @@ Now let's add the increment to the number of moves into the input system.
 impl<'a> System<'a> for InputSystem {
     // Data
     type SystemData = (
-        Write<'a, InputQueue>, 
+        Write<'a, InputQueue>,
         Write<'a, Gameplay>,  // added gameplay here
-        Entities<'a>, 
-        WriteStorage<'a, Position>, 
+        Entities<'a>,
+        WriteStorage<'a, Position>,
         ReadStorage<'a, Player>,
         ReadStorage<'a, Movable>,
         ReadStorage<'a, Immovable>,
@@ -33,19 +33,19 @@ impl<'a> System<'a> for InputSystem {
     fn run(&mut self, data: Self::SystemData) {
 
         let (
-            mut input_queue, 
+            mut input_queue,
             mut gameplay, // added gameplay here
-            entities, 
-            mut positions, 
-            players, 
-            movables, 
+            entities,
+            mut positions,
+            players,
+            movables,
             immovables
         ) = data;
-        
+
         let mut to_move = Vec::new();
-        
+
         // ....
-        
+
         // We've just moved, so let's increase the number of moves
         if to_move.len() > 0 {
             gameplay.moves_count += 1;
@@ -66,7 +66,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
     type SystemData = (
         Read<'a, Gameplay>,
-        ReadStorage<'a, Position>, 
+        ReadStorage<'a, Position>,
         ReadStorage<'a, Renderable>
     );
 
@@ -75,7 +75,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
 
         // ...
 
-        // Render any text 
+        // Render any text
         self.draw_text(&gameplay.state.to_string(), 525.0, 80.0);
         self.draw_text(&gameplay.moves_count.to_string(), 525.0, 100.0); // render the moves count
 
@@ -107,7 +107,7 @@ use ggez::graphics::Color;
 use ggez::nalgebra as na;
 use ggez::{conf, event, Context, GameResult};
 use specs::{
-    join::Join, Builder, Component, ReadStorage, RunNow, 
+    join::Join, Builder, Component, ReadStorage, RunNow,
     System, VecStorage, World, WorldExt, Write, Read
 };
 use specs::world::Index;
@@ -186,8 +186,8 @@ impl Display for GameplayState {
 }
 
 impl Default for GameplayState {
-    fn default() -> Self { 
-        Self::Playing 
+    fn default() -> Self {
+        Self::Playing
     }
 }
 
@@ -225,7 +225,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
     type SystemData = (
         Read<'a, Gameplay>,
-        ReadStorage<'a, Position>, 
+        ReadStorage<'a, Position>,
         ReadStorage<'a, Renderable>
     );
 
@@ -248,13 +248,13 @@ impl<'a> System<'a> for RenderingSystem<'a> {
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
             let x = (MAP_OFFSET_X + position.x) as f32 * TILE_WIDTH;
             let y = (MAP_OFFSET_Y + position.y) as f32 * TILE_WIDTH;
-            
+
             // draw
             let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 
-        // Render any text 
+        // Render any text
         self.draw_text(&gameplay.state.to_string(), 525.0, 80.0);
         self.draw_text(&gameplay.moves_count.to_string(), 525.0, 100.0);
 
@@ -270,10 +270,10 @@ pub struct InputSystem {}
 impl<'a> System<'a> for InputSystem {
     // Data
     type SystemData = (
-        Write<'a, InputQueue>, 
-        Write<'a, Gameplay>, 
-        Entities<'a>, 
-        WriteStorage<'a, Position>, 
+        Write<'a, InputQueue>,
+        Write<'a, Gameplay>,
+        Entities<'a>,
+        WriteStorage<'a, Position>,
         ReadStorage<'a, Player>,
         ReadStorage<'a, Movable>,
         ReadStorage<'a, Immovable>,
@@ -282,17 +282,17 @@ impl<'a> System<'a> for InputSystem {
     fn run(&mut self, data: Self::SystemData) {
 
         let (
-            mut input_queue, 
+            mut input_queue,
             mut gameplay,
-            entities, 
-            mut positions, 
-            players, 
-            movables, 
+            entities,
+            mut positions,
+            players,
+            movables,
             immovables
         ) = data;
-        
+
         let mut to_move = Vec::new();
-        
+
         for (position, _player) in (&positions, &players).join() {
             // Get the first key pressed
             if let Some(key) = input_queue.keys_pressed.pop() {
@@ -380,7 +380,7 @@ pub struct GameplayStateSystem {}
 impl<'a> System<'a> for GameplayStateSystem {
     // Data
     type SystemData = (
-        Write<'a, Gameplay>, 
+        Write<'a, Gameplay>,
         ReadStorage<'a, Position>,
         ReadStorage<'a, Box>,
         ReadStorage<'a, BoxSpot>,
@@ -446,7 +446,7 @@ impl event::EventHandler for Game {
             gss.run_now(&self.world);
         }
 
-        
+
         Ok(())
     }
 
