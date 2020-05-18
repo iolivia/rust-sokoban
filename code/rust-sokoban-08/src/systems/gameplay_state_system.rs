@@ -1,4 +1,4 @@
-use specs::{Join, ReadStorage, System, Write, WriteStorage};
+use specs::{Join, ReadStorage, System, Write};
 use std::collections::HashMap;
 
 use crate::{
@@ -6,9 +6,9 @@ use crate::{
     resources::{Gameplay, GameplayState},
 };
 
-pub struct GamePlayStateSystem {}
+pub struct GameplayStateSystem {}
 
-impl<'a> System<'a> for GamePlayStateSystem {
+impl<'a> System<'a> for GameplayStateSystem {
     // Data
     type SystemData = (
         Write<'a, Gameplay>,

@@ -31,7 +31,7 @@ impl event::EventHandler for Game {
 
         // Run gameplay state system
         {
-            let mut gss = GamePlayStateSystem {};
+            let mut gss = GameplayStateSystem {};
             gss.run_now(&self.world);
         }
 
