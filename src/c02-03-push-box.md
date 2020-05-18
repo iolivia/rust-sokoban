@@ -43,7 +43,7 @@ A few observations we can make based on this:
 * a chain of movables with an immovable spot cannot move
 * even though all examples were moving to the right, the rules should generalize for any movement and the key pressed should just influence how we find the chain
 
-So given this, let's start implementing this logic. Let's thing about the logical pieces we need. Some initial ideas:
+So given this, let's start implementing this logic. Let's think about the logical pieces we need. Some initial ideas:
 1. **find all the movable and immovable entities** - this is so we can figure out if they are affected by the movement
 2. **figure out which way to move based on a key** - we've kind of figured this out in the previous section already, basically a bunch of +1/-1 operations based on the key enum
 3. **iterate through all positions between the player and the end of the map** on the correct axis based on the direction - for example, if we press right, we need to go from player.x to map_width, if we press up we need to go from 0 to player.y
