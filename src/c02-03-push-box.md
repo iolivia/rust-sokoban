@@ -3,7 +3,7 @@
 In the previous chapter we got our player moving, but he is going through walls and boxes, not really interacting with the environment. In this section we'll add some logic for more intelligent player movement.
 
 ## Movement components
-First, we need to make our code slightly more generic. If you remember the previous chapter we were operating on players to figure out where we should move them, but we'll also need to move boxes. Also in the future we might want to introduce another movable kind of object, so let's try to build something with that in mind. What we'll do in true ECS spirit we will use a marker component to tell us which entities are movable and which aren't. For example, players and boxes are movable, while walls are immovable. Box spots are kind of irrelevant here because they do not move, but they also shouldn't affect the movement of players or boxes, so box spots will not have either of these components. 
+First, we need to make our code slightly more generic. If you remember the previous chapter we were operating on players to figure out where we should move them, but we'll also need to move boxes. Also in the future we might want to introduce another movable kind of object, so let's try to build something with that in mind. What we'll do in true ECS spirit we will use a marker component to tell us which entities are movable and which aren't. For example, players and boxes are movable, while walls are immovable. Box spots are kind of irrelevant here because they do not move, but they also shouldn't affect the movement of players or boxes, so box spots will not have either of these components.
 
 Here are our two new components, nothing too new apart from two minor things:
 * we are using `NullStorage` which is slightly more efficient than using `VecStorage` since these two components will not have any fields, and are just used as markers
@@ -49,7 +49,7 @@ So given this, let's start implementing this logic. Let's thing about the logica
 3. **iterate through all positions between the player and the end of the map** on the correct axis based on the direction - for example, if we press right, we need to go from player.x to map_width, if we press up we need to go from 0 to player.y
 4. **for every tile in this sequence** we need to:
     * if the tile is movable, continue and remember this tile
-    * if the tile is not movable, stop and don't move anything 
+    * if the tile is not movable, stop and don't move anything
     * if the tile is neither movable or immovable, move all the tiles we've remembered so far
 
 Here is the new implementation of the input systems, it's a bit long but hopefully it makes sense.
