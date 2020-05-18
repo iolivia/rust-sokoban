@@ -86,7 +86,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
 }
 ```
 
-Here's how it looks on the screen. Notice how when we try to go through the wall on the right the number of moves doesn't go up because we only move if movement has actually happenned not only if a key was pressed.
+Here's how it looks on the screen. Notice how when we try to go through the wall on the right the number of moves doesn't go up because we only move if movement has actually happened not only if a key was pressed.
 
 ![Counting moves](./images/moves.gif)
 
