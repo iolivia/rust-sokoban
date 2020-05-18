@@ -29,7 +29,7 @@ And here is the implementation of load map.
 {{#include ../code/rust-sokoban-04/src/main.rs:195:234}}
 ```
 
-The most interesting Rust concept here is probably the `match`. We are using the basic feature of pattern matching here, we are simply matching on the values of each token found in the map config, but we could do a lot of more advanced conditions or types of patterns. 
+The most interesting Rust concept here is probably the `match`. We are using the basic feature of pattern matching here, we are simply matching on the values of each token found in the map config, but we could do a lot of more advanced conditions or types of patterns.
 
 > **_MORE:_**  Read more about pattern matching [here](https://doc.rust-lang.org/book/ch06-02-match.html).
 
