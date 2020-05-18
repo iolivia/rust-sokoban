@@ -5,18 +5,25 @@ The main file is getting quite big and as you can imagine, that will not be very
 For now, let's aim for this folder structure. Eventually as we get more components and systems, we'll probably want more than one file, but this should be a pretty good place to start.
 
 ```
-- Cargo.toml
-- src
--- entities.rs
--- components.rs
--- systems
---- rendering_system.rs
---- input_system.rs
---- mod.rs
--- constants.rs
--- resources.rs
--- map.rs
--- main.rs
+├── Cargo.toml
+├── resources
+│   └── images
+│       ├── box.png
+│       ├── box_spot.png
+│       ├── floor.png
+│       ├── player.png
+│       └── wall.png
+└── src
+    ├── components.rs
+    ├── constants.rs
+    ├── entities.rs
+    ├── main.rs
+    ├── map.rs
+    ├── resources.rs
+    └── systems
+        ├── input_system.rs
+        ├── mod.rs
+        └── rendering_system.rs
 ```
 
 > **_MORE:_**  Read more about modules and managing growing projects [here](https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html).
