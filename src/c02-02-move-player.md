@@ -11,7 +11,7 @@ Let's start listening to key events. First we'll bring a few more modules into s
 {{#include ../code/rust-sokoban-05/src/main.rs:1:11}}
 ```
 
-Then, we'll ad this code inside the `event::EventHandler` implementation block for our Game:
+Then, we'll add this code inside the `event::EventHandler` implementation block for our Game:
 
 ```rust
 {{#include ../code/rust-sokoban-05/src/main.rs:155:162}}
