@@ -19,7 +19,6 @@ jobs:
             rust-sokoban-06,
             rust-sokoban-07,
             rust-sokoban-08,
-            rust-sokoban-034\ copy,
           ]
     steps:
       - uses: actions/checkout@v2
