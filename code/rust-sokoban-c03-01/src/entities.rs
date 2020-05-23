@@ -24,26 +24,26 @@ pub fn create_floor(world: &mut World, position: Position) {
         .build();
 }
 
-pub fn create_box(world: &mut World, position: Position) {
+pub fn create_box(world: &mut World, position: Position, colour: BoxColour) {
     world
         .create_entity()
         .with(Position { z: 10, ..position })
         .with(Renderable {
-            path: "/images/box.png".to_string(),
+            path: format!("/images/box_{}.png", colour.to_string()).to_string(),
         })
-        .with(Box {})
+        .with(Box { colour })
         .with(Movable)
         .build();
 }
 
-pub fn create_box_spot(world: &mut World, position: Position) {
+pub fn create_box_spot(world: &mut World, position: Position, colour: BoxColour) {
     world
         .create_entity()
         .with(Position { z: 9, ..position })
         .with(Renderable {
-            path: "/images/box_spot.png".to_string(),
+            path: format!("/images/box_spot_{}.png", colour.to_string()).to_string(),
         })
-        .with(BoxSpot {})
+        .with(BoxSpot { colour })
         .build();
 }
 
