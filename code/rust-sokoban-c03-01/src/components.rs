@@ -25,6 +25,7 @@ pub struct Wall {}
 #[storage(VecStorage)]
 pub struct Player {}
 
+#[derive(PartialEq, Eq)]
 pub enum BoxColour {
     Red,
     Blue,
