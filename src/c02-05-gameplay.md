@@ -22,7 +22,7 @@ not associated with a specific entity. Let's start by defining a `Gameplay` reso
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-08/src/resources.rs:38:43}}
+{{#include ../code/rust-sokoban-c02-05/src/resources.rs:38:43}}
 ```
 
 `Gameplay` has two fields: `state` and `moves_count`. These are used to track the
@@ -31,7 +31,7 @@ the number of moves made.  `state` is described by an `enum`, defined like so:
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-08/src/resources.rs:17:20}}
+{{#include ../code/rust-sokoban-c02-05/src/resources.rs:17:20}}
 ```
 
 The eagle-eyed reader will note that we used a macro to derive the `Default` trait
@@ -43,14 +43,14 @@ automatically, we must implement `Default` for `Gameplay` ourselves.
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-08/src/resources.rs:32:36}}
+{{#include ../code/rust-sokoban-c02-05/src/resources.rs:32:36}}
 ```
 
 Having defined the resource, let's register it with the world:
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-08/src/resources.rs:12:15}}
+{{#include ../code/rust-sokoban-c02-05/src/resources.rs:12:15}}
 ```
 
 Now, when the game is started, the `Gameplay` resource will look like this:
@@ -73,7 +73,7 @@ definition.
 
 ```rust
 // input_system.rs
-{{#include ../code/rust-sokoban-08/src/systems/input_system.rs:0:25}}
+{{#include ../code/rust-sokoban-c02-05/src/systems/input_system.rs:0:25}}
         ...
 ```
 
@@ -84,7 +84,7 @@ counter.
 ```rust
 // input_system.rs
         ...
-{{#include ../code/rust-sokoban-08/src/systems/input_system.rs:87:105}}
+{{#include ../code/rust-sokoban-c02-05/src/systems/input_system.rs:87:105}}
 ```
 
 ## Gameplay System
@@ -108,7 +108,7 @@ Otherwise, the game is still in play.
 
 ```rust
 // gameplay_state_system.rs
-{{#include ../code/rust-sokoban-08/src/systems/gameplay_state_system.rs::}}
+{{#include ../code/rust-sokoban-c02-05/src/systems/gameplay_state_system.rs::}}
 ```
 
 ## Gameplay UI
@@ -124,7 +124,7 @@ to render "Playing" or "Won".
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-08/src/resources.rs:21:30}}
+{{#include ../code/rust-sokoban-c02-05/src/resources.rs:21:30}}
 ```
 
 Next, we'll add a `draw_text` method to `RenderingSystem`, so it can print
@@ -132,7 +132,7 @@ Next, we'll add a `draw_text` method to `RenderingSystem`, so it can print
 
 ```rust
 // rendering_systems.rs
-{{#include ../code/rust-sokoban-08/src/systems/rendering_system.rs:16:32}}
+{{#include ../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:16:32}}
 ```
 
 ...and then we'll add the `Gameplay` resource to `RenderingSystem` so we can
@@ -141,7 +141,7 @@ resource.
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-08/src/systems/rendering_system.rs:35:71}}
+{{#include ../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:35:71}}
 ```
 
 At this point, the game will provide basic feedback to the user:
@@ -155,4 +155,4 @@ Here's how it looks.
 
 There are plenty of other enhancements that can be made!
 
-You can see the full code in this example [here](https://github.com/iolivia/rust-book/tree/master/code/rust-sokoban-08).
+You can see the full code in this example [here](https://github.com/iolivia/rust-book/tree/master/code/rust-sokoban-c02-05).

@@ -12,9 +12,9 @@ Here are our two new components, nothing too new apart from two minor things:
 
 
 ```rust
-{{#include ../code/rust-sokoban-06/src/main.rs:55:62}}
+{{#include ../code/rust-sokoban-c02-03/src/main.rs:55:62}}
 
-{{#include ../code/rust-sokoban-06/src/main.rs:250:259}}
+{{#include ../code/rust-sokoban-c02-03/src/main.rs:250:259}}
 ```
 
 Next, we'll add:
@@ -23,7 +23,7 @@ Next, we'll add:
 * do nothing with floors and box spots (as mentioned before they should not be part of our movement/collision system since they are inconsequential to the movement)
 
 ```rust
-{{#include ../code/rust-sokoban-06/src/main.rs:266:321}}
+{{#include ../code/rust-sokoban-c02-03/src/main.rs:266:321}}
 ```
 
 ## Movement requirements
@@ -55,7 +55,7 @@ So given this, let's start implementing this logic. Let's think about the logica
 Here is the new implementation of the input systems, it's a bit long but hopefully it makes sense.
 
 ```rust
-{{#include ../code/rust-sokoban-06/src/main.rs:113:201}}
+{{#include ../code/rust-sokoban-c02-03/src/main.rs:113:201}}
 ```
 
 Now if we run the code, we'll see it actually works! We can't go through walls anymore and we can push the box and it stops when it gets to the wall.
@@ -65,5 +65,5 @@ Now if we run the code, we'll see it actually works! We can't go through walls a
 Full code below.
 
 ```rust
-{{#include ../code/rust-sokoban-06/src/main.rs}}
+{{#include ../code/rust-sokoban-c02-03/src/main.rs}}
 ```

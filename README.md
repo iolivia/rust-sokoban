@@ -21,7 +21,7 @@ $ mdbook serve
 
 ### Run the code locally
 ```
-$ cd code/rust-sokoban-01
+$ cd code/rust-sokoban-c01-01
 $ cargo run --release
 ```
 

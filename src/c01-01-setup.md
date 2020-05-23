@@ -68,7 +68,7 @@ more dependencies. If this step fails and you see errors related to `alsa` and `
 Now let's actually use ggez in the main file and set up our window. This is just the simplest example of a ggez program that will give us a window with nothing else. Copy and paste this into the `main.rs` file and run again.
 
 ```rust
-{{#include ../code/rust-sokoban-01/src/main.rs}}
+{{#include ../code/rust-sokoban-c01-01/src/main.rs}}
 ```
 
 You should see something like this.
@@ -84,12 +84,12 @@ Hopefully this should be a familiar concept from other languages you might know,
 
 ```rust
 // this will import conf, event, Context and GameResult from the ggez namespace
-{{#include ../code/rust-sokoban-01/src/main.rs:1}}
+{{#include ../code/rust-sokoban-c01-01/src/main.rs:1}}
 ```
 
 ### Declaring a struct
 ```rust
-{{#include ../code/rust-sokoban-01/src/main.rs:4:7}}
+{{#include ../code/rust-sokoban-c01-01/src/main.rs:4:7}}
 ```
 
 > **_MORE:_**  Read more about structs [here](https://doc.rust-lang.org/book/ch05-00-structs.html).
@@ -99,7 +99,7 @@ Hopefully this should be a familiar concept from other languages you might know,
 A trait is much like an interface in other languages, it allows us to associate some behaviour with a particular type. In this case we want to implement the EventHandler trait and add that behaviour to our Game struct.
 
 ```rust
-{{#include ../code/rust-sokoban-01/src/main.rs:9:23}}
+{{#include ../code/rust-sokoban-c01-01/src/main.rs:9:23}}
 ```
 
 > **_MORE:_**  Read more about traits [here](https://doc.rust-lang.org/book/ch10-02-traits.html).
@@ -109,7 +109,7 @@ A trait is much like an interface in other languages, it allows us to associate 
 We are also learning how to declare functions in Rust.
 
 ```rust
-{{#include ../code/rust-sokoban-01/src/main.rs:14:17}}
+{{#include ../code/rust-sokoban-c01-01/src/main.rs:14:17}}
 ```
 
 You might be wondering what the self is, in this case self means that the update function is a member function, it belongs to an instance of the game struct and it cannot be called in a static context. You might also be wondering what the `&mut` is. Mut means that the update function is allowed to make changes to the game struct.

@@ -8,14 +8,14 @@ This should hopefully be straight-forward, the position components stores the x,
 
 
 ```rust
-{{#include ../code/rust-sokoban-02/src/main.rs:13:42}}
+{{#include ../code/rust-sokoban-c01-03/src/main.rs:13:42}}
 ```
 
 ## Registering components
 In order for specs to be happy we have to tell it ahead of time what components we will be using. Let's create a function to register components into specs.
 
 ```rust
-{{#include ../code/rust-sokoban-02/src/main.rs:61:69}}
+{{#include ../code/rust-sokoban-c01-03/src/main.rs:61:69}}
 ```
 
 ## Creating entities
@@ -24,7 +24,7 @@ An entity is simply a numeric identifier tied to a set of components. So the way
 This is how entity creation looks now.
 
 ```rust
-{{#include ../code/rust-sokoban-02/src/main.rs:71:124}}
+{{#include ../code/rust-sokoban-c01-03/src/main.rs:71:124}}
 ```
 
 ## Assets
@@ -56,7 +56,7 @@ Let's add the images to our project. We'll add a `resources` folder which will h
 Finally, let's tie everything together. We'll need to create a specs::World object, we'll add that to our Game struct and we will initialize it first thing in our main. Here is the full code, running now should render the same blank window, but we've made tremendous progress in actually setting up our game components and entities! Next up, we'll get to rendering so we'll finally see something on screen!
 
 ```rust
-{{#include ../code/rust-sokoban-02/src/main.rs}}
+{{#include ../code/rust-sokoban-c01-03/src/main.rs}}
 ```
 
 > **_NOTE:_** Running now will report some warnings in the console about "unused import(s)" and "field is never read". Don't worry about these just yet. We'll fix them in the coming chapters.
