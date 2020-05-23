@@ -1,22 +1,29 @@
 # Modules
 
-The main file is getting quite big and as you can imagine, that will not be very sustainable as our project grows. Luckily, Rust has the concept of modules which will alow us to nicely split out functionality based on concerns into separate files. 
+The main file is getting quite big and as you can imagine, that will not be very sustainable as our project grows. Luckily, Rust has the concept of modules which will alow us to nicely split out functionality based on concerns into separate files.
 
 For now, let's aim for this folder structure. Eventually as we get more components and systems, we'll probably want more than one file, but this should be a pretty good place to start.
 
 ```
-- Cargo.toml
-- src
--- entities.rs
--- components.rs
--- systems
---- rendering_system.rs
---- input_system.rs
---- mod.rs
--- constants.rs
--- resources.rs
--- map.rs
--- main.rs
+├── resources
+│   └── images
+│       ├── box.png
+│       ├── box_spot.png
+│       ├── floor.png
+│       ├── player.png
+│       └── wall.png
+├── src
+│   ├── systems
+│   │   ├── input_system.rs
+│   │   ├── mod.rs
+│   │   └── rendering_system.rs
+│   ├── components.rs
+│   ├── constants.rs
+│   ├── entities.rs
+│   ├── main.rs
+│   ├── map.rs
+│   └── resources.rs
+└── Cargo.toml
 ```
 
 > **_MORE:_**  Read more about modules and managing growing projects [here](https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html).
@@ -58,7 +65,7 @@ Now for the map loading.
 
 Finally, we'll move the systems code into their own files (RenderingSystem to rendering_system.rs and InputSystem to input_system.rs). It should just be a copy paste from main with some import removals, so go ahead and do that.
 
-Now the interesting thing about systems is that it's a folder with multiple files inside. If we do nothing else and try to use `RenderingSystem` or `InputSystem` in main we will get some compilation failures. We will have to add a `mod.rs` file in the `systems` folder and tell Rust what we want to export out of this folder. All this bit is doing is it's telling Rust we want the outside world (the world out of this folder) to be able to access RenderingSystem and InputSystem types. 
+Now the interesting thing about systems is that it's a folder with multiple files inside. If we do nothing else and try to use `RenderingSystem` or `InputSystem` in main we will get some compilation failures. We will have to add a `mod.rs` file in the `systems` folder and tell Rust what we want to export out of this folder. All this bit is doing is it's telling Rust we want the outside world (the world out of this folder) to be able to access RenderingSystem and InputSystem types.
 
 
 ```rust

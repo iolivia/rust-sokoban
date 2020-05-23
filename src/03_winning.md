@@ -1,9 +1,9 @@
 # Winning
 
-Now that we can push boxes around, the final thing to make this a proper game is to allow you to win. Winning is simply placing all the boxes on their spots. 
+Now that we can push boxes around, the final thing to make this a proper game is to allow you to win. Winning is simply placing all the boxes on their spots.
 
 ## Gameplay resource
-Let's add a game state as a resource and display it on the screen. For now we can either be playing or won. 
+Let's add a game state as a resource and display it on the screen. For now we can either be playing or won.
 
 ```rust
 pub enum GameplayState {
@@ -16,8 +16,8 @@ We will also implement a default value for gameplay state which will be Playing.
 
 ```rust
 impl Default for GameplayState {
-    fn default() -> Self { 
-        Self::Playing 
+    fn default() -> Self {
+        Self::Playing
     }
 }
 ```
@@ -70,13 +70,13 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
     type SystemData = (
         Read<'a, Gameplay>, // add this here
-        ReadStorage<'a, Position>, 
+        ReadStorage<'a, Position>,
         ReadStorage<'a, Renderable>
     );
 
     fn run(&mut self, data: Self::SystemData) {
         let (gameplay, positions, renderables) = data;
-        // add gameplay here 
+        // add gameplay here
 
         // .......
         for (position, renderable) in rendering_data.iter() {
@@ -132,7 +132,7 @@ pub struct GameplayStateSystem {}
 impl<'a> System<'a> for GameplayStateSystem {
     // Data
     type SystemData = (
-        Write<'a, Gameplay>, 
+        Write<'a, Gameplay>,
         ReadStorage<'a, Position>,
         ReadStorage<'a, Box>,
         ReadStorage<'a, BoxSpot>,
@@ -166,7 +166,7 @@ fn update(&mut self, _context: &mut Context) -> GameResult {
         gss.run_now(&self.world);
     }
 
-    
+
     Ok(())
 }
 ```
@@ -228,7 +228,7 @@ use ggez::graphics::Color;
 use ggez::nalgebra as na;
 use ggez::{conf, event, Context, GameResult};
 use specs::{
-    join::Join, Builder, Component, ReadStorage, RunNow, 
+    join::Join, Builder, Component, ReadStorage, RunNow,
     System, VecStorage, World, WorldExt, Write, Read
 };
 use specs::world::Index;
@@ -307,8 +307,8 @@ impl Display for GameplayState {
 }
 
 impl Default for GameplayState {
-    fn default() -> Self { 
-        Self::Playing 
+    fn default() -> Self {
+        Self::Playing
     }
 }
 
@@ -345,7 +345,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
     type SystemData = (
         Read<'a, Gameplay>,
-        ReadStorage<'a, Position>, 
+        ReadStorage<'a, Position>,
         ReadStorage<'a, Renderable>
     );
 
@@ -368,13 +368,13 @@ impl<'a> System<'a> for RenderingSystem<'a> {
             let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
             let x = (MAP_OFFSET_X + position.x) as f32 * TILE_WIDTH;
             let y = (MAP_OFFSET_Y + position.y) as f32 * TILE_WIDTH;
-            
+
             // draw
             let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 
-        // Render any text 
+        // Render any text
         self.draw_text(&gameplay.state.to_string(), 525.0, 80.0);
 
         // Finally, present the context, this will actually display everything
@@ -389,9 +389,9 @@ pub struct InputSystem {}
 impl<'a> System<'a> for InputSystem {
     // Data
     type SystemData = (
-        Write<'a, InputQueue>, 
-        Entities<'a>, 
-        WriteStorage<'a, Position>, 
+        Write<'a, InputQueue>,
+        Entities<'a>,
+        WriteStorage<'a, Position>,
         ReadStorage<'a, Player>,
         ReadStorage<'a, Movable>,
         ReadStorage<'a, Immovable>,
@@ -400,16 +400,16 @@ impl<'a> System<'a> for InputSystem {
     fn run(&mut self, data: Self::SystemData) {
 
         let (
-            mut input_queue, 
-            entities, 
-            mut positions, 
-            players, 
-            movables, 
+            mut input_queue,
+            entities,
+            mut positions,
+            players,
+            movables,
             immovables
         ) = data;
-        
+
         let mut to_move = Vec::new();
-        
+
         for (position, _player) in (&positions, &players).join() {
             // Get the first key pressed
             if let Some(key) = input_queue.keys_pressed.pop() {
@@ -492,7 +492,7 @@ pub struct GameplayStateSystem {}
 impl<'a> System<'a> for GameplayStateSystem {
     // Data
     type SystemData = (
-        Write<'a, Gameplay>, 
+        Write<'a, Gameplay>,
         ReadStorage<'a, Position>,
         ReadStorage<'a, Box>,
         ReadStorage<'a, BoxSpot>,
@@ -558,7 +558,7 @@ impl event::EventHandler for Game {
             gss.run_now(&self.world);
         }
 
-        
+
         Ok(())
     }
 

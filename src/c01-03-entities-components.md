@@ -1,5 +1,5 @@
 # Components and entities
-In this section we will create our components, we'll see how to create entities and register everything to keep specs happy. 
+In this section we will create our components, we'll see how to create entities and register everything to keep specs happy.
 
 ## Defining components
 Let's start by defining components. We previously discussed Position, Renderable and Movement - we'll skip movement for now. We will also need some components to identify each entity - for example we will need a Wall component so we can identify an entity as a wall by the fact that it has a wall component.
@@ -40,17 +40,16 @@ You might have noticed we are referencing the assets we will be using above in t
 Let's add the images to our project. We'll add a `resources` folder which will hold the images and any other configuration or assets we might have. It should look like this.
 
 ```
-- Cargo.toml
-- .gitignore
-- src
-- resources
--- images
---- floor.png
---- wall.png
---- player.png
---- box.png
---- box_spot.png
--- main.rs
+├── resources
+│   └── images
+│       ├── box.png
+│       ├── box_spot.png
+│       ├── floor.png
+│       ├── player.png
+│       └── wall.png
+├── src
+│   └── main.rs
+└── Cargo.toml
 ```
 
 ## World creation
@@ -59,3 +58,5 @@ Finally, let's tie everything together. We'll need to create a specs::World obje
 ```rust
 {{#include ../code/rust-sokoban-02/src/main.rs}}
 ```
+
+> **_NOTE:_** Running now will report some warnings in the console about "unused import(s)" and "field is never read". Don't worry about these just yet. We'll fix them in the coming chapters.

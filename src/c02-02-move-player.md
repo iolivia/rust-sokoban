@@ -5,7 +5,13 @@ It wouldn't be a game if we couldn't move the player, would it? In this section 
 ## Input events
 The first step for making our player move is to start listening to input events. If we take a quick look at the [ggez input example](https://github.com/ggez/ggez/blob/master/examples/input_test.rs#L59) we can see we can subscribe to all sort of mouse and keyboard related events, for now we probably only want `key_down_event`.
 
-Let's start listening to key events.
+Let's start listening to key events. First we'll bring a few more modules into scope:
+
+```rust
+{{#include ../code/rust-sokoban-05/src/main.rs:1:11}}
+```
+
+Then, we'll add this code inside the `event::EventHandler` implementation block for our Game:
 
 ```rust
 {{#include ../code/rust-sokoban-05/src/main.rs:155:162}}
