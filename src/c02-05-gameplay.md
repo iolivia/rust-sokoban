@@ -148,6 +148,11 @@ At this point, the game will provide basic feedback to the user:
 - Counts the number of steps
 - Tells the player when they have won
 
+Here's how it looks.
+
+![Sokoban play](./images/moves.gif)
+
+
 There are plenty of other enhancements that can be made!
 
 You can see the full code in this example [here](https://github.com/iolivia/rust-book/tree/master/code/rust-sokoban-08).
