@@ -11,4 +11,6 @@
     - [Pushing boxes](./c02-03-push-box.md)
     - [Modules](./c02-04-modules.md)
     - [Gameplay](./c02-05-gameplay.md)
+- [Advanced gameplay](./c03-00-intro.md)
+    - [Coloured boxes](./c03-01-colours.md)
 
