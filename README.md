@@ -1,4 +1,4 @@
-[![cargo-check](https://github.com/iolivia/rust-book/workflows/Code-samples-compile/badge.svg?branch=master)](https://github.com/iolivia/rust-book/actions?query=workflow%3ACode-samples-compile+branch%3Amaster)
+[![cargo-check](https://github.com/iolivia/rust-book/workflows/Code%20Samples%20Compile/badge.svg?branch=master)](https://github.com/iolivia/rust-book/actions?query=workflow%3ACode%20Samples%20Compile+branch%3Amaster)
 
 # Rust sokoban
 
