@@ -11,14 +11,15 @@ jobs:
       matrix:
         sample_path:
           [
-            rust-sokoban-01,
-            rust-sokoban-02,
-            rust-sokoban-03,
-            rust-sokoban-04,
-            rust-sokoban-05,
-            rust-sokoban-06,
-            rust-sokoban-07,
-            rust-sokoban-034\ copy,
+            rust-sokoban-c01-01,
+            rust-sokoban-c01-03,
+            rust-sokoban-c01-04,
+            rust-sokoban-c02-01,
+            rust-sokoban-c02-02,
+            rust-sokoban-c02-03,
+            rust-sokoban-c02-04,
+            rust-sokoban-c02-05,
+            rust-sokoban-c03-01,
           ]
     steps:
       - uses: actions/checkout@v2
