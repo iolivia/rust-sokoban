@@ -20,6 +20,7 @@ jobs:
             rust-sokoban-c02-04,
             rust-sokoban-c02-05,
             rust-sokoban-c03-01,
+            rust-sokoban-c03-02,
           ]
     steps:
       - uses: actions/checkout@v2
