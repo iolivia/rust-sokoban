@@ -32,9 +32,6 @@ impl RenderingSystem<'_> {
     }
 
     pub fn get_image(&mut self, renderable: &Renderable, delta: Duration) -> Image {
-        println!("delta MS {}", delta.as_millis());
-        println!("renderable.paths.len() {}", renderable.paths.len());
-
         let image_index = if renderable.paths.len() == 1 {
             // we only have one image, so we just return that
             0
@@ -45,13 +42,11 @@ impl RenderingSystem<'_> {
             // So if we have 4 frames, it will be 1, 2, 3, 4 (in one second)
             // So if we have 3 frames, it will be 1, 2, 3, 1 (in one second)
             let frame_index = (delta.as_millis() % 1000) / 250;
-            println!("frame_index {}", frame_index);
 
             // frame_index will be a number between 0 and 4, if we have less than 4
             // frames we need to make sure that wraps around, so we mod by how many
             // paths we actually have.
             let path_index = (frame_index as usize) % renderable.paths.len();
-            println!("path_index {}", path_index);
 
             path_index
         };
