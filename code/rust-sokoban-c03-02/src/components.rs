@@ -14,7 +14,17 @@ pub struct Position {
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Renderable {
-    pub path: String,
+    pub paths: Vec<String>,
+}
+
+impl Renderable {
+    pub fn new_image(path: String) -> Self {
+        Self { paths: vec![path] }
+    }
+
+    pub fn new_sprite(paths: Vec<String>) -> Self {
+        Self { paths }
+    }
 }
 
 #[derive(Component)]

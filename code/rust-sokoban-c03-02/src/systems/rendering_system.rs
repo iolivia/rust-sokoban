@@ -1,13 +1,13 @@
 use crate::components::*;
-use crate::resources::*;
 use crate::constants::TILE_WIDTH;
+use crate::resources::*;
 use ggez::graphics;
+use ggez::graphics::Color;
 use ggez::graphics::DrawParam;
 use ggez::graphics::Image;
-use ggez::graphics::Color;
 use ggez::nalgebra as na;
 use ggez::Context;
-use specs::{Join, ReadStorage, System, Read};
+use specs::{Join, Read, ReadStorage, System};
 
 pub struct RenderingSystem<'a> {
     pub context: &'a mut Context,
@@ -34,7 +34,11 @@ impl RenderingSystem<'_> {
 // System implementation
 impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
-    type SystemData = (Read<'a, Gameplay>, ReadStorage<'a, Position>, ReadStorage<'a, Renderable>);
+    type SystemData = (
+        Read<'a, Gameplay>,
+        ReadStorage<'a, Position>,
+        ReadStorage<'a, Renderable>,
+    );
 
     fn run(&mut self, data: Self::SystemData) {
         let (gameplay, positions, renderables) = data;
@@ -51,7 +55,8 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // and draw it at the specified position.
         for (position, renderable) in rendering_data.iter() {
             // Load the image
-            let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
+            let image = Image::new(self.context, renderable.paths.first().unwrap().clone())
+                .expect("expected image");
             let x = position.x as f32 * TILE_WIDTH;
             let y = position.y as f32 * TILE_WIDTH;
 
