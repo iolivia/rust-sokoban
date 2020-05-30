@@ -1,4 +1,4 @@
-name: Code Samples Compile
+name: Code-samples-compile
 
 on:
   pull_request:

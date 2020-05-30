@@ -1,3 +1,5 @@
+[![Code-samples-compile](https://github.com/iolivia/rust-book/workflows/Code-samples-compile/badge.svg?branch=master)](https://github.com/iolivia/rust-book/actions?query=workflow%3ACode-samples-compile+branch%3Amaster)
+
 # Rust sokoban
 
 ## :dart: What is it?
