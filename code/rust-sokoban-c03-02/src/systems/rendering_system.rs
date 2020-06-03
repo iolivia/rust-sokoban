@@ -34,15 +34,15 @@ impl RenderingSystem<'_> {
     pub fn get_image(&mut self, renderable: &Renderable, delta: Duration) -> Image {
         let path_index = match renderable.kind() {
             RenderableKind::Static => {
-                // we only have one image, so we just return that
+                // We only have one image, so we just return that
                 0
             }
             RenderableKind::Animated => {
-                // If we have multiple, we want to select the right one based on
-                // how much time has passed since last time we rendered (delta time).
-                // We wil split each second into 4 frames (a new frame every 250ms).
-                // So if we have 4 frames, it will be 1, 2, 3, 4 (in one second)
-                // So if we have 3 frames, it will be 1, 2, 3, 1 (in one second)
+                // If we have multiple, we want to select the right one based on the delta time.
+                // First we get the delta in milliseconds, we % by 1000 to get the seconds only
+                // and finally we divide by 250 to get a number between 0 and 4. If it's 4
+                // we technically are on the next iteration of the loop (or on 0), but we will let
+                // the renderable handle this logic of wrapping frames.
                 ((delta.as_millis() % 1000) / 250) as usize
             }
         };

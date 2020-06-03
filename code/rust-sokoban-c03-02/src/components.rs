@@ -23,11 +23,11 @@ pub struct Renderable {
 }
 
 impl Renderable {
-    pub fn new_image(path: String) -> Self {
+    pub fn new_static(path: String) -> Self {
         Self { paths: vec![path] }
     }
 
-    pub fn new_sprite(paths: Vec<String>) -> Self {
+    pub fn new_animated(paths: Vec<String>) -> Self {
         Self { paths }
     }
 
