@@ -11,10 +11,15 @@ pub struct Position {
     pub z: u8,
 }
 
+pub enum RenderableKind {
+    Static,
+    Animated,
+}
+
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Renderable {
-    pub paths: Vec<String>,
+    paths: Vec<String>,
 }
 
 impl Renderable {
@@ -24,6 +29,21 @@ impl Renderable {
 
     pub fn new_sprite(paths: Vec<String>) -> Self {
         Self { paths }
+    }
+
+    pub fn kind(&self) -> RenderableKind {
+        match self.paths.len() {
+            0 => panic!("invalid renderable"),
+            1 => RenderableKind::Static,
+            _ => RenderableKind::Animated,
+        }
+    }
+
+    pub fn path(&self, path_index: usize) -> String {
+        // If we get asked for a path that is larger than the
+        // number of paths we actually have, we simply mod the index
+        // with the length to get an index that is in range.
+        self.paths[path_index % self.paths.len()].clone()
     }
 }
 

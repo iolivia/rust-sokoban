@@ -32,26 +32,22 @@ impl RenderingSystem<'_> {
     }
 
     pub fn get_image(&mut self, renderable: &Renderable, delta: Duration) -> Image {
-        let image_index = if renderable.paths.len() == 1 {
-            // we only have one image, so we just return that
-            0
-        } else {
-            // If we have multiple, we want to select the right one based on
-            // how much time has passed since last time we rendered (delta time).
-            // We wil split each second into 4 frames (a new frame every 250ms).
-            // So if we have 4 frames, it will be 1, 2, 3, 4 (in one second)
-            // So if we have 3 frames, it will be 1, 2, 3, 1 (in one second)
-            let frame_index = (delta.as_millis() % 1000) / 250;
-
-            // frame_index will be a number between 0 and 4, if we have less than 4
-            // frames we need to make sure that wraps around, so we mod by how many
-            // paths we actually have.
-            let path_index = (frame_index as usize) % renderable.paths.len();
-
-            path_index
+        let path_index = match renderable.kind() {
+            RenderableKind::Static => {
+                // we only have one image, so we just return that
+                0
+            }
+            RenderableKind::Animated => {
+                // If we have multiple, we want to select the right one based on
+                // how much time has passed since last time we rendered (delta time).
+                // We wil split each second into 4 frames (a new frame every 250ms).
+                // So if we have 4 frames, it will be 1, 2, 3, 4 (in one second)
+                // So if we have 3 frames, it will be 1, 2, 3, 1 (in one second)
+                ((delta.as_millis() % 1000) / 250) as usize
+            }
         };
 
-        let image_path = renderable.paths[image_index].clone();
+        let image_path = renderable.path(path_index);
 
         Image::new(self.context, image_path).expect("expected image")
     }
