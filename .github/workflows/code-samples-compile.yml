@@ -5,24 +5,19 @@ on:
     branches: [master]
 
 jobs:
+  calculate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: echo "::set-output name=matrix::{\"sample_path\":$(echo [$(ls -d code/*/ | xargs printf '\"%s\",'  | tr -d ' ')])}"
   check:
+    needs: calculate-matrix
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        sample_path:
-          [
-            rust-sokoban-c01-01,
-            rust-sokoban-c01-03,
-            rust-sokoban-c01-04,
-            rust-sokoban-c02-01,
-            rust-sokoban-c02-02,
-            rust-sokoban-c02-03,
-            rust-sokoban-c02-04,
-            rust-sokoban-c02-05,
-            rust-sokoban-c03-01,
-            rust-sokoban-c03-02,
-            rust-sokoban-c03-03,
-          ]
+      matrix: ${{fromJson(needs.calculate-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -30,4 +25,4 @@ jobs:
           toolchain: stable
       - run: sudo apt-get install libudev-dev libasound2-dev
       - name: Build ${{ matrix.sample_path }}
-        run: cd code/${{ matrix.sample_path }} && cargo check
+        run: cd ${{ matrix.sample_path }} && cargo check
