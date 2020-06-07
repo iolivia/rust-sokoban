@@ -8,6 +8,7 @@ use std::path;
 mod components;
 mod constants;
 mod entities;
+mod events;
 mod map;
 mod resources;
 mod systems;
@@ -39,6 +40,12 @@ impl event::EventHandler for Game {
         {
             let mut time = self.world.write_resource::<Time>();
             time.delta += timer::delta(context);
+        }
+
+        // Run event system
+        {
+            let mut es = EventSystem {};
+            es.run_now(&self.world);
         }
 
         Ok(())
