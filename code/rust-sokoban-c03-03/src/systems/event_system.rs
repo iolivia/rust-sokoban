@@ -1,4 +1,5 @@
 use crate::{
+    audio::AudioStore,
     components::*,
     events::{BoxPlacedOnSpot, EntityMoved, Event},
     resources::EventQueue,
@@ -13,6 +14,7 @@ impl<'a> System<'a> for EventSystem {
     // Data
     type SystemData = (
         Write<'a, EventQueue>,
+        Write<'a, AudioStore>,
         Entities<'a>,
         ReadStorage<'a, Box>,
         ReadStorage<'a, BoxSpot>,
@@ -20,7 +22,7 @@ impl<'a> System<'a> for EventSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut event_queue, entities, boxes, box_spots, positions) = data;
+        let (mut event_queue, mut audio_store, entities, boxes, box_spots, positions) = data;
 
         let mut new_events = Vec::new();
 
@@ -28,9 +30,7 @@ impl<'a> System<'a> for EventSystem {
             println!("New event: {:?}", event);
 
             match event {
-                Event::PlayerHitObstacle => {
-                    // nothing to do yet
-                }
+                Event::PlayerHitObstacle => audio_store.play_sound(&"wall".to_string()),
                 Event::EntityMoved(EntityMoved { id }) => {
                     // An entity was just moved, check if it was a box and fire
                     // more events if it's been moved on a spot.
@@ -56,8 +56,14 @@ impl<'a> System<'a> for EventSystem {
                         }
                     }
                 }
-                Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot: _ }) => {
-                    // nothing to do yet
+                Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) => {
+                    let sound = if is_correct_spot {
+                        "correct"
+                    } else {
+                        "incorrect"
+                    };
+
+                    audio_store.play_sound(&sound.to_string())
                 }
             }
         }

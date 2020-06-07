@@ -5,6 +5,7 @@ use ggez::{conf, event, timer, Context, GameResult};
 use specs::{RunNow, World, WorldExt};
 use std::path;
 
+mod audio;
 mod components;
 mod constants;
 mod entities;
@@ -13,6 +14,7 @@ mod map;
 mod resources;
 mod systems;
 
+use crate::audio::*;
 use crate::components::*;
 use crate::map::*;
 use crate::resources::*;
@@ -105,6 +107,7 @@ pub fn main() -> GameResult {
         .add_resource_path(path::PathBuf::from("./resources"));
 
     let (context, event_loop) = &mut context_builder.build()?;
+    initialize_sounds(&mut world, context);
 
     // Create the game state
     let game = &mut Game { world };

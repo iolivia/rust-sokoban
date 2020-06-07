@@ -1,3 +1,4 @@
+use crate::audio::AudioStore;
 use crate::events::Event;
 use ggez::event::KeyCode;
 use specs::World;
@@ -15,6 +16,7 @@ pub fn register_resources(world: &mut World) {
     world.insert(Gameplay::default());
     world.insert(Time::default());
     world.insert(EventQueue::default());
+    world.insert(AudioStore::default());
 }
 
 pub enum GameplayState {
