@@ -30,7 +30,10 @@ impl<'a> System<'a> for EventSystem {
             println!("New event: {:?}", event);
 
             match event {
-                Event::PlayerHitObstacle => audio_store.play_sound(&"wall".to_string()),
+                Event::PlayerHitObstacle => {
+                    // play sound here
+                    audio_store.play_sound(&"wall".to_string());
+                }
                 Event::EntityMoved(EntityMoved { id }) => {
                     // An entity was just moved, check if it was a box and fire
                     // more events if it's been moved on a spot.
@@ -57,6 +60,7 @@ impl<'a> System<'a> for EventSystem {
                     }
                 }
                 Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) => {
+                    // play sound here
                     let sound = if is_correct_spot {
                         "correct"
                     } else {
