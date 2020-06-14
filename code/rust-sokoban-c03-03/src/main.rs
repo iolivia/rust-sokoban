@@ -5,13 +5,16 @@ use ggez::{conf, event, timer, Context, GameResult};
 use specs::{RunNow, World, WorldExt};
 use std::path;
 
+mod audio;
 mod components;
 mod constants;
 mod entities;
+mod events;
 mod map;
 mod resources;
 mod systems;
 
+use crate::audio::*;
 use crate::components::*;
 use crate::map::*;
 use crate::resources::*;
@@ -39,6 +42,12 @@ impl event::EventHandler for Game {
         {
             let mut time = self.world.write_resource::<Time>();
             time.delta += timer::delta(context);
+        }
+
+        // Run event system
+        {
+            let mut es = EventSystem {};
+            es.run_now(&self.world);
         }
 
         Ok(())
@@ -98,6 +107,7 @@ pub fn main() -> GameResult {
         .add_resource_path(path::PathBuf::from("./resources"));
 
     let (context, event_loop) = &mut context_builder.build()?;
+    initialize_sounds(&mut world, context);
 
     // Create the game state
     let game = &mut Game { world };

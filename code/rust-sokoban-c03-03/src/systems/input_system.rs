@@ -1,6 +1,7 @@
 use crate::components::*;
 use crate::constants::*;
-use crate::resources::{InputQueue, Gameplay};
+use crate::events::{EntityMoved, Event};
+use crate::resources::{EventQueue, Gameplay, InputQueue};
 use ggez::event::KeyCode;
 use specs::world::Index;
 use specs::{Entities, Join, ReadStorage, System, Write, WriteStorage};
@@ -12,6 +13,7 @@ pub struct InputSystem {}
 impl<'a> System<'a> for InputSystem {
     // Data
     type SystemData = (
+        Write<'a, EventQueue>,
         Write<'a, InputQueue>,
         Write<'a, Gameplay>,
         Entities<'a>,
@@ -22,7 +24,16 @@ impl<'a> System<'a> for InputSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut input_queue, mut gameplay, entities, mut positions, players, movables, immovables) = data;
+        let (
+            mut events,
+            mut input_queue,
+            mut gameplay,
+            entities,
+            mut positions,
+            players,
+            movables,
+            immovables,
+        ) = data;
 
         let mut to_move = Vec::new();
 
@@ -76,7 +87,10 @@ impl<'a> System<'a> for InputSystem {
                             // if it exists, we need to stop and not move anything
                             // if it doesn't exist, we stop because we found a gap
                             match immov.get(&pos) {
-                                Some(_id) => to_move.clear(),
+                                Some(_id) => {
+                                    to_move.clear();
+                                    events.events.push(Event::PlayerHitObstacle {})
+                                }
                                 None => break,
                             }
                         }
@@ -102,6 +116,9 @@ impl<'a> System<'a> for InputSystem {
                     _ => (),
                 }
             }
+
+            // Fire an event for the entity that just moved
+            events.events.push(Event::EntityMoved(EntityMoved { id }));
         }
     }
 }
