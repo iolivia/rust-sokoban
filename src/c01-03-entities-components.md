@@ -11,6 +11,10 @@ This should hopefully be straight-forward, the position components stores the x,
 {{#include ../code/rust-sokoban-c01-03/src/main.rs:13:42}}
 ```
 
+Among the familiar Rust code we've got some new syntax, we're using a powerful Rust feature called `Procedural Macros`. These type of macros are essentially functions that at compile time consume some syntax and produce some new syntax.
+
+> **_MORE:_**  Read more about procedural macros [here](https://doc.rust-lang.org/book/ch19-06-macros.html).
+
 ## Registering components
 In order for specs to be happy we have to tell it ahead of time what components we will be using. Let's create a function to register components into specs.
 
