@@ -9,6 +9,10 @@ First we'll define the `RenderingSystem` struct, it will need access to the ggez
 {{#include ../code/rust-sokoban-c01-04/src/main.rs:47:49}}
 ```
 
+We've got some new syntax here; `'a` is called a lifetime annotation. It's needed because the compiler can't see how long the reference in `RenderingSystem` is valid, meaning that we have to specify the lifetime annotation.
+
+> **_MORE:_**  Read more about lifetimes [here](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html).
+
 Now let's implement the System trait for our Rendering system. This doesn't do anything yet, we're just setting up the scaffolding. The definition of SystemData means that we will have access to the storage of position and renderable components, and the fact that it's read storage means we only get immutable access, which is exactly what we need.
 
 ```rust
