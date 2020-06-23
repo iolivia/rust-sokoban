@@ -1,4 +1,3 @@
-use ggez;
 use ggez::graphics;
 use ggez::graphics::DrawParam;
 use ggez::graphics::Image;

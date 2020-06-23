@@ -1,4 +1,3 @@
-use ggez;
 use ggez::event::KeyCode;
 use ggez::event::KeyMods;
 use ggez::graphics;
@@ -11,8 +10,7 @@ use specs::Entities;
 use specs::NullStorage;
 use specs::WriteStorage;
 use specs::{
-    join::Join, Builder, Component, Read, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
-    Write,
+    join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt, Write,
 };
 use std::collections::HashMap;
 use std::path;
@@ -129,13 +127,13 @@ impl<'a> System<'a> for InputSystem {
             // Get the first key pressed
             if let Some(key) = input_queue.keys_pressed.pop() {
                 // get all the movables and immovables
-                let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
+                let mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
                     .join()
                     .collect::<Vec<_>>()
                     .into_iter()
                     .map(|t| ((t.2.x, t.2.y), t.0.id()))
                     .collect::<HashMap<_, _>>();
-                let mut immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
+                let immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
                     .join()
                     .collect::<Vec<_>>()
                     .into_iter()
@@ -175,7 +173,7 @@ impl<'a> System<'a> for InputSystem {
                             // if it exists, we need to stop and not move anything
                             // if it doesn't exist, we stop because we found a gap
                             match immov.get(&pos) {
-                                Some(id) => to_move.clear(),
+                                Some(_id) => to_move.clear(),
                                 None => break,
                             }
                         }
@@ -322,7 +320,7 @@ pub fn create_player(world: &mut World, position: Position) {
 
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
-    const MAP: &'static str = "
+    const MAP: &str = "
     N N W W W W W W
     W W W . . . . W
     W . . . B . . W

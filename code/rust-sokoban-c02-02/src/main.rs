@@ -1,4 +1,3 @@
-use ggez;
 use ggez::event::{KeyCode, KeyMods};
 use ggez::graphics;
 use ggez::graphics::DrawParam;
@@ -6,7 +5,7 @@ use ggez::graphics::Image;
 use ggez::nalgebra as na;
 use ggez::{conf, event, Context, GameResult};
 use specs::{
-    join::Join, Builder, Component, Read, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
+    join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
     Write, WriteStorage,
 };
 
@@ -237,7 +236,7 @@ pub fn create_player(world: &mut World, position: Position) {
 
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
-    const MAP: &'static str = "
+    const MAP: &str = "
     N N W W W W W W
     W W W . . . . W
     W . . . B . . W

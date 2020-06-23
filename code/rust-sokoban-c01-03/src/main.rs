@@ -1,8 +1,3 @@
-use ggez;
-use ggez::graphics;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
-use ggez::nalgebra as na;
 use ggez::{conf, event, Context, GameResult};
 use specs::{
     join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
@@ -53,7 +48,7 @@ impl event::EventHandler for Game {
         Ok(())
     }
 
-    fn draw(&mut self, context: &mut Context) -> GameResult {
+    fn draw(&mut self, _context: &mut Context) -> GameResult {
         Ok(())
     }
 }
