@@ -51,6 +51,9 @@ Finally, let's put everything together and run. You should see something like th
 
 Final code below.
 
+> **_NOTE:_**  Note that this is a very basic implementation of rendering and as the number of entities grow the performance will not be good enough. A more advanced implementation of rendering which uses batch rendering can be found in [Chapter 3 - Batch Rendering](/c03-04-batch-rendering.html).
+
+
 ```rust
 {{#include ../code/rust-sokoban-c01-04/src/main.rs}}
 ```
