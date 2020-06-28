@@ -15,4 +15,5 @@
     - [Coloured boxes](./c03-01-colours.md)
     - [Animations](./c03-02-animations.md)
     - [Sounds and events](./c03-03-sounds-events.md)
+    - [Batch rendering](./c03-04-batch-rendering.md)
 
