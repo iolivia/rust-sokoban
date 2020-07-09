@@ -1,11 +1,11 @@
 [![Code-samples-compile](https://github.com/iolivia/rust-book/workflows/Code-samples-compile/badge.svg)](https://github.com/iolivia/rust-book/actions?query=workflow%3ACode-samples-compile)
 
-# Rust sokoban
+# [Rust sokoban](https://sokoban.iolivia.me)
 
 ## :dart: What is it?
-This repository hosts the Rust Sokoban book and source code used in the book. It's using [mdbook](https://github.com/rust-lang/mdBook).
+This repository hosts the Rust Sokoban book and source code used in the book. It's using [mdbook](https://github.com/rust-lang/mdBook). You can read the book at [sokoban.iolivia.me](https://sokoban.iolivia.me). 
 
-![Demo](src/images/movement.gif)
+<img src="src/images/readme.gif" width="80%">
 
 ## :running: How to?
 
