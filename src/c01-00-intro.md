@@ -4,6 +4,9 @@ Welcome to **Rust Sokoban**!
 ## What is Rust Sokoban?
 Rust Sokoban is an extended tutorial on making a [Sokoban](https://en.wikipedia.org/wiki/Sokoban) copy in Rust. We'll use an existing 2D game engine, pre-made assets and by the end we'll have a fully working game.
 
+## Who made this book? 
+This book was written by [@oliviff](https://twitter.com/oliviff) with the help of awesome contributors: [Blaine](https://github.com/wbprice), [Ivan](https://github.com/zubivan), [cobans](https://github.com/cobans), [Hector](https://github.com/rojashr), [Matt](https://github.com/mysterycommand), [Guilhermo](https://github.com/GuilhermoReadonly) and [Christian](https://github.com/ChristianIsaacRoy).
+
 ## Why Rust?
 I started learning Rust in March 2019 and I've been making a game in Rust since. I've learnt a lot in the process about Rust, about making games, written a few blog posts and learnt a lot about the Rust gamedev ecosystem. This book is me writing it all up and hopefully helping more people get involved in Rust gamedev.
 
