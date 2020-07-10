@@ -155,4 +155,4 @@ Here's how it looks.
 
 There are plenty of other enhancements that can be made!
 
-You can see the full code in this example [here](https://github.com/iolivia/rust-book/tree/master/code/rust-sokoban-c02-05).
+You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-05).

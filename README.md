@@ -1,4 +1,4 @@
-[![Code-samples-compile](https://github.com/iolivia/rust-book/workflows/Code-samples-compile/badge.svg)](https://github.com/iolivia/rust-book/actions?query=workflow%3ACode-samples-compile)
+[![Code-samples-compile](https://github.com/iolivia/rust-sokoban/workflows/Code-samples-compile/badge.svg)](https://github.com/iolivia/rust-sokoban/actions?query=workflow%3ACode-samples-compile)
 
 # [Rust sokoban](https://sokoban.iolivia.me)
 
