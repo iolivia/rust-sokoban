@@ -11,7 +11,7 @@ This should hopefully be straight-forward, the position components stores the x,
 {{#include ../code/rust-sokoban-c01-03/src/main.rs:13:42}}
 ```
 
-Among the familiar Rust code we've got some new syntax, we're using a powerful Rust feature called `Procedural Macros`. These type of macros are essentially functions that at compile time consume some syntax and produce some new syntax.
+Among the familiar Rust code we've got some new syntax, we're using a powerful Rust feature called `Procedural Macros` which is used in `#[storage(VecStorage)]`. These type of macros are essentially functions that at compile time consume some syntax and produce some new syntax.
 
 > **_MORE:_**  Read more about procedural macros [here](https://doc.rust-lang.org/book/ch19-06-macros.html).
 
@@ -41,7 +41,7 @@ You might have noticed we are referencing the assets we will be using above in t
 ![Box tile](./images/box.png)
 ![Box tile](./images/box_spot.png)
 
-Let's add the images to our project. We'll add a `resources` folder which will hold the images and any other configuration or assets we might have. It should look like this.
+Let's add the images to our project. We'll add a `resources` folder which will hold all our resources, for now this will only be images but in the future we will have other types of resources, like configuration files and/or audio files (keep going and you'll learn all about playing sounds in [Chapter 3.3 - Sounds and events](/c03-03-sounds-events.html)). We'll also add an `images` folder and place our pngs there, it should look like something like this. You can also use a different folder structure if you wish so, just make sure to use the right paths further down in this section when we'll be using the images.
 
 ```
 ├── resources

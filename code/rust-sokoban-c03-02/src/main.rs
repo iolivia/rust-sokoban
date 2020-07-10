@@ -70,7 +70,7 @@ impl event::EventHandler for Game {
 
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
-    const MAP: &'static str = "
+    const MAP: &str = "
     N N W W W W W W
     W W W . . . . W
     W . . . BB . . W

@@ -103,7 +103,7 @@ Another component we will need for this is keeping track of time. What does time
 
 Because of this we need to keep track of the delta time - or how much time passes between the previous loop and the current loop. And because the delta time is much smaller than our animation frame interval (which we have decided on 250ms), we need to keep the cumulative delta - or how much time has passed since the beginning of the game being launched.
 
-> **_MORE:_**  Read more about delta time, frame rate and game loops [here](https://medium.com/@dr3wc/understanding-delta-time-b53bf4781a03#:~:text=Delta%20time%20describes%20the%20time,drawn%20and%20the%20current%20frame.&text=If%20you%20read%20my%20article,until%20the%20game%20is%20stopped.) and [here](https://www.reddit.com/r/pcmasterrace/comments/29qcqr/an_explanation_of_game_loops_fps_and_delta_time/).
+> **_MORE:_**  Read more about delta time, frame rate and game loops [here](https://medium.com/@dr3wc/understanding-delta-time-b53bf4781a03#:~:text=Delta%20time%20describes%20the%20time,drawn%20and%20the%20current%20frame.&text=If%20you%20read%20my%20article,until%20the%20game%20is%20stopped.), [here](https://www.reddit.com/r/pcmasterrace/comments/29qcqr/an_explanation_of_game_loops_fps_and_delta_time/) or [here](https://www.youtube.com/watch?v=pctGOMDW-HQ&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=37) .
 
 Let's now add a resource for time, this doesn't fit into our component model since time is just some global state that needs to be kept.
 

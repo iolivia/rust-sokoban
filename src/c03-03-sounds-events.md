@@ -82,20 +82,11 @@ Let discuss how we will handle each event:
 ## Audio assets
 Now that we have the event bits in place, let's add audio assets. I've selected 3 sounds from this [asset pack](https://opengameart.org/content/512-sound-effects-8-bit-style), but feel free to select your own.
 
-Correct sound
-<audio controls>
-  <source src="./sounds/correct.wav" type="audio/wav">
-</audio>
+Correct sound [here](./sounds/correct.wav)
 
-Incorrect sound
-<audio controls>
-  <source src="./sounds/incorrect.wav" type="audio/wav">
-</audio>
+Incorrect sound [here](./sounds/incorrect.wav)
 
-Wall sound
-<audio controls>
-  <source src="./sounds/wall.wav" type="audio/wav">
-</audio>
+Wall sound [here](./sounds/wall.wav)
 
 Let's add these sounds to a new folder under resources.
 
