@@ -93,4 +93,6 @@ And that's it! Run the game again and you should see a shiny 60FPS and everythin
 
 ![low fps](./images/high_fps.png)
 
+> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-04).
+
 

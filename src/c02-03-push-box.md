@@ -67,3 +67,5 @@ Full code below.
 ```rust
 {{#include ../code/rust-sokoban-c02-03/src/main.rs}}
 ```
+
+> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-03).
