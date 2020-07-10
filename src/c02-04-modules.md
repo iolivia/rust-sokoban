@@ -82,4 +82,6 @@ Awesome, now that we've done that here is how our simplified main file looks lik
 
 Feel free to run at this point, everything should work just the same, the only difference is now our code is much nicer and ready for more amazing Sokoban features.
 
-You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04).
+
+> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04).
+
