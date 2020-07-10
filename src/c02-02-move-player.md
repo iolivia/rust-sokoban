@@ -37,6 +37,8 @@ Key pressed: Down
 Key pressed: Left
 ```
 
+If you are not familiar with the `{:?}` notation used when printing, this is just a convenient way that Rust allows us to print objects for debugging. In this case we can print a KeyCode object (which is an enum) because the KeyCode type implements the Debug trait using the Debug macro (remember we discussed macros in [Chapter 1.3](./c01-03-entities-components.html), so head back there if you need a refresher). If KeyCode didn't implement Debug we would not be able to use this syntax and instead we would get a compiler error. This saves us writing some custom code to convert the key codes to strings, so we can rely on the built-in functionalily for that.   
+
 ## Resources
 Next up we'll add a resource, which is the specs way of sharing some state across systems which isn't part of your world. We'll use a resource for modelling the input queue of key presses, since that doesn't really fit into our existing components/entities model.
 
