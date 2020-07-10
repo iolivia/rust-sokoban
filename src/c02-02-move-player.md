@@ -14,8 +14,16 @@ Let's start listening to key events. First we'll bring a few more modules into s
 Then, we'll add this code inside the `event::EventHandler` implementation block for our Game:
 
 ```rust
+{{#include ../code/rust-sokoban-c02-02/src/main.rs:134}}
+
+    // ...
+
 {{#include ../code/rust-sokoban-c02-02/src/main.rs:155:162}}
 {{#include ../code/rust-sokoban-c02-02/src/main.rs:166}}
+
+    // ...
+
+{{#include ../code/rust-sokoban-c02-02/src/main.rs:167}}
 ```
 
 If we run this we should see the print lines in the console.
@@ -39,7 +47,15 @@ Next up we'll add a resource, which is the specs way of sharing some state acros
 And then we'll push the new key presses into the queue when `key_down_event` is called.
 
 ```rust
+{{#include ../code/rust-sokoban-c02-02/src/main.rs:134}}
+
+    // ...
+
 {{#include ../code/rust-sokoban-c02-02/src/main.rs:155:166}}
+
+    // ...
+
+{{#include ../code/rust-sokoban-c02-02/src/main.rs:167}}
 ```
 
 Finally, we need to register the resources into specs like we did for components.
@@ -70,12 +86,6 @@ The input system is pretty simple, it grabs all the players and positions (we sh
 
 Pretty cool! Here's how it should look like. Notice we can go through walls and boxes. We'll fix that up in the next section when we add the movable component.
 
-Full code below.
-
 ![Moving player](./images/input.gif)
-
-```rust
-{{#include ../code/rust-sokoban-c02-02/src/main.rs}}
-```
 
 > **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-02).
