@@ -41,7 +41,7 @@ You might have noticed we are referencing the assets we will be using above in t
 ![Box tile](./images/box.png)
 ![Box tile](./images/box_spot.png)
 
-Let's add the images to our project. We'll add a `resources` folder which will hold the images and any other configuration or assets we might have. It should look like this.
+Let's add the images to our project. We'll add a `resources` folder which will hold all our resources, for now this will only be images but in the future we will have other types of resources, like configuration files and/or audio files (keep going and you'll learn all about playing sounds in [Chapter 3.3 - Sounds and events](/c03-03-sounds-events.html)). We'll also add an `images` folder and place our pngs there, it should look like something like this. You can also use a different folder structure if you wish so, just make sure to use the right paths further down in this section when we'll be using the images.
 
 ```
 ├── resources
