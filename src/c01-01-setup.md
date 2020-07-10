@@ -112,9 +112,39 @@ We are also learning how to declare functions in Rust.
 {{#include ../code/rust-sokoban-c01-01/src/main.rs:14:17}}
 ```
 
-You might be wondering what the self is, in this case self means that the update function is a member function, it belongs to an instance of the game struct and it cannot be called in a static context. You might also be wondering what the `&mut` is. Mut means that the update function is allowed to make changes to the game struct.
+You might be wondering what the self is, in this case self means that the update function is a member function, it belongs to an instance of the game struct and it cannot be called in a static context. 
 
 > **_MORE:_**  Read more about functions [here](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html).
+
+### Mut syntax
+You might also be wondering what the `&mut` is in the `&mut self` in the update function. Mutability of an object simply says whether or not that object can be modified or not. Check out the example below when declaring variables.
+
+```rust
+let a = 10; // a cannot be changed because it's not declared as mutable
+let mut b = 20; // b can be changed because it's declared as mutable
+```
+
+Now going back to the update function, when mut is used with self, it refers to the instance of the class that the function belongs to. Taking another example:
+
+```rust
+// Simple struct X with a num variable inside
+struct X {
+    num: u32
+}
+
+// Implementation block for X
+impl X {
+    fn a(&self) { self.num = 5 } 
+    // a cannot modify the instance of x here because 
+    // of the &self, this will not compile
+
+    fn b(&mut self) { self.num = 5 } 
+    // b can modify the instance of x here because 
+    // of the &mut self, this part will compile
+}
+```
+
+> **_MORE:_**  Read more about mutability [here](https://web.mit.edu/6.005/www/fa15/classes/09-immutability/) (this lecture uses Java but the concepts should apply to any language), and read more about Rust mutability and variables [here](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html).
 
 
 After that gentle intro to Rust syntax and code, we are now ready to move on! See you in the next section!
