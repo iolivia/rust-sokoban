@@ -118,3 +118,5 @@ You might be wondering what the self is, in this case self means that the update
 
 
 After that gentle intro to Rust syntax and code, we are now ready to move on! See you in the next section!
+
+> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-01).

@@ -126,4 +126,4 @@ Now we can compile the code the reap the rewards of our efforts by seeing the ga
 
 ![Sokoban play](./images/colours.gif)
 
-You can see the full code in this example [here](https://github.com/iolivia/rust-book/tree/master/code/rust-sokoban-c03-01).
+> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-01).

@@ -169,8 +169,7 @@ That was a long section, but I hope you enjoyed it! Here is how the game should 
 
 ![Sokoban animations](./images/animations.gif)
 
-You can see the full code in this example [here](https://github.com/iolivia/rust-book/tree/master/code/rust-sokoban-c03-02).
-
+> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-02).
 
 
 

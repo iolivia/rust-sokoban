@@ -7,3 +7,5 @@ src = "src"
 
 [output.html]
 google-analytics = "UA-26280927-4"
+additional-css = ["custom.css"]
+additional-js = ["custom.js"]

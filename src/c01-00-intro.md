@@ -13,6 +13,14 @@ I started learning Rust in March 2019 and I've been making a game in Rust since.
 ## Do I need to know Rust to follow?
 No, you don't need to know Rust! This book should be a good hands-on intro to making games in Rust, it will explain some of the syntax and basic Rust concepts, and it's meant to give you enough info that you can go read up more on your own about each topic and concept. I recommend you take everything in this book step by step and if there is anything you'd like to understand better there will usually be a link around to a resource that explains it in more detail. This book is not meant to be an in depth walkthrough of all of Rust's features, just a gentle introduction to the language doing a fun little task.
 
+## Book formatting
+You'll see links like this which will point you to resources where you can learn more about the concepts introduced, either Rust or gamedev related.
+> **_MORE:_**  Read more here.
+
+You will also see links like this which will point to the full code in that chapter. Sometimes not all code will be included in the section, so check these out for details like imports, code order, etc. 
+> **_CODELINK:_**  You can see the full code in this example here.
+
+
 ## Resources
 If you find yourself in need of help or just want to ask a question, here are some good places:
 * [The Rust programming language book](https://amzn.to/2tXzRdP)
