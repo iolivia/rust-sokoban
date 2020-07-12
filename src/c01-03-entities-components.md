@@ -8,7 +8,7 @@ This should hopefully be straight-forward, the position components stores the x,
 
 
 ```rust
-{{#include ../code/rust-sokoban-c01-03/src/main.rs:13:42}}
+{{#include ../code/rust-sokoban-c01-03/src/main.rs:14:42}}
 ```
 
 Among the familiar Rust code we've got some new syntax, we're using a powerful Rust feature called `Procedural Macros` which is used in `#[storage(VecStorage)]`. These type of macros are essentially functions that at compile time consume some syntax and produce some new syntax.
