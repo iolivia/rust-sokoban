@@ -1,5 +1,5 @@
 [![Code-samples-compile](https://github.com/iolivia/rust-sokoban/workflows/Code-samples-compile/badge.svg)](https://github.com/iolivia/rust-sokoban/actions?query=workflow%3ACode-samples-compile)
-
+[简体中文](README-zh_CN.md)
 # [Rust sokoban](https://sokoban.iolivia.me)
 
 ## :dart: What is it?
