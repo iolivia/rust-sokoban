@@ -1,4 +1,3 @@
-#![feature(drain_filter)]
 use ggez;
 use ggez::event::KeyCode;
 use ggez::event::KeyMods;
@@ -19,7 +18,12 @@ use crate::audio::*;
 use crate::components::*;
 use crate::map::*;
 use crate::resources::*;
-use crate::systems::*;
+use crate::systems::{
+    *,
+    box_placed_on_spot_event_handler_system as box_placed_on_spot,
+    entity_moved_event_handler_system as entity_moved,
+    player_hit_obstacle_event_handler_system as player_hit_obstacle,
+} ;
 
 struct Game {
     world: World,
@@ -47,15 +51,15 @@ impl event::EventHandler for Game {
 
         // Run event_handler system
         {
-            let mut es = box_placed_on_spot_event_handler_system::EventHandlerSystem {};
+            let mut es = box_placed_on_spot::EventHandlerSystem {};
             es.run_now(&self.world);
         }
         {
-            let mut es = player_hit_obstacle_event_handler_system::EventHandlerSystem {};
+            let mut es = player_hit_obstacle::EventHandlerSystem {};
             es.run_now(&self.world);
         }
         {
-            let mut es = entity_moved_event_handler_system::EventHandlerSystem {};
+            let mut es = entity_moved::EventHandlerSystem {};
             es.run_now(&self.world);
         }
 
