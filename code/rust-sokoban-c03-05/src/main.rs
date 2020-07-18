@@ -1,3 +1,4 @@
+#![feature(drain_filter)]
 use ggez;
 use ggez::event::KeyCode;
 use ggez::event::KeyMods;
@@ -44,9 +45,17 @@ impl event::EventHandler for Game {
             time.delta += timer::delta(context);
         }
 
-        // Run event system
+        // Run event_handler system
         {
-            let mut es = EventSystem {};
+            let mut es = box_placed_on_spot_event_handler_system::EventHandlerSystem {};
+            es.run_now(&self.world);
+        }
+        {
+            let mut es = player_hit_obstacle_event_handler_system::EventHandlerSystem {};
+            es.run_now(&self.world);
+        }
+        {
+            let mut es = entity_moved_event_handler_system::EventHandlerSystem {};
             es.run_now(&self.world);
         }
 

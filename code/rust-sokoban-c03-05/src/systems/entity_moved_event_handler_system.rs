@@ -1,5 +1,4 @@
 use crate::{
-    audio::AudioStore,
     components::*,
     events::{BoxPlacedOnSpot, EntityMoved, Event},
     resources::EventQueue,
@@ -7,14 +6,13 @@ use crate::{
 use specs::{Entities, Join, ReadStorage, System, Write};
 use std::collections::HashMap;
 
-pub struct EventSystem {}
+pub struct EventHandlerSystem {}
 
 // System implementation
-impl<'a> System<'a> for EventSystem {
+impl<'a> System<'a> for EventHandlerSystem {
     // Data
     type SystemData = (
         Write<'a, EventQueue>,
-        Write<'a, AudioStore>,
         Entities<'a>,
         ReadStorage<'a, Box>,
         ReadStorage<'a, BoxSpot>,
@@ -22,19 +20,13 @@ impl<'a> System<'a> for EventSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut event_queue, mut audio_store, entities, boxes, box_spots, positions) = data;
+        let (mut event_queue, entities, boxes, box_spots, positions) = data;
 
         let mut new_events = Vec::new();
-
-        for event in event_queue.events.drain(..) {
-            println!("New event: {:?}", event);
-
-            match event {
-                Event::PlayerHitObstacle => {
-                    // play sound here
-                    audio_store.play_sound(&"wall".to_string());
-                }
-                Event::EntityMoved(EntityMoved { id }) => {
+        event_queue.events
+            .drain_filter(|x| matches!(x, Event::EntityMoved(_)))
+            .for_each(|event| {
+                if let Event::EntityMoved(EntityMoved{ id }) = event {
                     // An entity was just moved, check if it was a box and fire
                     // more events if it's been moved on a spot.
                     if let Some(the_box) = boxes.get(entities.entity(id)) {
@@ -58,19 +50,9 @@ impl<'a> System<'a> for EventSystem {
                             }
                         }
                     }
-                }
-                Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) => {
-                    // play sound here
-                    let sound = if is_correct_spot {
-                        "correct"
-                    } else {
-                        "incorrect"
-                    };
 
-                    audio_store.play_sound(&sound.to_string())
                 }
-            }
-        }
+            });
 
         event_queue.events.append(&mut new_events);
     }
