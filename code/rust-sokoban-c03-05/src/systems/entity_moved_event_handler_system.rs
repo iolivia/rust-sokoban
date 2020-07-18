@@ -24,15 +24,13 @@ impl<'a> System<'a> for EventHandlerSystem {
 
         let mut new_events = Vec::new();
         event_queue.events
-            .iter()
-            .filter(|x| matches!(x, Event::BoxPlacedOnSpot(_)))
-            .collect::<Vec<_>>()
             .drain(..)
             .for_each(|event| {
+                println!("entity moved {:?}", event);
                 if let Event::EntityMoved(EntityMoved{ id }) = event {
                     // An entity was just moved, check if it was a box and fire
                     // more events if it's been moved on a spot.
-                    if let Some(the_box) = boxes.get(entities.entity(*id)) {
+                    if let Some(the_box) = boxes.get(entities.entity(id)) {
                         let box_spots_with_positions: HashMap<(u8, u8), &BoxSpot> =
                             (&box_spots, &positions)
                                 .join()
@@ -41,7 +39,7 @@ impl<'a> System<'a> for EventHandlerSystem {
                                 .map(|t| ((t.1.x, t.1.y), t.0))
                                 .collect::<HashMap<_, _>>();
 
-                        if let Some(box_position) = positions.get(entities.entity(*id)) {
+                        if let Some(box_position) = positions.get(entities.entity(id)) {
                             // Check if there is a spot on this position, and if there
                             // is if it's the correct or incorrect type
                             if let Some(box_spot) =
@@ -53,7 +51,8 @@ impl<'a> System<'a> for EventHandlerSystem {
                             }
                         }
                     }
-
+                } else {
+                    new_events.push(event);
                 }
             });
         //event_queue.events
