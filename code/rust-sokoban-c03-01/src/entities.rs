@@ -29,7 +29,7 @@ pub fn create_box(world: &mut World, position: Position, colour: BoxColour) {
         .create_entity()
         .with(Position { z: 10, ..position })
         .with(Renderable {
-            path: format!("/images/box_{}.png", colour.to_string()).to_string(),
+            path: format!("/images/box_{}.png", colour),
         })
         .with(Box { colour })
         .with(Movable)
@@ -41,7 +41,7 @@ pub fn create_box_spot(world: &mut World, position: Position, colour: BoxColour)
         .create_entity()
         .with(Position { z: 9, ..position })
         .with(Renderable {
-            path: format!("/images/box_spot_{}.png", colour.to_string()).to_string(),
+            path: format!("/images/box_spot_{}.png", colour),
         })
         .with(BoxSpot { colour })
         .build();
