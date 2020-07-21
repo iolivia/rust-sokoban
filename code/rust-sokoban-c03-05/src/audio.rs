@@ -24,7 +24,7 @@ pub fn initialize_sounds(world: &mut World, context: &mut Context) {
 
     for sound in sounds.iter() {
         let sound_name = sound.to_string();
-        let sound_path = format!("/sounds/{}.wav", sound_name).to_string();
+        let sound_path = format!("/sounds/{}.wav", sound_name);
         let sound_source = audio::Source::new(context, sound_path).expect("expected sound loaded");
 
         audio_store.sounds.insert(sound_name, sound_source);
