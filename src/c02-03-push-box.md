@@ -55,7 +55,7 @@ So given this, let's start implementing this logic. Let's think about the logica
 Here is the new implementation of the input systems, it's a bit long but hopefully it makes sense.
 
 ```rust
-{{#include ../code/rust-sokoban-c02-03/src/main.rs:113:201}}
+{{#include ../code/rust-sokoban-c02-03/src/main.rs:113:197}}
 ```
 
 Now if we run the code, we'll see it actually works! We can't go through walls anymore and we can push the box and it stops when it gets to the wall.
