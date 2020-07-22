@@ -41,8 +41,6 @@ impl<'a> System<'a> for EventSystem {
                         let box_spots_with_positions: HashMap<(u8, u8), &BoxSpot> =
                             (&box_spots, &positions)
                                 .join()
-                                .collect::<Vec<_>>()
-                                .into_iter()
                                 .map(|t| ((t.1.x, t.1.y), t.0))
                                 .collect::<HashMap<_, _>>();
 

@@ -23,8 +23,6 @@ impl<'a> System<'a> for GameplayStateSystem {
         // get all boxes indexed by position
         let boxes_by_position: HashMap<(u8, u8), &Box> = (&positions, &boxes)
             .join()
-            .collect::<Vec<_>>()
-            .into_iter()
             .map(|t| ((t.0.x, t.0.y), t.1))
             .collect::<HashMap<_, _>>();
 
