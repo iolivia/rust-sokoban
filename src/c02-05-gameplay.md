@@ -84,7 +84,7 @@ counter.
 ```rust
 // input_system.rs
         ...
-{{#include ../code/rust-sokoban-c02-05/src/systems/input_system.rs:87:105}}
+{{#include ../code/rust-sokoban-c02-05/src/systems/input_system.rs:83:105}}
 ```
 
 ## Gameplay System
@@ -110,6 +110,16 @@ Otherwise, the game is still in play.
 // gameplay_state_system.rs
 {{#include ../code/rust-sokoban-c02-05/src/systems/gameplay_state_system.rs::}}
 ```
+
+Finally, let's run the gameplay system in our main update loop.
+
+```rust
+// main.rs
+{{#include ../code/rust-sokoban-c02-05/src/main.rs:24:39}}
+    // ...
+{{#include ../code/rust-sokoban-c02-05/src/main.rs:63}}
+```
+
 
 ## Gameplay UI
 
