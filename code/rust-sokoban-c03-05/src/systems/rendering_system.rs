@@ -41,8 +41,8 @@ impl RenderingSystem<'_> {
             }
             RenderableKind::Animated => {
                 // If we have multiple, we want to select the right one based on the delta time.
-                // First we get the delta in milliseconds, we % by 1000 to get the seconds only
-                // and finally we divide by 250 to get a number between 0 and 4. If it's 4
+                // First we get the delta in milliseconds, we % by 1000 to get the milliseconds
+                // only and finally we divide by 250 to get a number between 0 and 4. If it's 4
                 // we technically are on the next iteration of the loop (or on 0), but we will let
                 // the renderable handle this logic of wrapping frames.
                 ((delta.as_millis() % 1000) / 250) as usize
