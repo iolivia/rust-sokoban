@@ -1,3 +1,5 @@
+// ANCHOR: all
+// ANCHOR: includes
 use ggez;
 use ggez::graphics;
 use ggez::graphics::DrawParam;
@@ -9,6 +11,7 @@ use specs::{
 };
 
 use std::path;
+// ANCHOR_END: includes
 
 const TILE_WIDTH: f32 = 32.0;
 
@@ -175,6 +178,7 @@ pub fn create_player(world: &mut World, position: Position) {
         .build();
 }
 
+// ANCHOR: init_level
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
     const MAP: &str = "
@@ -191,7 +195,9 @@ pub fn initialize_level(world: &mut World) {
 
     load_map(world, MAP.to_string());
 }
+// ANCHOR_END: init_level
 
+// ANCHOR: load_map
 pub fn load_map(world: &mut World, map_string: String) {
     // read all lines
     let rows: Vec<&str> = map_string.trim().split('\n').map(|x| x.trim()).collect();
@@ -232,6 +238,8 @@ pub fn load_map(world: &mut World, map_string: String) {
         }
     }
 }
+// ANCHOR_END: load_map
+
 pub fn main() -> GameResult {
     let mut world = World::new();
     register_components(&mut world);
@@ -250,3 +258,5 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+
+// ANCHOR_END: all

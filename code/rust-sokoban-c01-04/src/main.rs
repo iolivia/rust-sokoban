@@ -1,12 +1,17 @@
+// ANCHOR: all
 use ggez;
+// ANCHOR: includes
 use ggez::graphics;
 use ggez::graphics::DrawParam;
 use ggez::graphics::Image;
 use ggez::nalgebra as na;
+// ANCHOR_END: includes
 use ggez::{conf, event, Context, GameResult};
+// ANCHOR: specs_includes
 use specs::{
     join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
 };
+// ANCHOR_END: specs_includes
 
 use std::path;
 
@@ -43,17 +48,22 @@ pub struct Box {}
 #[storage(VecStorage)]
 pub struct BoxSpot {}
 
+// ANCHOR: render_struct
 // Systems
 pub struct RenderingSystem<'a> {
     context: &'a mut Context,
 }
+// ANCHOR_END: render_struct
 
+// ANCHOR: render_impl_1
 // System implementation
 impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
     type SystemData = (ReadStorage<'a, Position>, ReadStorage<'a, Renderable>);
 
+    // ANCHOR: render_run
     fn run(&mut self, data: Self::SystemData) {
+        // ANCHOR_END: render_impl_1
         let (positions, renderables) = data;
 
         // Clearing the screen (this gives us the backround colour)
@@ -80,8 +90,11 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // Finally, present the context, this will actually display everything
         // on the screen.
         graphics::present(self.context).expect("expected to present");
+        // ANCHOR: render_impl_2
     }
+    //ANCHOR_END: render_run
 }
+// ANCHOR_END: render_impl_2
 
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
@@ -94,6 +107,7 @@ struct Game {
 // two things:
 // - updating
 // - rendering
+// ANCHOR: event_handler
 impl event::EventHandler for Game {
     fn update(&mut self, _context: &mut Context) -> GameResult {
         Ok(())
@@ -109,6 +123,7 @@ impl event::EventHandler for Game {
         Ok(())
     }
 }
+// ANCHOR_END: event_handler
 
 // Register components with the world
 pub fn register_components(world: &mut World) {
@@ -175,6 +190,7 @@ pub fn create_player(world: &mut World, position: Position) {
         .build();
 }
 
+// ANCHOR: init_level
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
     create_player(
@@ -202,6 +218,7 @@ pub fn initialize_level(world: &mut World) {
         },
     );
 }
+// ANCHOR_END: init_level
 
 pub fn main() -> GameResult {
     let mut world = World::new();
@@ -221,3 +238,4 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+// ANCHOR_END: all

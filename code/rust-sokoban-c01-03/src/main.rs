@@ -1,15 +1,15 @@
+// ANCHOR: all
+// ANCHOR: includes
 use ggez;
-use ggez::graphics;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
-use ggez::nalgebra as na;
 use ggez::{conf, event, Context, GameResult};
 use specs::{
-    join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
+    Builder, Component, VecStorage, World, WorldExt,
 };
 
 use std::path;
+// ANCHOR_END: includes
 
+// ANCHOR: components
 // Components
 #[derive(Debug, Component, Clone, Copy)]
 #[storage(VecStorage)]
@@ -40,6 +40,7 @@ pub struct Box {}
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct BoxSpot {}
+// ANCHOR_END: components
 
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
@@ -58,6 +59,7 @@ impl event::EventHandler for Game {
     }
 }
 
+// ANCHOR: register_components
 // Register components with the world
 pub fn register_components(world: &mut World) {
     world.register::<Position>();
@@ -67,7 +69,9 @@ pub fn register_components(world: &mut World) {
     world.register::<Box>();
     world.register::<BoxSpot>();
 }
+// ANCHOR_END: register_components
 
+// ANCHOR: entities
 // Create a wall entity
 pub fn create_wall(world: &mut World, position: Position) {
     world
@@ -122,6 +126,7 @@ pub fn create_player(world: &mut World, position: Position) {
         .with(Player {})
         .build();
 }
+// ANCHOR_END: entities
 
 pub fn main() -> GameResult {
     let mut world = World::new();
@@ -140,3 +145,4 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+// ANCHOR_END: all

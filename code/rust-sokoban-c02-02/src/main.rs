@@ -1,3 +1,5 @@
+// ANCHOR: all
+// ANCHOR: includes
 use ggez;
 use ggez::event::{KeyCode, KeyMods};
 use ggez::graphics;
@@ -11,6 +13,7 @@ use specs::{
 };
 
 use std::path;
+// ANCHOR_END: includes
 
 const TILE_WIDTH: f32 = 32.0;
 
@@ -45,11 +48,13 @@ pub struct Box {}
 #[storage(VecStorage)]
 pub struct BoxSpot {}
 
+// ANCHOR: input_queue
 // Resources
 #[derive(Default)]
 pub struct InputQueue {
     pub keys_pressed: Vec<KeyCode>,
 }
+// ANCHOR_END: input_queue
 
 // Systems
 pub struct RenderingSystem<'a> {
@@ -91,6 +96,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     }
 }
 
+// ANCHOR: input_system
 pub struct InputSystem {}
 
 impl<'a> System<'a> for InputSystem {
@@ -119,6 +125,7 @@ impl<'a> System<'a> for InputSystem {
         }
     }
 }
+// ANCHOR_END: input_system
 
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
@@ -131,7 +138,10 @@ struct Game {
 // two things:
 // - updating
 // - rendering
+// ANCHOR: event_handler_1
 impl event::EventHandler for Game {
+    // ANCHOR_END: event_handler_1
+    // ANCHOR: update
     fn update(&mut self, _context: &mut Context) -> GameResult {
         // Run input system
         {
@@ -141,6 +151,7 @@ impl event::EventHandler for Game {
 
         Ok(())
     }
+    // ANCHOR_END: update
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
         // Render game entities
@@ -152,6 +163,8 @@ impl event::EventHandler for Game {
         Ok(())
     }
 
+    // ANCHOR: key_down_event
+    // ANCHOR: event_handler_2
     fn key_down_event(
         &mut self,
         _context: &mut Context,
@@ -160,11 +173,17 @@ impl event::EventHandler for Game {
         _repeat: bool,
     ) {
         println!("Key pressed: {:?}", keycode);
+        // ANCHOR_END: event_handler_2
 
         let mut input_queue = self.world.write_resource::<InputQueue>();
         input_queue.keys_pressed.push(keycode);
+        // ANCHOR: event_handler_3
     }
+    // ANCHOR_END: event_handler_3
+    // ANCHOR_END: key_down_event
+    // ANCHOR: event_handler_4
 }
+// ANCHOR_END: event_handler_4
 
 // Register components with the world
 pub fn register_components(world: &mut World) {
@@ -176,9 +195,11 @@ pub fn register_components(world: &mut World) {
     world.register::<BoxSpot>();
 }
 
+// ANCHOR: register_resources
 pub fn register_resources(world: &mut World) {
     world.insert(InputQueue::default())
 }
+// ANCHOR_END: register_resources
 
 // Create a wall entity
 pub fn create_wall(world: &mut World, position: Position) {
@@ -292,6 +313,7 @@ pub fn load_map(world: &mut World, map_string: String) {
         }
     }
 }
+// ANCHOR: main
 pub fn main() -> GameResult {
     let mut world = World::new();
     register_components(&mut world);
@@ -311,3 +333,5 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+// ANCHOR_END: main
+// ANCHOR_END: all
