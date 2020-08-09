@@ -13,6 +13,7 @@ pub struct RenderingSystem<'a> {
     pub context: &'a mut Context,
 }
 
+// ANCHOR: draw_text
 impl RenderingSystem<'_> {
     pub fn draw_text(&mut self, text_string: &str, x: f32, y: f32) {
         let text = graphics::Text::new(text_string);
@@ -30,7 +31,9 @@ impl RenderingSystem<'_> {
         .expect("expected drawing queued text");
     }
 }
+// ANCHOR_END: draw_text
 
+// ANCHOR: rendering_system_1
 // System implementation
 impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
@@ -38,6 +41,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
 
     fn run(&mut self, data: Self::SystemData) {
         let (gameplay, positions, renderables) = data;
+        // ANCHOR_END: rendering_system_1
 
         // Clearing the screen (this gives us the backround colour)
         graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
@@ -60,6 +64,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 
+        // ANCHOR: rendering_system_2
         // Render any text
         self.draw_text(&gameplay.state.to_string(), 525.0, 80.0);
         self.draw_text(&gameplay.moves_count.to_string(), 525.0, 100.0);
@@ -69,3 +74,4 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         graphics::present(self.context).expect("expected to present");
     }
 }
+// ANCHOR_END: rendering_system_2

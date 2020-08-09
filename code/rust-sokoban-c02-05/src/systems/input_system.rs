@@ -1,3 +1,4 @@
+// ANCHOR: includes
 use crate::components::*;
 use crate::constants::*;
 use crate::resources::{InputQueue, Gameplay};
@@ -5,7 +6,9 @@ use ggez::event::KeyCode;
 use specs::world::Index;
 use specs::{Entities, Join, ReadStorage, System, Write, WriteStorage};
 use std::collections::HashMap;
+// ANCHOR_END: includes
 
+// ANCHOR: input_system_1
 pub struct InputSystem {}
 
 // System implementation
@@ -23,6 +26,7 @@ impl<'a> System<'a> for InputSystem {
 
     fn run(&mut self, data: Self::SystemData) {
         let (mut input_queue, mut gameplay, entities, mut positions, players, movables, immovables) = data;
+        // ANCHOR_END: input_system_1
 
         let mut to_move = Vec::new();
 
@@ -81,6 +85,7 @@ impl<'a> System<'a> for InputSystem {
             }
         }
 
+        // ANCHOR: input_system_2
         // We've just moved, so let's increase the number of moves
         if to_move.len() > 0 {
             gameplay.moves_count += 1;
@@ -101,3 +106,5 @@ impl<'a> System<'a> for InputSystem {
         }
     }
 }
+
+// ANCHOR_END: input_system_2
