@@ -1,3 +1,4 @@
+// ANCHOR: all
 use ggez;
 use ggez::event::KeyCode;
 use ggez::event::KeyMods;
@@ -52,6 +53,7 @@ pub struct Box {}
 #[storage(VecStorage)]
 pub struct BoxSpot {}
 
+// ANCHOR: new_components
 #[derive(Component, Default)]
 #[storage(NullStorage)]
 pub struct Movable;
@@ -59,6 +61,7 @@ pub struct Movable;
 #[derive(Component, Default)]
 #[storage(NullStorage)]
 pub struct Immovable;
+// ANCHOR_END: new_components
 
 // Resources
 #[derive(Default)]
@@ -108,6 +111,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
 
 pub struct InputSystem {}
 
+// ANCHOR: input_system
 // System implementation
 impl<'a> System<'a> for InputSystem {
     // Data
@@ -195,6 +199,7 @@ impl<'a> System<'a> for InputSystem {
         }
     }
 }
+// ANCHOR_END: input_system
 
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
@@ -242,22 +247,27 @@ impl event::EventHandler for Game {
     }
 }
 
+// ANCHOR: register_components_1
 // Register components with the world
 pub fn register_components(world: &mut World) {
+    // ANCHOR_END: register_components_1
     world.register::<Position>();
     world.register::<Renderable>();
     world.register::<Player>();
     world.register::<Wall>();
     world.register::<Box>();
     world.register::<BoxSpot>();
+    // ANCHOR: register_components_2
     world.register::<Movable>();
     world.register::<Immovable>();
 }
+// ANCHOR_END: register_components_2
 
 pub fn register_resources(world: &mut World) {
     world.insert(InputQueue::default())
 }
 
+// ANCHOR: with_movable_or_immovable
 // Create a wall entity
 pub fn create_wall(world: &mut World, position: Position) {
     world
@@ -315,6 +325,7 @@ pub fn create_player(world: &mut World, position: Position) {
         .with(Movable)
         .build();
 }
+// ANCHOR_END: with_movable_or_immovable
 
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
@@ -392,3 +403,4 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+// ANCHOR_END: all
