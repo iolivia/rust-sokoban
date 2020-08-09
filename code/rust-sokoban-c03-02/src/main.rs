@@ -21,7 +21,10 @@ struct Game {
     world: World,
 }
 
+// ANCHOR: event_handler_impl
 impl event::EventHandler for Game {
+    // ANCHOR_END: event_handler_impl
+    // ANCHOR: update
     fn update(&mut self, context: &mut Context) -> GameResult {
         // Run input system
         {
@@ -43,6 +46,7 @@ impl event::EventHandler for Game {
 
         Ok(())
     }
+    // ANCHOR_END: update
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
         // Render game entities
@@ -66,7 +70,9 @@ impl event::EventHandler for Game {
         let mut input_queue = self.world.write_resource::<InputQueue>();
         input_queue.keys_pressed.push(keycode);
     }
+    // ANCHOR: event_handler_end
 }
+// ANCHOR_END: event_handler_end
 
 // Initialize the level
 pub fn initialize_level(world: &mut World) {

@@ -2,6 +2,7 @@ use crate::components::*;
 use specs::{Builder, World, WorldExt};
 
 // Create a wall entity
+// ANCHOR: create_wall
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
@@ -11,6 +12,7 @@ pub fn create_wall(world: &mut World, position: Position) {
         .with(Immovable)
         .build();
 }
+// ANCHOR_END: create_wall
 
 pub fn create_floor(world: &mut World, position: Position) {
     world
@@ -45,6 +47,7 @@ pub fn create_box_spot(world: &mut World, position: Position, colour: BoxColour)
         .build();
 }
 
+// ANCHOR: create_player
 pub fn create_player(world: &mut World, position: Position) {
     world
         .create_entity()
@@ -58,3 +61,4 @@ pub fn create_player(world: &mut World, position: Position) {
         .with(Movable)
         .build();
 }
+// ANCHOR_END: create_player

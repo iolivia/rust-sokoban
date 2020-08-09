@@ -9,11 +9,13 @@ pub struct InputQueue {
     pub keys_pressed: Vec<KeyCode>,
 }
 
+// ANCHOR: register_resources
 pub fn register_resources(world: &mut World) {
     world.insert(InputQueue::default());
     world.insert(Gameplay::default());
     world.insert(Time::default());
 }
+// ANCHOR_END: register_resources
 
 pub enum GameplayState {
     Playing,
@@ -42,7 +44,9 @@ pub struct Gameplay {
     pub moves_count: u32,
 }
 
+// ANCHOR: time_struct
 #[derive(Default)]
 pub struct Time {
     pub delta: Duration,
 }
+// ANCHOR_END: time_struct

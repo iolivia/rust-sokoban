@@ -14,7 +14,9 @@ pub struct RenderingSystem<'a> {
     pub context: &'a mut Context,
 }
 
+// ANCHOR: rendering_system_impl
 impl RenderingSystem<'_> {
+    // ANCHOR_END: rendering_system_impl
     pub fn draw_text(&mut self, text_string: &str, x: f32, y: f32) {
         let text = graphics::Text::new(text_string);
         let destination = na::Point2::new(x, y);
@@ -31,6 +33,7 @@ impl RenderingSystem<'_> {
         .expect("expected drawing queued text");
     }
 
+    // ANCHOR: get_image
     pub fn get_image(&mut self, renderable: &Renderable, delta: Duration) -> Image {
         let path_index = match renderable.kind() {
             RenderableKind::Static => {
@@ -51,9 +54,13 @@ impl RenderingSystem<'_> {
 
         Image::new(self.context, image_path).expect("expected image")
     }
+    // ANCHOR_END: get_image
+    // ANCHOR: rendering_system_end
 }
+// ANCHOR_END: rendering_system_end
 
 // System implementation
+// ANCHOR: system_impl
 impl<'a> System<'a> for RenderingSystem<'a> {
     // Data
     type SystemData = (
@@ -62,9 +69,12 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         ReadStorage<'a, Position>,
         ReadStorage<'a, Renderable>,
     );
+    // ANCHOR_END: system_impl
 
+    // ANCHOR: run_1
     fn run(&mut self, data: Self::SystemData) {
         let (gameplay, time, positions, renderables) = data;
+        // ANCHOR_END: run_1
 
         // Clearing the screen (this gives us the backround colour)
         graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
@@ -76,16 +86,20 @@ impl<'a> System<'a> for RenderingSystem<'a> {
 
         // Iterate through all pairs of positions & renderables, load the image
         // and draw it at the specified position.
+        // ANCHOR: run_for
         for (position, renderable) in rendering_data.iter() {
             // Load the image
             let image = self.get_image(renderable, time.delta);
+            // ANCHOR_END: run_for
             let x = position.x as f32 * TILE_WIDTH;
             let y = position.y as f32 * TILE_WIDTH;
 
             // draw
             let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
+            // ANCHOR: run_for_end
         }
+        // ANCHOR_END: run_for_end
 
         // Render any text
         self.draw_text(&gameplay.state.to_string(), 525.0, 80.0);
@@ -94,5 +108,9 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // Finally, present the context, this will actually display everything
         // on the screen.
         graphics::present(self.context).expect("expected to present");
+        // ANCHOR: run_end
     }
+    // ANCHOR_END: run_end
+    // ANCHOR: system_impl_end
 }
+// ANCHOR_END: system_impl_end
