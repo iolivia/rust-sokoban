@@ -5,6 +5,7 @@ use ggez::{conf, event, timer, Context, GameResult};
 use specs::{RunNow, World, WorldExt};
 use std::path;
 
+// ANCHOR: mods
 mod audio;
 mod components;
 mod constants;
@@ -19,13 +20,16 @@ use crate::components::*;
 use crate::map::*;
 use crate::resources::*;
 use crate::systems::*;
+// ANCHOR_END: mods
 
 struct Game {
     world: World,
 }
 
+// ANCHOR: event_handler_start
 impl event::EventHandler for Game {
     fn update(&mut self, context: &mut Context) -> GameResult {
+        // ANCHOR_END: event_handler_start
         // Run input system
         {
             let mut is = InputSystem {};
@@ -44,6 +48,7 @@ impl event::EventHandler for Game {
             time.delta += timer::delta(context);
         }
 
+        // ANCHOR: event_sys
         // Run event system
         {
             let mut es = EventSystem {};
@@ -52,6 +57,7 @@ impl event::EventHandler for Game {
 
         Ok(())
     }
+    // ANCHOR_END: event_sys
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
         // Render game entities
@@ -75,7 +81,9 @@ impl event::EventHandler for Game {
         let mut input_queue = self.world.write_resource::<InputQueue>();
         input_queue.keys_pressed.push(keycode);
     }
+    // ANCHOR: event_handler_end
 }
+// ANCHOR_END: event_handler_end
 
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
@@ -94,7 +102,9 @@ pub fn initialize_level(world: &mut World) {
     load_map(world, MAP.to_string());
 }
 
+// ANCHOR: main_start
 pub fn main() -> GameResult {
+    // ANCHOR_END: main_start
     let mut world = World::new();
     register_components(&mut world);
     register_resources(&mut world);
@@ -106,11 +116,15 @@ pub fn main() -> GameResult {
         .window_mode(conf::WindowMode::default().dimensions(800.0, 600.0))
         .add_resource_path(path::PathBuf::from("./resources"));
 
+    // ANCHOR: init_sounds
     let (context, event_loop) = &mut context_builder.build()?;
     initialize_sounds(&mut world, context);
+    // ANCHOR_END: init_sounds
 
     // Create the game state
     let game = &mut Game { world };
     // Run the main event loop
     event::run(context, event_loop, game)
+    // ANCHOR: main_end
 }
+// ANCHOR_END: main_end

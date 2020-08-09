@@ -1,3 +1,4 @@
+// ANCHOR: includes
 use crate::components::*;
 use crate::constants::*;
 use crate::events::{EntityMoved, Event};
@@ -6,12 +7,16 @@ use ggez::event::KeyCode;
 use specs::world::Index;
 use specs::{Entities, Join, ReadStorage, System, Write, WriteStorage};
 use std::collections::HashMap;
+// ANCHOR_END: includes
 
 pub struct InputSystem {}
 
 // System implementation
+// ANCHOR: input_system_start
 impl<'a> System<'a> for InputSystem {
+    // ANCHOR_END: input_system_start
     // Data
+    // ANCHOR: input_system_data
     type SystemData = (
         Write<'a, EventQueue>,
         Write<'a, InputQueue>,
@@ -22,8 +27,12 @@ impl<'a> System<'a> for InputSystem {
         ReadStorage<'a, Movable>,
         ReadStorage<'a, Immovable>,
     );
+    // ANCHOR_END: input_system_data
 
+    // ANCHOR: run_start
     fn run(&mut self, data: Self::SystemData) {
+        // ANCHOR_END: run_start
+        // ANCHOR: run_let_data
         let (
             mut events,
             mut input_queue,
@@ -34,6 +43,7 @@ impl<'a> System<'a> for InputSystem {
             movables,
             immovables,
         ) = data;
+        // ANCHOR_END: run_let_data
 
         let mut to_move = Vec::new();
 
@@ -76,12 +86,14 @@ impl<'a> System<'a> for InputSystem {
                     // find a movable
                     // if it exists, we try to move it and continue
                     // if it doesn't exist, we continue and try to find an immovable instead
+                    // ANCHOR: input_system_for_for_match
                     match mov.get(&pos) {
                         Some(id) => to_move.push((key, id.clone())),
                         None => {
                             // find an immovable
                             // if it exists, we need to stop and not move anything
                             // if it doesn't exist, we stop because we found a gap
+                            // ANCHOR: immov_match
                             match immov.get(&pos) {
                                 Some(_id) => {
                                     to_move.clear();
@@ -89,6 +101,7 @@ impl<'a> System<'a> for InputSystem {
                                 }
                                 None => break,
                             }
+                            // ANCHOR_END: immov_match
                         }
                     }
                 }
@@ -101,6 +114,7 @@ impl<'a> System<'a> for InputSystem {
         }
 
         // Now actually move what needs to be moved
+        // ANCHOR: input_system_for_act
         for (key, id) in to_move {
             let position = positions.get_mut(entities.entity(id));
             if let Some(position) = position {
@@ -116,5 +130,10 @@ impl<'a> System<'a> for InputSystem {
             // Fire an event for the entity that just moved
             events.events.push(Event::EntityMoved(EntityMoved { id }));
         }
+        // ANCHOR_END: input_system_for_act
+        // ANCHOR: run_end
     }
+    // ANCHOR_END: run_end
+    // ANCHOR: input_system_end
 }
+// ANCHOR_END: input_system_end
