@@ -24,6 +24,7 @@ pub fn create_floor(world: &mut World, position: Position) {
         .build();
 }
 
+// ANCHOR: with_box_colour
 pub fn create_box(world: &mut World, position: Position, colour: BoxColour) {
     world
         .create_entity()
@@ -46,6 +47,7 @@ pub fn create_box_spot(world: &mut World, position: Position, colour: BoxColour)
         .with(BoxSpot { colour })
         .build();
 }
+// ANCHOR_END: with_box_colour
 
 pub fn create_player(world: &mut World, position: Position) {
     world

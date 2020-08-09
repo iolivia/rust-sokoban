@@ -17,6 +17,7 @@ impl<'a> System<'a> for GameplayStateSystem {
         ReadStorage<'a, BoxSpot>,
     );
 
+    // ANCHOR: run
     fn run(&mut self, data: Self::SystemData) {
         let (mut gameplay_state, positions, boxes, box_spots) = data;
 
@@ -48,4 +49,5 @@ impl<'a> System<'a> for GameplayStateSystem {
         // game has been won
         gameplay_state.state = GameplayState::Won;
     }
+    // ANCHOR_END: run
 }

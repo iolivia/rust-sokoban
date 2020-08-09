@@ -62,6 +62,7 @@ impl event::EventHandler for Game {
     }
 }
 
+// ANCHOR: static_map
 // Initialize the level
 pub fn initialize_level(world: &mut World) {
     const MAP: &str = "
@@ -78,6 +79,7 @@ pub fn initialize_level(world: &mut World) {
 
     load_map(world, MAP.to_string());
 }
+// ANCHOR_END: static_map
 
 pub fn main() -> GameResult {
     let mut world = World::new();

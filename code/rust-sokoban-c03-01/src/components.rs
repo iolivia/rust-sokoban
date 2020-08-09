@@ -25,12 +25,17 @@ pub struct Wall {}
 #[storage(VecStorage)]
 pub struct Player {}
 
+// ANCHOR: box_colour_partialeq
 #[derive(PartialEq)]
+// ANCHOR: box_colour
 pub enum BoxColour {
     Red,
     Blue,
 }
+// ANCHOR_END: box_colour
+// ANCHOR_END: box_colour_partialeq
 
+// ANCHOR: box_colour_display
 impl Display for BoxColour {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(match self {
@@ -40,7 +45,9 @@ impl Display for BoxColour {
         Ok(())
     }
 }
+// ANCHOR_END: box_colour_display
 
+// ANCHOR: box_and_box_spot_changes
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Box {
@@ -52,6 +59,7 @@ pub struct Box {
 pub struct BoxSpot {
     pub colour: BoxColour,
 }
+// ANCHOR_END: box_and_box_spot_changes
 
 #[derive(Component, Default)]
 #[storage(NullStorage)]
