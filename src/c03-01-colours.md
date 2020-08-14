@@ -96,7 +96,7 @@ We've learnt before that data goes in components and behaviour goes in systems -
 Let's modify the run function and check the colour of the spot and the box match.
 
 ```rust
-// gameplay_state_system.rs.rs
+// gameplay_state_system.rs
 {{#include ../code/rust-sokoban-c03-01/src/systems/gameplay_state_system.rs:20:52}}
 ```
 
