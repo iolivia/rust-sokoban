@@ -11,3 +11,4 @@ additional-css = ["custom.css"]
 additional-js = ["custom.js"]
 git-repository-url = "https://github.com/iolivia/rust-sokoban"
 git-repository-icon = "fa-github"
+site-url = "/zh_CN/"
