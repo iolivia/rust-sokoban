@@ -5,6 +5,9 @@ language = "zh"
 multilingual = false
 src = "src"
 
+[build]
+build-dir = "./../../build/zh_CN"
+
 [output.html]
 google-analytics = "UA-26280927-4"
 additional-css = ["custom.css"]
