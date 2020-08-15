@@ -11,13 +11,13 @@ For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/gg
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
         ...
 
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:114:118}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:114:118}}
 
         ...
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
 ```
 
 Run the game and move around with the keys a bit and you will see the FPS drops quite significantly from the expected 60. For me it looks to be in the range of 20-30 but depending on your machine it might be more or less. 
@@ -41,21 +41,21 @@ Before we get deep into the rendering code, we will need to do some collection g
 
 ```toml
 // Cargo.toml
-{{#include ../code/rust-sokoban-c03-04/Cargo.toml:9:12}}
+{{#include ../../../code/rust-sokoban-c03-04/Cargo.toml:9:12}}
 ```
 
 Let's also import it in the rendering system
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:11}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:11}}
 ```
 
 Now, remember that get_image function we wrote in the Animations chapter to figure out which image we need for every frame? We'll be able to re-use that we just need to ensure we don't actually load the image, but instead return the path to the image.
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:36:53}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:36:53}}
 ```
 
 Now let's figure out the format we want our batched data to be in. We will use a `HashMap<u8, HashMap<String, Vec<DrawParam>>>` where:
@@ -67,26 +67,26 @@ Let's now write the code to populate the rendering_batches hash map.
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
         ...
 
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:72:94}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:72:94}}
 
         ...
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
 ```
 
 Finally, let's actually render the batches. We will not be able to use the draw(image) function we used before but luckily ggez has a batching API - [SpriteBatch](https://docs.rs/ggez/0.5.1/ggez/graphics/spritebatch/struct.SpriteBatch.html). Also note the `sorted_by` here, that is provided to us to itertools. 
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
         ...
 
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:96:112}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:96:112}}
 
         ...
-{{#include ../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
 ```
 
 And that's it! Run the game again and you should see a shiny 60FPS and everything should feel much smoother!

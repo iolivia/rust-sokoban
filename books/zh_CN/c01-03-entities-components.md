@@ -8,7 +8,7 @@
 
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-03/src/main.rs:13:42}}
+{{#include ../../../../code/rust-sokoban-c01-03/src/main.rs:13:42}}
 ```
 
 `#[storage(VecStorage)]`这原来没见过是不是? 恭喜你，少年！你已经使用到了一个Rust很强大的功能`过程宏`。这种宏是一些可以在代码`编译时`对代码进行处理并生成新代码的特殊函数。
@@ -21,14 +21,14 @@
 > 把组件注册到world
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-03/src/main.rs:61:69}}
+{{#include ../../../../code/rust-sokoban-c01-03/src/main.rs:61:69}}
 ```
 
 ## 创建实体
 实体就是代表一系列组件，所以我们创建实体的方法就是简单地指定它们包含哪些组件。就像这个样子：
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-03/src/main.rs:71:124}}
+{{#include ../../../../code/rust-sokoban-c01-03/src/main.rs:71:124}}
 ```
 
 ## 素材
@@ -60,7 +60,7 @@
 最后，当然只是本小节的最后，接下来在main函数的第一行就创建一个`specs::World`对象，把先前创建的实体还有素材都整合到一起。
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-03/src/main.rs}}
+{{#include ../../../../code/rust-sokoban-c01-03/src/main.rs}}
 ```
 
 然后你就可以执行`cargo run`运行看下效果，当你满怀期待却发现看到的依然是一个空白的窗口，控制台里可能还多了些警告信息。这是因为我们还没有编写渲染的代码也就是还没有绘制这些实体。少侠，莫急！下一节，我们就开始绘制。到时这些因为引入而没有使用的警告也就自然消失了。

@@ -53,34 +53,34 @@ Let's also add two new functions to construct the two types of renderables, eith
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-02/src/components.rs:19:32}}
-{{#include ../code/rust-sokoban-c03-02/src/components.rs:48}}
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:19:32}}
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:48}}
 ```
 
 Next, we need a way of telling if a renderable is animated or static, which we will use in the rendering system. We could leave the paths member variable public and allow the rendering system to get the length of the paths and infer based on the length, but there is a more idiomatic way. We can add an enum for the kind of renderable, and add a method on the renderable to get that kind, in this way we encapsulate the logic of the kind within the renderable, and we can keep paths private. You can put the kind declaration anywhere in the components.rs, but ideally next to the renderable declaration.
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-02/src/components.rs:14:18}}
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:14:18}}
 ```
 
 Now let's add a function to tell us the kind of a renderable based on the internal paths.
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-02/src/components.rs:25:40}}
-{{#include ../code/rust-sokoban-c03-02/src/components.rs:48}}
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:25:40}}
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:48}}
 ```
 
 And finally, because we made paths private, we need to allow users of renderable to get a specific path from our list. For static renderables, this will be the 0th path (the only one) and for animated paths we'll let the rendering system decide which path should be rendered based on the time. The only tricky bit here is if we get asked for a frame bigger than what we have, we will wrap that around by modding with the length. 
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-02/src/components.rs:25}}
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:25}}
 
     //...
 
-{{#include ../code/rust-sokoban-c03-02/src/components.rs:42:48}}
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:42:48}}
 ```
 
 ## Entity creation
@@ -88,14 +88,14 @@ Next up, let's update our player entity creation to account for multiple paths. 
 
 ```rust
 // entities.rs
-{{#include ../code/rust-sokoban-c03-02/src/entities.rs:48:60}}
+{{#include ../../../code/rust-sokoban-c03-02/src/entities.rs:48:60}}
 ```
 
 And let's update everything else to use the `new_static` function - here is how we are doing it for the wall entity creation, feel free to go ahead and apply this to the other static entities.
 
 ```rust
 // entities.rs
-{{#include ../code/rust-sokoban-c03-02/src/entities.rs:5:14}}
+{{#include ../../../code/rust-sokoban-c03-02/src/entities.rs:5:14}}
 ```
 
 ## Time
@@ -109,21 +109,21 @@ Let's now add a resource for time, this doesn't fit into our component model sin
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-c03-02/src/resources.rs:45:48}}
+{{#include ../../../code/rust-sokoban-c03-02/src/resources.rs:45:48}}
 ```
 
 And don't forget to register the new resource.
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-c03-02/src/resources.rs:12:16}}
+{{#include ../../../code/rust-sokoban-c03-02/src/resources.rs:12:16}}
 ```
 
 And now let's update this time in our main loop. Luckily ggez provides a function to get the delta, so all we have to do is accumulate it.
 
 ```rust
 // main.rs
-{{#include ../code/rust-sokoban-c03-02/src/main.rs:24:45}}
+{{#include ../../../code/rust-sokoban-c03-02/src/main.rs:24:45}}
 ```
 
 
@@ -134,25 +134,25 @@ Let's first add a function to enapsulate this logic of getting the correct image
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:17}}
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:17}}
     //...
-{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:34:54}}
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:34:54}}
 ```
 
 And finally, let's use the new `get_image` function inside the run function (we will also have to add time to the `SystemData` definition and a couple of imports, but that should be pretty much it).
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:57:81}}
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:57:81}}
 
             //...
             
-{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:88}}
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:88}}
 
         //...
 
-{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:97}}
-{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:98}}
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:97}}
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:98}}
 
 ```
 

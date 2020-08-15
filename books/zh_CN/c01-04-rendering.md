@@ -6,7 +6,7 @@
 首先我们定义个结构体`RenderingSystem`,它需要使用`ggez`的上下文对象(`context`)绘制实体。
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-04/src/main.rs:47:49}}
+{{#include ../../../../code/rust-sokoban-c01-04/src/main.rs:47:49}}
 ```
 
 注意代码中的&apos;a, &apos; 可不是单引号哦,在你的键盘上应该也是`Esc`键下面的那个建。这是什么东东，为何写法如此奇怪嘞?这是Rust的生命周期声明语法。因为Rust编译器自己推断不出结构体`RenderingSystem`持有的`Context`引用的有效性，所以需要我们使用生命周期声明语法告诉它。
@@ -16,9 +16,9 @@
 接下来我们需要为结构体`RenderingSystem`实现`System`特征。当前只是编写个架子，并不对方法做具体实现。
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-04/src/main.rs:51:57}}
+{{#include ../../../../code/rust-sokoban-c01-04/src/main.rs:51:57}}
         // implementation here
-{{#include ../../code/rust-sokoban-c01-04/src/main.rs:83:84}}
+{{#include ../../../../code/rust-sokoban-c01-04/src/main.rs:83:84}}
 ```
 
 代码中定义的`SystemData`类型是方便访问位置和可渲染存储信息的。我们使用了只读存储`ReadStorage`，也就是只读取数据不修改数据。
@@ -26,7 +26,7 @@
 最后在绘制循环中运行渲染系统。也就是当每次游戏更新时也同时根据实体的最新状态重新绘制实体。
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-04/src/main.rs:97:111}}
+{{#include ../../../../code/rust-sokoban-c01-04/src/main.rs:97:111}}
 ```
 
 现在我们的代码是可以编译运行的，但是依然看不到任何东西，因为我们还没编写渲染的逻辑代码，也还没创建实体。
@@ -41,7 +41,7 @@
 * 最后就可以在屏幕上看到它们了。
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-04/src/main.rs:56:83}}
+{{#include ../../../../code/rust-sokoban-c01-04/src/main.rs:56:83}}
 ```
 
 ## 添加实体测试下
@@ -49,7 +49,7 @@
 接下来我们创建一些用来测试的实体，验证下我们的代码是不是可以正常工作。
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-04/src/main.rs:179:204}}
+{{#include ../../../../code/rust-sokoban-c01-04/src/main.rs:179:204}}
 ```
 
 最后我们把所有这些都整合到一起，然后编译运行，你会看到：
@@ -64,7 +64,7 @@
 
 
 ```rust
-{{#include ../../code/rust-sokoban-c01-04/src/main.rs}}
+{{#include ../../../../code/rust-sokoban-c01-04/src/main.rs}}
 ```
 
 > **_CODELINK:_**  可以点 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-04)获取本章节完整代码.

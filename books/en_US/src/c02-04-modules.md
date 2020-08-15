@@ -32,35 +32,35 @@ Let's start by moving all the components into a file. There should be no changes
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c02-04/src/components.rs:}}
+{{#include ../../../code/rust-sokoban-c02-04/src/components.rs:}}
 ```
 
 Now for the resources.
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-c02-04/src/resources.rs:}}
+{{#include ../../../code/rust-sokoban-c02-04/src/resources.rs:}}
 ```
 
 Next up, let's move the constants into their own file. For now we are hardcoding the map dimensions, we need them for the movement to know when we've reached the edge of the map, but as an improvement would could later store the dimensions of the map and make them dynamic based on the map loading.
 
 ```rust
 // constants.rs
-{{#include ../code/rust-sokoban-c02-04/src/constants.rs}}
+{{#include ../../../code/rust-sokoban-c02-04/src/constants.rs}}
 ```
 
 Next up, entity creation code is now into an entities file.
 
 ```rust
 // entities.rs
-{{#include ../code/rust-sokoban-c02-04/src/entities.rs}}
+{{#include ../../../code/rust-sokoban-c02-04/src/entities.rs}}
 ```
 
 Now for the map loading.
 
 ```rust
 // map.rs
-{{#include ../code/rust-sokoban-c02-04/src/map.rs}}
+{{#include ../../../code/rust-sokoban-c02-04/src/map.rs}}
 ```
 
 Finally, we'll move the systems code into their own files (RenderingSystem to rendering_system.rs and InputSystem to input_system.rs). It should just be a copy paste from main with some import removals, so go ahead and do that.
@@ -70,14 +70,14 @@ Now the interesting thing about systems is that it's a folder with multiple file
 
 ```rust
 // systems/mod.rs
-{{#include ../code/rust-sokoban-c02-04/src/systems/mod.rs}}
+{{#include ../../../code/rust-sokoban-c02-04/src/systems/mod.rs}}
 ```
 
 Awesome, now that we've done that here is how our simplified main file looks like. Notice the mod and use declarations after the imports, those are again telling Rust that we want to use those modules.
 
 ```rust
 // main.rs
-{{#include ../code/rust-sokoban-c02-04/src/main.rs}}
+{{#include ../../../code/rust-sokoban-c02-04/src/main.rs}}
 ```
 
 Feel free to run at this point, everything should work just the same, the only difference is now our code is much nicer and ready for more amazing Sokoban features.

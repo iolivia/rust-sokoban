@@ -42,14 +42,14 @@ Now let's add an enum for the colour (if you chose to implement more than two co
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-01/src/components.rs:29:32}}
+{{#include ../../../code/rust-sokoban-c03-01/src/components.rs:29:32}}
 ```
 
 Now let's use this enum both for the box and the spot. 
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-01/src/components.rs:44:54}}
+{{#include ../../../code/rust-sokoban-c03-01/src/components.rs:44:54}}
 ```
 
 ## Entity creation
@@ -59,14 +59,14 @@ In order to create the correct string for the asset path we basically want `"/im
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-01/src/components.rs:34:43}}
+{{#include ../../../code/rust-sokoban-c03-01/src/components.rs:34:43}}
 ```
 
 Now let's include the colour in our entity creation code and use the fancy `colour.to_string()` we just made possible in the previous snippet.
 
 ```rust
 // entities.rs
-{{#include ../code/rust-sokoban-c03-01/src/entities.rs:27:48}}
+{{#include ../../../code/rust-sokoban-c03-01/src/entities.rs:27:48}}
 ```
 
 ## Map
@@ -78,14 +78,14 @@ Now let's change our map code to allow new options for coloured boxes and spots:
 
 ```rust
 // map.rs
-{{#include ../code/rust-sokoban-c03-01/src/map.rs}}
+{{#include ../../../code/rust-sokoban-c03-01/src/map.rs}}
 ```
 
 And let's update our static map in the main.
 
 ```rust
 // main.rs
-{{#include ../code/rust-sokoban-c03-01/src/main.rs:65:80}}
+{{#include ../../../code/rust-sokoban-c03-01/src/main.rs:65:80}}
 ```
 
 ## Gameplay
@@ -97,14 +97,14 @@ Let's modify the run function and check the colour of the spot and the box match
 
 ```rust
 // gameplay_state_system.rs
-{{#include ../code/rust-sokoban-c03-01/src/systems/gameplay_state_system.rs:20:52}}
+{{#include ../../../code/rust-sokoban-c03-01/src/systems/gameplay_state_system.rs:20:52}}
 ```
 
 Now if you compile the code at this point it should complain about the fact that we are trying to compare two enums with `==`. Rust doesn't know by default how to handle this, so we must tell it. The best way we can do that is add an implementation for the `PartialEq` trait.
 
 ```rust
 // components.rs
-{{#include ../code/rust-sokoban-c03-01/src/components.rs:28:32}}
+{{#include ../../../code/rust-sokoban-c03-01/src/components.rs:28:32}}
 ```
 
 Now is a good time to discuss these unusual `derive` annotations. We've used them before, but never got too deep into what they do. Derive attributes can be applied to structs or enums and they allow us to add default trait implementations to our types. For example here we are telling Rust to add the `PartialEq` default trait implementations to our `BoxColour` enum.

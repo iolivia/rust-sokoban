@@ -24,14 +24,14 @@ Let's look at our events enum.
 
 ```rust
 // events.rs
-{{#include ../code/rust-sokoban-c03-03/src/events.rs:13:23}}
+{{#include ../../../code/rust-sokoban-c03-03/src/events.rs:13:23}}
 ```
 
 Note the second `EntityMoved` and the second `BoxPlacedOnSpot`. Those are actually struct definitions where we can attach properties. Let's look at those structs now.
 
 ```rust
 // events.rs
-{{#include ../code/rust-sokoban-c03-03/src/events.rs:1:11}}
+{{#include ../../../code/rust-sokoban-c03-03/src/events.rs:1:11}}
 ```
 
 ## Event queue resource
@@ -39,15 +39,15 @@ Now let's add a resource for the event queue. We will have various systems writi
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-c03-03/src/resources.rs:54:57}}
+{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:54:57}}
 ```
 
 And as always let's register this resource.
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-c03-03/src/resources.rs:14:18}}
-{{#include ../code/rust-sokoban-c03-03/src/resources.rs:20}}
+{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:14:18}}
+{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:20}}
 ```
 
 ## Sending events
@@ -55,10 +55,10 @@ Now that we have a way to enqueue events, let's add the two events we need in th
 
 ```rust
 // input_system.rs
-{{#include ../code/rust-sokoban-c03-03/src/systems/input_system.rs:1:42}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input_system.rs:1:42}}
                     // ...
                     // ...
-{{#include ../code/rust-sokoban-c03-03/src/systems/input_system.rs:83:124}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input_system.rs:83:124}}
 ```
 
 I've omitted some of the code in the original file for readability, but we are really just adding two lines in the right places. 
@@ -73,9 +73,9 @@ Let discuss how we will handle each event:
 
 ```rust
 // event_system.rs
-{{#include ../code/rust-sokoban-c03-03/src/systems/event_system.rs:1:34}}
-{{#include ../code/rust-sokoban-c03-03/src/systems/event_system.rs:36:63}}
-{{#include ../code/rust-sokoban-c03-03/src/systems/event_system.rs:71:78}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:1:34}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:36:63}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:71:78}}
 
 ```
 
@@ -120,21 +120,21 @@ We'll use a resource for the audio store.
 
 ```rust
 // audio.rs
-{{#include ../code/rust-sokoban-c03-03/src/audio.rs:6:9}}
+{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:6:9}}
 ```
 
 And as always let's register this resource.
 
 ```rust
 // resources.rs
-{{#include ../code/rust-sokoban-c03-03/src/resources.rs:14:20}}
+{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:14:20}}
 ```
 
 And let's add the code for initializing the store.
 
 ```rust
 // audio.rs
-{{#include ../code/rust-sokoban-c03-03/src/audio.rs:21:32}}
+{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:21:32}}
 ```
 
 ## Playing audio
@@ -142,16 +142,16 @@ Finally, let's add the ability to play the sound in the store.
 
 ```rust
 // audio.rs
-{{#include ../code/rust-sokoban-c03-03/src/audio.rs:11:19}}
+{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:11:19}}
 ```
 
 And now let's play in the event system.
 
 ```rust
     // event_system.rs
-{{#include ../code/rust-sokoban-c03-03/src/systems/event_system.rs:24:37}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:24:37}}
                         // ...
-{{#include ../code/rust-sokoban-c03-03/src/systems/event_system.rs:61:73}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:61:73}}
 ```
 
 Now let's run the game and enjoy those sound effects!
