@@ -62,7 +62,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // Get all the renderables with their positions and sort by the position z
         // This will allow us to have entities layered visually.
         let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
-        rendering_data.sort_by(|&a, &b| a.0.z.partial_cmp(&b.0.z).expect("expected comparison"));
+        rendering_data.sort_by_key(|&k| k.0.z);
 
         // Iterate through all pairs of positions & renderables, load the image
         // and draw it at the specified position.
