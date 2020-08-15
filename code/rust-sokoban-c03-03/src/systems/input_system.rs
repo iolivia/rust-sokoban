@@ -87,8 +87,9 @@ impl<'a> System<'a> for InputSystem {
                                     to_move.clear();
                                     events.events.push(Event::PlayerHitObstacle {})
                                 }
-                                None => break,
+                                None => (),
                             }
+                            break;
                         }
                     }
                 }
