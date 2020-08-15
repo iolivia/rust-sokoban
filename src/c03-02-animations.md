@@ -134,7 +134,7 @@ Let's first add a function to enapsulate this logic of getting the correct image
 
 ```rust
 // rendering_system.rs
-{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:13}}
+{{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:17}}
     //...
 {{#include ../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:34:54}}
 ```
