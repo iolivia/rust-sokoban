@@ -27,11 +27,11 @@
 
 ## 文本样式约定
 我们使用下面这种样式的文本链接对Rust或者游戏开发等的知识点的扩展信息。
-> **_MORE:_**  Read more here.
+> **_MORE:_**  点这里查看更多.
 
 我们使用下面这种样式的文本链接本章内容相关的程序代码。
 
-> **_CODELINK:_**  You can see the full code in this example here.
+> **_CODELINK:_**  点这里查看示例完整代码.
 
 
 ## 学习资源
@@ -53,5 +53,5 @@
 
 
 _______
-Made with 🦀 and 🧡 by [@oliviff](https://twitter.com/oliviff)
+Made with 🦀 and 🧡 by [@oliviff](https://twitter.com/oliviff) 由[FusionZhu](https://www.tianlang.tech/)翻译
 
