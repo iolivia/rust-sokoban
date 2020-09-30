@@ -1,8 +1,10 @@
 use ggez;
 use ggez::event::KeyCode;
 use ggez::event::KeyMods;
+use ggez::graphics::Image;
 use ggez::{conf, event, timer, Context, GameResult};
 use specs::{RunNow, World, WorldExt};
+use std::collections::HashMap;
 use std::path;
 
 mod audio;
@@ -22,6 +24,7 @@ use crate::systems::*;
 
 struct Game {
     world: World,
+    image_cache: HashMap<String, Image>,
 }
 
 impl event::EventHandler for Game {
@@ -56,7 +59,7 @@ impl event::EventHandler for Game {
     fn draw(&mut self, context: &mut Context) -> GameResult {
         // Render game entities
         {
-            let mut rs = RenderingSystem { context };
+            let mut rs = RenderingSystem { context, image_cache: &mut self.image_cache };
             rs.run_now(&self.world);
         }
 
@@ -110,7 +113,7 @@ pub fn main() -> GameResult {
     initialize_sounds(&mut world, context);
 
     // Create the game state
-    let game = &mut Game { world };
+    let game = &mut Game { world, image_cache: HashMap::new() };
     // Run the main event loop
     event::run(context, event_loop, game)
 }
