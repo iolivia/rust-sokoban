@@ -10,6 +10,7 @@ use specs::{
     Write, WriteStorage,
 };
 
+use std::collections::VecDeque;
 use std::path;
 
 const TILE_WIDTH: f32 = 32.0;
@@ -48,7 +49,7 @@ pub struct BoxSpot {}
 // Resources
 #[derive(Default)]
 pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
+    pub keys_pressed: VecDeque<KeyCode>,
 }
 
 // Systems
@@ -106,7 +107,7 @@ impl<'a> System<'a> for InputSystem {
 
         for (position, _player) in (&mut positions, &players).join() {
             // Get the first key pressed
-            if let Some(key) = input_queue.keys_pressed.pop() {
+            if let Some(key) = input_queue.keys_pressed.pop_front() {
                 // Apply the key to the position
                 match key {
                     KeyCode::Up => position.y -= 1,
@@ -162,7 +163,7 @@ impl event::EventHandler for Game {
         println!("Key pressed: {:?}", keycode);
 
         let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
+        input_queue.keys_pressed.push_back(keycode);
     }
 }
 

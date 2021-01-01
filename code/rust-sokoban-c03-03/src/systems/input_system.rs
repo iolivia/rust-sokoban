@@ -39,7 +39,7 @@ impl<'a> System<'a> for InputSystem {
 
         for (position, _player) in (&positions, &players).join() {
             // Get the first key pressed
-            if let Some(key) = input_queue.keys_pressed.pop() {
+            if let Some(key) = input_queue.keys_pressed.pop_front() {
                 // get all the movables and immovables
                 let mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
                     .join()

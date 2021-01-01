@@ -14,7 +14,7 @@ use specs::{
     join::Join, Builder, Component, Read, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
     Write,
 };
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::path;
 
 const TILE_WIDTH: f32 = 32.0;
@@ -63,7 +63,7 @@ pub struct Immovable;
 // Resources
 #[derive(Default)]
 pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
+    pub keys_pressed: VecDeque<KeyCode>,
 }
 
 // Systems
@@ -127,7 +127,7 @@ impl<'a> System<'a> for InputSystem {
 
         for (position, _player) in (&positions, &players).join() {
             // Get the first key pressed
-            if let Some(key) = input_queue.keys_pressed.pop() {
+            if let Some(key) = input_queue.keys_pressed.pop_front() {
                 // get all the movables and immovables
                 let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
                     .join()
@@ -238,7 +238,7 @@ impl event::EventHandler for Game {
         println!("Key pressed: {:?}", keycode);
 
         let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
+        input_queue.keys_pressed.push_back(keycode);
     }
 }
 
