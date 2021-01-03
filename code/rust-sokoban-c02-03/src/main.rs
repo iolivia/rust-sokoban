@@ -85,7 +85,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // Get all the renderables with their positions and sort by the position z
         // This will allow us to have entities layered visually.
         let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
-        rendering_data.sort_by(|&a, &b| a.0.z.partial_cmp(&b.0.z).expect("expected comparison"));
+        rendering_data.sort_by_key(|&k| k.0.z);
 
         // Iterate through all pairs of positions & renderables, load the image
         // and draw it at the specified position.
@@ -131,14 +131,10 @@ impl<'a> System<'a> for InputSystem {
                 // get all the movables and immovables
                 let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
                     .join()
-                    .collect::<Vec<_>>()
-                    .into_iter()
                     .map(|t| ((t.2.x, t.2.y), t.0.id()))
                     .collect::<HashMap<_, _>>();
                 let mut immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
                     .join()
-                    .collect::<Vec<_>>()
-                    .into_iter()
                     .map(|t| ((t.2.x, t.2.y), t.0.id()))
                     .collect::<HashMap<_, _>>();
 

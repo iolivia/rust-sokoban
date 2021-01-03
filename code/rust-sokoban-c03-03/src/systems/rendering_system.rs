@@ -39,8 +39,8 @@ impl RenderingSystem<'_> {
             }
             RenderableKind::Animated => {
                 // If we have multiple, we want to select the right one based on the delta time.
-                // First we get the delta in milliseconds, we % by 1000 to get the seconds only
-                // and finally we divide by 250 to get a number between 0 and 4. If it's 4
+                // First we get the delta in milliseconds, we % by 1000 to get the milliseconds
+                // only and finally we divide by 250 to get a number between 0 and 4. If it's 4
                 // we technically are on the next iteration of the loop (or on 0), but we will let
                 // the renderable handle this logic of wrapping frames.
                 ((delta.as_millis() % 1000) / 250) as usize
@@ -72,7 +72,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // Get all the renderables with their positions and sort by the position z
         // This will allow us to have entities layered visually.
         let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
-        rendering_data.sort_by(|&a, &b| a.0.z.partial_cmp(&b.0.z).expect("expected comparison"));
+        rendering_data.sort_by_key(|&k| k.0.z);
 
         // Iterate through all pairs of positions & renderables, load the image
         // and draw it at the specified position.

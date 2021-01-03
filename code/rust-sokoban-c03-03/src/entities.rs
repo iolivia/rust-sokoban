@@ -25,8 +25,8 @@ pub fn create_box(world: &mut World, position: Position, colour: BoxColour) {
         .create_entity()
         .with(Position { z: 10, ..position })
         .with(Renderable::new_animated(vec![
-            format!("/images/box_{}_1.png", colour.to_string()),
-            format!("/images/box_{}_2.png", colour.to_string()),
+            format!("/images/box_{}_1.png", colour),
+            format!("/images/box_{}_2.png", colour),
         ]))
         .with(Box { colour })
         .with(Movable)
@@ -39,7 +39,7 @@ pub fn create_box_spot(world: &mut World, position: Position, colour: BoxColour)
         .with(Position { z: 9, ..position })
         .with(Renderable::new_static(format!(
             "/images/box_spot_{}.png",
-            colour.to_string()
+            colour
         )))
         .with(BoxSpot { colour })
         .build();

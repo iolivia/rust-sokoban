@@ -43,14 +43,10 @@ impl<'a> System<'a> for InputSystem {
                 // get all the movables and immovables
                 let mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
                     .join()
-                    .collect::<Vec<_>>()
-                    .into_iter()
                     .map(|t| ((t.2.x, t.2.y), t.0.id()))
                     .collect::<HashMap<_, _>>();
                 let immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
                     .join()
-                    .collect::<Vec<_>>()
-                    .into_iter()
                     .map(|t| ((t.2.x, t.2.y), t.0.id()))
                     .collect::<HashMap<_, _>>();
 
