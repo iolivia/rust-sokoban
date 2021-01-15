@@ -1,6 +1,6 @@
 # Настройка проекта
 
-Let's install [rustup](https://www.rust-lang.org/tools/install), this will install Rust and the Rust compiler for us. Now let's check everything is installed correctly using these two commands; the versions shouldn't matter too much so if yours are different don't worry about it.
+Давайте установим [rustup](https://www.rust-lang.org/tools/install), который проинсталлирует Rust и его компилятор. Теперь проверим, что всё корректно установлено, используя следующие две команды. Версии не слишком важны, так что можете не беспокоиться, если у вас будет другая.
 
 ```
 $ rustc --version
@@ -11,13 +11,13 @@ cargo 1.40.0
 
 ## Создание проекта
 
-Cargo is Rust's package manager, and we will use it to create our game project. Change into a directory where you'd like the game to live and run the following command, with this we will be creating a new project called `rust-sokoban` using cargo.
+Cargo — пакетный менеджер Rust, который мы будем использовать для создания проекта нашей игры. Перейдите в директорию, где она будет жить, и выполните следующую команду — она создаст новый проект с названием `rust-sokoban`.
 
 ```
 $ cargo init rust-sokoban
 ```
 
-After the command has run you should see the following folder structure.
+После выполнения команды вы должны увидеть такую структуру директорий:
 
 ```
 ├── src
@@ -25,7 +25,7 @@ After the command has run you should see the following folder structure.
 └── Cargo.toml
 ```
 
-We can now run `cargo run` in this directory and we should see something like this.
+Теперь в этой директории мы можем запустить `cargo run`, после чего увидим что-то похожее:
 
 ```
 $ cargo run
@@ -37,9 +37,9 @@ Hello, world!
 
 ## Создание игры
 
-It's time to make this basic hello world project into a game! We are going to use [ggez](https://ggez.rs/) which is one of the popular 2D game engines out there.
+Настало время превратить наш базовый "Hello, World!" в игру! Мы будем использовать [ggez](https://ggez.rs/) — один из популярных 2D-движков для создания игр.
 
-Remember that `Cargo.toml` file we saw in our directory? That file is used for dependency management, so if we want to use any Rust crates we'll have to add them there. Let's add [ggez](https://github.com/ggez/ggez) as one of our dependencies.
+Помните файл `Cargo.toml`, который мы видели в нашей директории? Этот файл используется для управления зависимостями, так что если мы захотим использовать какие-нибудь крейты, мы должны добавить их туда. Давайте добавим [ggez](https://github.com/ggez/ggez) как одну из наших зависимостей.
 
 > ***ЕЩЁ:*** Узнать больше о Cargo и toml-файлах можно [здесь](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html).
 
@@ -48,7 +48,7 @@ Remember that `Cargo.toml` file we saw in our directory? That file is used for d
 ggez = "0.5.1"
 ```
 
-Now let's run `cargo run` again and you should see something like this. It should take slightly longer this time as it will be fetching these new dependencies from [crates.io](https://crates.io), then compiling them and finally linking them into our lib.
+Теперь снова запустим команду `cargo run` — вы должны видеть что-то похожее. Её выполнение займёт больше времени, чем обычно, так как она загружает новые зависимости с [crates.io](https://crates.io), затем компилирует их и, наконец, линкует с нашей библиотекой.
 
 ```
 cargo run
@@ -62,25 +62,25 @@ cargo run
     Hello, world!
 ```
 
-> ***NOTE:*** If you're following this guide on Ubuntu, you might need to install a few more dependencies. If this step fails and you see errors related to `alsa` and `libudev`, install them by running `sudo apt-get install libudev-dev libasound2-dev`.
+> ***Обратите внимание:*** если вы используете Ubuntu, то, возможно, вам потребуется установить некоторые дополнительные системные зависимости. Если этот шаг потерпел неудачу и вы видите ошибки, связанные с `alsa` и `libudev`, то установите их при помощи команды `sudo apt-get install libudev-dev libasound2-dev`.
 
-Now let's actually use ggez in the main file and set up our window. This is just the simplest example of a ggez program that will give us a window with nothing else. Copy and paste this into the `main.rs` file and run again.
+Теперь давайте опробуем `ggez` в главном файле и настроим окно. Это лишь простейший пример программы на `ggez`, в которой создаётся окно — и больше ничего. Скопируйте это в `main.rs` и запустите.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs}}
 ```
 
-You should see something like this.
+Вы должны увидеть что-то похожее:
 
 ![Screenshot](./images/window.png)
 
 ## Базовые концепции и синтаксис
 
-Now that we have our basic window, let's delve into the code we have in main and understand the underlying Rust concepts and syntax.
+Теперь, когда у нас есть базовое окно, давайте погрузимся в код и поймём основные концепции и синтаксис Rust.
 
 ### Импортирование
 
-Hopefully this should be a familiar concept from other languages you might know, but to bring types and namespaces into the scope from our dependent packages (or crates) we simply `use` them.
+Если вы уже изучали другие языки программирования, то эта концепция должна быть вам знакома. Для того, чтобы добавить типы и пространства имён в область видимости из наших зависимостей (или крейтов), мы используем слово `use`.
 
 ```rust
 // это импортирует `conf`, `event`, `Context` и `GameResult` из пакета ggez
@@ -93,17 +93,17 @@ Hopefully this should be a familiar concept from other languages you might know,
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:4:7}}
 ```
 
-> ***MORE:***  Read more about structs [here](https://doc.rust-lang.org/book/ch05-00-structs.html).
+> ***ЕЩЁ:*** Узнать больше о структурах вы можете [здесь](https://doc.rust-lang.org/book/ch05-00-structs.html).
 
-### Implementing a trait
+### Реализация типажа
 
-A trait is much like an interface in other languages, it allows us to associate some behaviour with a particular type. In this case we want to implement the EventHandler trait and add that behaviour to our Game struct.
+В других языках аналогом типажей являются интерфейсы, которые позволяют нам привязывать типам определённое поведение. В нашем случае мы хотим реализовать требуемое типажом `EventHandler` поведение для структуры `Game`.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:9:23}}
 ```
 
-> ***MORE:***  Read more about traits [here](https://doc.rust-lang.org/book/ch10-02-traits.html).
+> ***ЕЩЁ:*** Узнать больше о типажах вы можете [здесь](https://doc.rust-lang.org/book/ch10-02-traits.html).
 
 ### Функции
 
@@ -113,41 +113,41 @@ A trait is much like an interface in other languages, it allows us to associate 
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:14:17}}
 ```
 
-You might be wondering what the self is, in this case self means that the update function is a member function, it belongs to an instance of the game struct and it cannot be called in a static context.
+Вам может быть интересно, что означает `self`. В данном случае `self` означает, что функция `update` является методом, т. е. принадлежит экземпляру структуры `Game` и не может быть вызвана в статическом контексте.
 
-> ***MORE:***  Read more about functions [here](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html).
+> ***ЕЩЁ:*** Узнать больше о функциях вы можете [здесь](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html).
 
-### Mut syntax
+### Mut-синтаксис
 
-You might also be wondering what the `&mut` is in the `&mut self` in the update function. Mutability of an object simply says whether or not that object can be modified or not. Check out the example below when declaring variables.
+Ещё вы можете задаться вопросом, что значат `&mut` в `&mut self` функции `update`. Изменяемость (mutablitiy) объекта просто говорит о том, можно ли изменять его или нет. Ознакомьтесь со следующим примером объявления переменных:
 
 ```rust
-let a = 10; // a cannot be changed because it's not declared as mutable
-let mut b = 20; // b can be changed because it's declared as mutable
+let a = 10; // a не может быть изменена, так как она не объявлена изменяемой
+let mut b = 20; // b может быть изменена, так как она объявлена изменяемой
 ```
 
 Теперь вернёмся к функции `update`. Если `mut` используется вместе с `self`, то оно ссылается на экземпляр структуры, к которой относится функция. Возьмём другой пример:
 
 ```rust
-// Simple struct X with a num variable inside
+// Простая структура X с переменной num внутри
 struct X {
     num: u32
 }
 
-// Implementation block for X
+// Блок реализации для X
 impl X {
     fn a(&self) { self.num = 5 }
-    // a cannot modify the instance of x here because
-    // of the &self, this will not compile
+    // a не может изменить экземпляр структуры X, так как
+    // используется &self. Это не скомпилируется
 
     fn b(&mut self) { self.num = 5 }
-    // b can modify the instance of x here because
-    // of the &mut self, this part will compile
+    // b может изменять экземпляр структуры X, так как
+    // используется &mut self. Эта часть скомпилируется
 }
 ```
 
-> ***MORE:***  Read more about mutability [here](https://web.mit.edu/6.005/www/fa15/classes/09-immutability/) (this lecture uses Java but the concepts should apply to any language), and read more about Rust mutability and variables [here](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html).
+> ***ЕЩЁ:*** Узнать больше про изменяемость вы можете [здесь](https://web.mit.edu/6.005/www/fa15/classes/09-immutability/) (в этой лекции используется Java, но эти концепции можно применить к любым языкам), а прочитать больше о переменных и изменяемости в Rust можно [здесь](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html).
 
-After that gentle intro to Rust syntax and code, we are now ready to move on! See you in the next section!
+После небольшого введения в синтаксис Rust мы готовы двигаться дальше. Увидимся в следующей главе!
 
 > ***КОД:*** Увидеть весь код из данной главы можно [здесь](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-01).
