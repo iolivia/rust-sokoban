@@ -66,7 +66,7 @@
 
 Теперь, если мы запустим код, мы увидим, что игра работает как надо! Мы больше не можем проходить через стены — зато можем двигать коробки, которые остановятся, если упрутся в стену.
 
-![Moving player](./images/movement.gif)
+![Moving player](https://github.com/funkill/rust-sokoban/blob/master/books/ru/src/images/movement.gif?raw=true)
 
 Полный код находится ниже:
 
