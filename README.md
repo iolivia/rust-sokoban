@@ -5,9 +5,14 @@
 # [Rust编写推箱子游戏教程 ](https://sokoban.iolivia.me)
 
 ## :dart: 这是什么?
-这里是使用[mdbook](https://github.com/rust-lang/mdBook)创建的《Rust编写推箱子游戏》教程和相关代码。想在线阅读下？ 好嘞，给您安排，点这里[sokoban.iolivia.me](https://sokoban.iolivia.me)。
+这里是使用[mdbook](https://github.com/rust-lang/mdBook)创建的《Rust编写推箱子游戏》教程和相关代码。想在线阅读下？ 好嘞，给您安排，点这里[sokoban.iolivia.me](https://sokoban.iolivia.me)(当前只支持英文)。
 
 <img src="src/images/readme.gif" width="80%">
+
+- [x] 翻译第一章游戏开发基础  
+- [x] 翻译第二章实现基本功能  
+- [ ] 翻译第三章开发高级功能  
+- [ ] 支持在线阅读
 
 ## :running: 怎么做?
 
@@ -24,7 +29,7 @@ $ cargo install mdbook
 
 ```bash
 $ git clone  git@github.com:iolivia/rust-sokoban.git  
-$ cd rust-cokoban
+$ cd rust-cokoban/books/zh_CN
 $ mdbook serve
 ```
 
