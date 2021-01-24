@@ -1,10 +1,10 @@
 # Summary
 
-- [游戏基础](./zh_CN/c01-00-intro.md)
-    - [创建项目](./zh_CN/c01-01-setup.md)
-    - [实体组件系统](./zh_CN/c01-02-ecs.md)
-    - [组件和实体](./zh_CN/c01-03-entities-components.md)
-    - [渲染系统](./zh_CN/c01-04-rendering.md)
+- [Base game](./c01-00-intro.md)
+    - [Project setup](./c01-01-setup.md)
+    - [Entity Component System](./c01-02-ecs.md)
+    - [Components and entities](./c01-03-entities-components.md)
+    - [Rendering system](./c01-04-rendering.md)
 - [Gameplay](./c02-00-intro.md)
     - [Map loading](./c02-01-map-loading.md)
     - [Moving the player](./c02-02-move-player.md)
