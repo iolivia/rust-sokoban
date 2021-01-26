@@ -2,17 +2,15 @@
 
 [English](README-en.md)
 
-# [Rust编写推箱子游戏教程 ](https://sokoban.iolivia.me)
+# [Rust编写推箱子游戏教程 ](https://www.tianlang.tech/static/tutorial/rust-sokoban/zh_CN/index.html)
 
 ## :dart: 这是什么?
-这里是使用[mdbook](https://github.com/rust-lang/mdBook)创建的《Rust编写推箱子游戏》教程和相关代码。想在线阅读下？ 好嘞，给您安排，点这里[sokoban.iolivia.me](https://sokoban.iolivia.me)(当前只支持英文)。
-
-<img src="src/images/readme.gif" width="80%">
+这里是使用[mdbook](https://github.com/rust-lang/mdBook)创建的《Rust编写推箱子游戏》教程和相关代码。想在线阅读下？ 好嘞，给您安排，点这里[英文](https://sokoban.iolivia.me)[中文](https://www.tianlang.tech/static/tutorial/rust-sokoban/zh_CN/index.html)。
 
 - [x] 翻译第一章游戏开发基础  
 - [x] 翻译第二章实现基本功能  
 - [ ] 翻译第三章开发高级功能  
-- [ ] 支持在线阅读
+- [x] 支持在线阅读
 
 ## :running: 怎么做?
 
@@ -33,7 +31,7 @@ $ cd rust-cokoban/books/zh_CN
 $ mdbook serve
 ```
 
-启动成功后就可以打开浏览器访问http://localhost:3000/开始阅读本教程了。
+启动成功后就可以打开浏览器访问http://localhost:3000/ 开始阅读本教程了。
 
 ### 运行教程代码
 
