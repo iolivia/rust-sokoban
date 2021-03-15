@@ -56,7 +56,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     fn run(&mut self, data: Self::SystemData) {
         let (positions, renderables) = data;
 
-        // Clearing the screen (this gives us the backround colour)
+        // Clearing the screen (this gives us the background colour)
         graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
         // Get all the renderables with their positions and sort by the position z
