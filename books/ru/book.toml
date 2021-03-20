@@ -1,0 +1,17 @@
+[book]
+title = "Rust sokoban"
+authors = []
+language = "ru"
+multilingual = false
+src = "src"
+
+[build]
+build-dir = "./../../build/ru"
+
+[output.html]
+google-analytics = "UA-26280927-4"
+additional-css = ["custom.css"]
+additional-js = ["custom.js"]
+git-repository-url = "https://github.com/iolivia/rust-sokoban"
+git-repository-icon = "fa-github"
+site-url = "/ru/"
