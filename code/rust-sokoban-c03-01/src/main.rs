@@ -58,7 +58,7 @@ impl event::EventHandler for Game {
         println!("Key pressed: {:?}", keycode);
 
         let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
+        input_queue.keys_pressed.push_back(keycode);
     }
 }
 

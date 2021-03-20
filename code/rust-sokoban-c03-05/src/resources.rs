@@ -2,13 +2,14 @@ use crate::audio::AudioStore;
 use crate::events::Event;
 use ggez::event::KeyCode;
 use specs::World;
+use std::collections::VecDeque;
 use std::fmt;
 use std::{fmt::Display, time::Duration};
 
 // Resources
 #[derive(Default)]
 pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
+    pub keys_pressed: VecDeque<KeyCode>,
 }
 
 pub fn register_resources(world: &mut World) {
