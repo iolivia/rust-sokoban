@@ -85,10 +85,11 @@ impl<'a> System<'a> for InputSystem {
                             match immov.get(&pos) {
                                 Some(_id) => {
                                     to_move.clear();
-                                    events.events.push(Event::PlayerHitObstacle {})
-                                }
-                                None => break,
+                                    events.events.push(Event::PlayerHitObstacle {});
+                                },
+                                None => ()
                             }
+                            break;
                         }
                     }
                 }

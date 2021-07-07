@@ -72,8 +72,9 @@ impl<'a> System<'a> for InputSystem {
                             // if it doesn't exist, we stop because we found a gap
                             match immov.get(&pos) {
                                 Some(_id) => to_move.clear(),
-                                None => break,
+                                None => (),
                             }
+                            break;
                         }
                     }
                 }
