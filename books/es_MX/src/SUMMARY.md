@@ -1,6 +1,6 @@
-# Summary
+# Índice
 
-- [Base game](./c01-00-intro.md)
+- [Juego base](./c01-00-intro.md)
     - [Project setup](./c01-01-setup.md)
     - [Entity Component System](./c01-02-ecs.md)
     - [Components and entities](./c01-03-entities-components.md)

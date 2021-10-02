@@ -1,28 +1,28 @@
-# Chapter 1: Base game
-Welcome to **Rust Sokoban**!
+# Capítulo 1: Juego base
+¡Bienvenido a **Rust Sokoban**!
 
-## What is Rust Sokoban?
-Rust Sokoban is an extended tutorial on making a [Sokoban](https://en.wikipedia.org/wiki/Sokoban) copy in Rust. We'll use an existing 2D game engine, pre-made assets and by the end we'll have a fully working game.
+## ¿Qué es Rust Sokoban?
+Rust Sokoban es un tutorial sobre cómo crear una copia del juego [Sokoban](https://en.wikipedia.org/wiki/Sokoban) en el lenguaje de programación Rust. Haremos uso de un motor de juegos 2D ya existente, materiales pre hechos y al final tendremos un juego completamente funcional.
 
-## Who made this book? 
-This book was written by [@oliviff](https://twitter.com/oliviff) with the help of awesome contributors: [Blaine](https://github.com/wbprice), [Ivan](https://github.com/zubivan), [cobans](https://github.com/cobans), [Hector](https://github.com/rojashr), [Matt](https://github.com/mysterycommand), [Guilhermo](https://github.com/GuilhermoReadonly) and [Christian](https://github.com/ChristianIsaacRoy).
+## ¿Quién creó este libro? 
+Este libro fue escrito por [@oliviff](https://twitter.com/oliviff) con la ayuda de varios colaboradores impresionantes: [Blaine](https://github.com/wbprice), [Ivan](https://github.com/zubivan), [cobans](https://github.com/cobans), [Hector](https://github.com/rojashr), [Matt](https://github.com/mysterycommand), [Guilhermo](https://github.com/GuilhermoReadonly) y [Christian](https://github.com/ChristianIsaacRoy).
 
-## Why Rust?
-I started learning Rust in March 2019 and I've been making a game in Rust since. I've learnt a lot in the process about Rust, about making games, written a few blog posts and learnt a lot about the Rust gamedev ecosystem. This book is me writing it all up and hopefully helping more people get involved in Rust gamedev.
+## ¿Por qué Rust?
+Inicié mi aprendizaje de Rust en marzo de 2019 y desde entonces he estado creando un juego en este lenguaje. En el proceso he aprendido mucho sobre Rust, sobre crear juegos, escrito algunos artículos en línea y aprendido mucho sobre el ecosistema de desarrollo de juegos en Rust. En este libro estoy escribiéndolo todo y con suerte ayudando a más personas a involucrarse en el desarrollo de juegos con Rust.
 
-## Do I need to know Rust to follow?
-No, you don't need to know Rust! This book should be a good hands-on intro to making games in Rust, it will explain some of the syntax and basic Rust concepts, and it's meant to give you enough info that you can go read up more on your own about each topic and concept. I recommend you take everything in this book step by step and if there is anything you'd like to understand better there will usually be a link around to a resource that explains it in more detail. This book is not meant to be an in depth walkthrough of all of Rust's features, just a gentle introduction to the language doing a fun little task.
+## ¿Necesito saber Rust?
+¡No, no necesitas saber Rust! Este libro debería servir como introducción a la creción de juegos en Rust, explicará algo de la sintaxis y conceptos básicos de Rust, y está enfocado para darte suficiente información que puedas leer por tu cuenta sobre cada tema y concepto. Recomiendo seguir todo el libro paso por paso y si hay algo que te gustaría entender mejor, usualmente encontrarás un enlace web hacia un recurso que lo explique con más detalle. Este libro no está enfocado en ser un recorrido a fondo de todas las características de Rust, sino una amable introducción al lenguaje realizando una tarea pequeña y divertida.
 
-## Book formatting
-You'll see links like this which will point you to resources where you can learn more about the concepts introduced, either Rust or gamedev related.
-> **_MORE:_**  Read more here.
+## Formato del libro
+Verás enlaces como este que te llevarán a recursos donde puedes aprender más sobre los conceptos presentados, ya sea relacionados con Rust o con el desarrollo de juegos.
+> **_MORE:_**  Más información aquí.
 
-You will also see links like this which will point to the full code in that chapter. Sometimes not all code will be included in the section, so check these out for details like imports, code order, etc. 
-> **_CODELINK:_**  You can see the full code in this example here.
+También verás enlaces como el siguiente que apuntarán al código completo del capítulo. En ocasiones no todo el código estará incluído en la sección, así que echa un ojo a estos para tener detalles como las importaciones, el orden del código, etc.
+> **_CODELINK:_**  Puedes encontrar el código completo de este ejemplo aquí.
 
 
-## Resources
-If you find yourself in need of help or just want to ask a question, here are some good places:
+## Recursos
+Si necesitas ayuda o tienes alguna pregunta, aquí hay algunos buenos lugares a los cuales recurrir:
 * [The Rust programming language book](https://amzn.to/2tXzRdP)
 * [Rust learning by example](https://doc.rust-lang.org/rust-by-example/)
 * [Rust in motion course](https://www.manning.com/livevideo/rust-in-motion?a_aid=cnichols&a_bid=6a993c2e)
@@ -33,10 +33,10 @@ If you find yourself in need of help or just want to ask a question, here are so
 * [@rust_gamedev](https://twitter.com/rust_gamedev)
 
 
-One of the best things about Rust are the people behind it. There is an amazing community out there so please feel encouraged to reach out to any of us.
+Una de las mejores cosas de Rust es la gente detrás. Hay una comunidad increíble allá afuera así que por favor siéntete animado a comunicarte con cualquiera de nosotros.
 
-Now that we got the intro out of the way, let's get started making our first game in Rust (well, technically it will be my second, but hopefully your first).
+Ahora que hemos terminado la introducción, empecemos con la creción de nuestro primer juego en Rust (bueno, técnicamente será mi segundo, pero con ilusión tu primero).
 
 
 _______
-Made with 🦀 and 🧡 by [@oliviff](https://twitter.com/oliviff)
+Hecho con 🦀 y 🧡 por [@oliviff](https://twitter.com/oliviff)
