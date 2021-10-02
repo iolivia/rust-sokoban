@@ -1,6 +1,5 @@
-# Project setup
-
-Let's install [rustup](https://www.rust-lang.org/tools/install), this will install Rust and the Rust compiler for us. Now let's check everything is installed correctly using these two commands; the versions shouldn't matter too much so if yours are different don't worry about it.
+# Configuración del proyecto
+Vamos a instalar [rustup](https://www.rust-lang.org/tools/install), con esto tendremos Rust y el compilador Rust. Ahora revisemos que todo esté instalado correctamente mediante los siguientes dos comandos; las versiones no deberían importar demasiado así que no te preocupes si las tuyas son diferentes.
 
 ```
 $ rustc --version
@@ -9,15 +8,15 @@ $ cargo --version
 cargo 1.40.0
 ```
 
-## Creating a project
+## Creación de un proyecto
 
-Cargo is Rust's package manager, and we will use it to create our game project. Change into a directory where you'd like the game to live and run the following command, with this we will be creating a new project called `rust-sokoban` using cargo.
+Cargo es el administrador de paquetes de Rust, lo utilizaremos para crear nuestro proyecto de juego. Muévete a un directorio en donde te gustaría que se encuentre el juego y ejecuta el comando siguiente, con esto crearemos un nuevo proyecto llamado `rust-sokoban` utilizando cargo.
 
 ```
 $ cargo init rust-sokoban
 ```
 
-After the command has run you should see the following folder structure.
+Después de que el comando se ha ejecutado deberías tener la siguiente estructura de carpetas.
 
 ```
 ├── src
@@ -25,7 +24,7 @@ After the command has run you should see the following folder structure.
 └── Cargo.toml
 ```
 
-We can now run `cargo run` in this directory and we should see something like this.
+Ahora podemos ejectuar `cargo run` en este directorio y deberíamos ver algo como lo siguiente.
 
 ```
 $ cargo run
@@ -35,19 +34,19 @@ $ cargo run
 Hello, world!
 ```
 
-## Making it a game
-It's time to make this basic hello world project into a game! We are going to use [ggez](https://ggez.rs/) which is one of the popular 2D game engines out there.
+## Convirtiéndolo en un juego
+¡Es momento de converitr este proyecto básico hola mundo en un juego! Utilizaremos [ggez](https://ggez.rs/), uno de los motores de juegos 2D populares que existen.
 
-Remember that `Cargo.toml` file we saw in our directory? That file is used for dependency management, so if we want to use any Rust crates we'll have to add them there. Let's add [ggez](https://github.com/ggez/ggez) as one of our dependencies.
+¿Recuerdas el archivo `Cargo.toml` que vimos en nuestro directorio? Ese archivo se utiliza para la administración de crates (equivalente a biblioteca, dependencia o paquete en otros lenguajes), si queremos utilizar alguno de los crates de Rust los agregaremos a este archivo. Agreguemos [ggez](https://github.com/ggez/ggez) como una de nuestras dependencias.
 
-> **_MORE:_**  Read more about Cargo and toml files [here](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html).
+> **_MORE:_**  Lee más sobre Cargo y los archivos toml [aquí](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html).
 
 ```toml
 [dependencies]
 ggez = "0.5.1"
 ```
 
-Now let's run `cargo run` again and you should see something like this. It should take slightly longer this time as it will be fetching these new dependencies from [crates.io](https://crates.io), then compiling them and finally linking them into our lib.
+Ahora ejecutemos `cargo run` nuevamente y deberías ver algo como lo siguiente. Debería tomar un poco más de tiempo ya que buscará estas nuevas dependencias en [crates.io](https://crates.io), luego las compilará y finalmente las enlazará a nuestra biblioteca.
 
 ```
 cargo run
@@ -61,92 +60,97 @@ cargo run
     Hello, world!
 ```
 
-> **_NOTE:_** If you're following this guide on Ubuntu, you might need to install a few
-more dependencies. If this step fails and you see errors related to `alsa` and `libudev`, install them by running
+> **_NOTA:_** Si estás siguiendo esta guía en Ubuntu, podrías necesitar instalar algunas dependencias adicionales. Si el paso anterior falla y ves algunos errores relacionados con `alsa` y `libudev`, instálalos ejecutando
 ```sudo apt-get install libudev-dev libasound2-dev```.
 
-Now let's actually use ggez in the main file and set up our window. This is just the simplest example of a ggez program that will give us a window with nothing else. Copy and paste this into the `main.rs` file and run again.
+Ahora utilicemos ggez en el archivo principal y configuremos nuestra ventana. Este es el ejemplo más simple de un programa ggez que nos mostrará una ventana y nada más. Copia y pega lo siguiente en el archivo `main.rs` y ejecútalo de nuevo.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs}}
 ```
 
-You should see something like this.
+Deberías poder ver algo como esto.
 
 ![Screenshot](./images/window.png)
 
-## Basic concepts and syntax
+## Conceptos básicos y sintaxis
 
-Now that we have our basic window, let's delve into the code we have in main and understand the underlying Rust concepts and syntax.
+Ahora que tenemos nuestra ventana básica, ahondaremos en el código que tenemos en main para entender algunos conceptos y la sintaxis de Rust.
 
-### Importing
-Hopefully this should be a familiar concept from other languages you might know, but to bring types and namespaces into the scope from our dependent packages (or crates) we simply `use` them.
+### Importaciones
+Posiblemente este es un concepto familiar de otros lenguajes de programación que conozcas, para poder tener disponibles tipos y espacios de nombre de nuestras dependencias (o crates) simplemente tenemos que declararlos utilizando `use`.
 
 ```rust
-// this will import conf, event, Context and GameResult from the ggez namespace
+// esto importará conf, event, Context y GameResult del espacio de nombres ggez
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:1}}
 ```
 
-### Declaring a struct
+### Declarando una estructura
 ```rust
+// Esta estructura contrendrá todo el estado de nuestro juego
+// Por ahora no hay nada, pero pronto agregaremos cosas
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:4:7}}
 ```
 
-> **_MORE:_**  Read more about structs [here](https://doc.rust-lang.org/book/ch05-00-structs.html).
+> **_MORE:_**  Lee más sobre estructuras [aquí](https://doc.rust-lang.org/book/ch05-00-structs.html).
 
 
-### Implementing a trait
-A trait is much like an interface in other languages, it allows us to associate some behaviour with a particular type. In this case we want to implement the EventHandler trait and add that behaviour to our Game struct.
+### Implementando un trait
+Un trait es como una interfaz en otros lenguajes, nos permite asociar cierto comportamiento a un tipo en particular. En este caso queremos implementar el trait EventHandler y agregar comportamiento a nuestra estructura Game.
 
 ```rust
+// Este es el ciclo principal. ggez nos indica que implementemos
+// dos cosas:
+// - actualización (update)
+// - renderizado (draw)
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:9:23}}
 ```
 
-> **_MORE:_**  Read more about traits [here](https://doc.rust-lang.org/book/ch10-02-traits.html).
+> **_MORE:_**  Lee más sobre traits [aquí](https://doc.rust-lang.org/book/ch10-02-traits.html).
 
 
-### Functions
-We are also learning how to declare functions in Rust.
+### Funciones
+También vamos a aprender cómo declarar funciones en Rust.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:14:17}}
 ```
 
-You might be wondering what the self is, in this case self means that the update function is a member function, it belongs to an instance of the game struct and it cannot be called in a static context. 
+Quizá te preguntes qué es `self`, en este caso indica que la función update es una función miembro, que pertenece a una instancia de la estructura game y que no puede ser llamada en un contexto estático.
 
-> **_MORE:_**  Read more about functions [here](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html).
+> **_MORE:_**  Lee más sobre funciones [aquí](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html).
 
-### Mut syntax
-You might also be wondering what the `&mut` is in the `&mut self` in the update function. Mutability of an object simply says whether or not that object can be modified or not. Check out the example below when declaring variables.
+### Sintaxis mut
+También estarás preguntándote qué significa `&mut` en `&mut self` en la función update. La mutabilidad de un objeto simplemente indica si dicho objeto puede o no modificarse. Revisa el siguiente ejemplo al declarar variables.
 
 ```rust
-let a = 10; // a cannot be changed because it's not declared as mutable
-let mut b = 20; // b can be changed because it's declared as mutable
+let a = 10; // el valor de a no puede modificarse porque no fue declarada como mutable
+let mut b = 20; // b puede ser modificada porque se declaró como mutable
 ```
 
-Now going back to the update function, when mut is used with self, it refers to the instance of the class that the function belongs to. Taking another example:
+De vuelta a la función update, cuando se utiliza mut con self, se hace referencia a la instancia de la clase a la que pertenece la función. Tomemos otro ejemplo:
 
 ```rust
-// Simple struct X with a num variable inside
+// Estructura simple con una variable num
 struct X {
     num: u32
 }
 
-// Implementation block for X
+// Bloque de implementación de la estructura X
 impl X {
     fn a(&self) { self.num = 5 } 
-    // a cannot modify the instance of x here because 
-    // of the &self, this will not compile
+    // a no puede modificar la instancia de x aquí
+    // debido a &self, esto no compilará
 
     fn b(&mut self) { self.num = 5 } 
-    // b can modify the instance of x here because 
-    // of the &mut self, this part will compile
+    // b puede modificar la instancia de x aquí
+    // gracias a &mut self, esta parte si compila
 }
 ```
 
-> **_MORE:_**  Read more about mutability [here](https://web.mit.edu/6.005/www/fa15/classes/09-immutability/) (this lecture uses Java but the concepts should apply to any language), and read more about Rust mutability and variables [here](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html).
+> **_MORE:_**  Lee más sobre la mutabilidad [aquí](https://web.mit.edu/6.005/www/fa15/classes/09-immutability/) (esta conferencia utiliza Java pero los conceptos son válidos para cualquier otro lenguaje), y más sobre las variables y su mutabilidad en Rust [aquí](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html).
 
 
-After that gentle intro to Rust syntax and code, we are now ready to move on! See you in the next section!
+Después de esta breve introducción a la sintaxis y código de Rust, ¡estamos listos para continuar! ¡Nos vemos en la siguiente sección!
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-01).
+> **_CODELINK:_**  Puedes ver el código completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-01).
