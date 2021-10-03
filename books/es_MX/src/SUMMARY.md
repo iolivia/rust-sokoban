@@ -3,7 +3,7 @@
 - [Juego base](./c01-00-intro.md)
     - [Configuración del proyecto](./c01-01-setup.md)
     - [Entidades, componentes y sistemas](./c01-02-ecs.md)
-    - [Components and entities](./c01-03-entities-components.md)
+    - [Componentes y entidades](./c01-03-entities-components.md)
     - [Rendering system](./c01-04-rendering.md)
 - [Gameplay](./c02-00-intro.md)
     - [Map loading](./c02-01-map-loading.md)
