@@ -1,19 +1,19 @@
-# Rendering system
+# Sistema de renderizado
 
-It's time for our first system, the rendering system. This system will be responsible for drawing all our entities on the screen.
+Es hora de nuestro primer sistema, el sistema de renderizado. Este sistema será responsable de dibujar todas nuestras entidades en pantalla.
 
-## Rendering system setup
-First we'll define the `RenderingSystem` struct, it will need access to the ggez context in order to actually render.
+## Configuración del sistema de renderizado
+En primer lugar vamos a definir la estructura `RenderingSystem`, la cual necesita acceso al contexto ggez para poder renderizar.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-04/src/main.rs:47:49}}
 ```
 
-We've got some new syntax here; `'a` is called a lifetime annotation. It's needed because the compiler can't see how long the reference in `RenderingSystem` is valid, meaning that we have to specify the lifetime annotation.
+Aquí tenemos alguna sintaxis nueva; `'a` es lo que llamamos una anotación explícita de por vida. Se necesita ya que el compilador no puede ver por cuánto tiempo es válida la referencia en `RenderingSystem`, por lo que tenemos que especificar la anotación de por vida.
 
-> **_MORE:_**  Read more about lifetimes [here](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html).
+> **_MORE:_**  Lee más sobre los tiempos de vida [aquí](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html).
 
-Now let's implement the System trait for our Rendering system. This doesn't do anything yet, we're just setting up the scaffolding. The definition of SystemData means that we will have access to the storage of position and renderable components, and the fact that it's read storage means we only get immutable access, which is exactly what we need.
+Ahora implementemos el trait System para nuestro sistema de renderizado. Aún no se requiere haga acción alguna, solo estamos preparando la estructura. La definición de SystemData significa que tenemos acceso al almacenamiento de los componentes de posición y renderizables, y el hecho de que es un almacenamiento de lectura indica que solo tenemos acceso inmutable, que es exactamente lo que necesitamos.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-04/src/main.rs:51:57}}
@@ -21,45 +21,45 @@ Now let's implement the System trait for our Rendering system. This doesn't do a
 {{#include ../../../code/rust-sokoban-c01-04/src/main.rs:83:84}}
 ```
 
-Finally let's run the rendering system in our draw loop. This means that every time the game updates we will render the latest state of all our entities.
+Finalmente ejecutemos el sistema de renderizado en nuestro ciclo de dibujado. Esto significa que cada vez que el juego se actualice renderizaremos el estado más reciente de todas nuestras entidades.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-04/src/main.rs:97:111}}
 ```
 
-Running the game now should compile, but it will probably not do anything yet, since we haven't filled in any of the implementation of the rendering system and also we haven't created any entities.
+En este momento el juego debería compilar, pero probablemente no hará nada todavía, ya que no hemos implementado el sistema de renderizado ni tampoco creado ninguna entidad.
 
-## Rendering system implementation
+## Implementación del sistema de renderizado
 
-Here is the implementation of the rendering system. It does a few things:
-* clear the screen (ensuring we don't keep any of the state rendered on the previous frame)
-* get all entities with a renderable component and sort them by z (we do this in order to ensure we can render things on top of each other, for example the player should be above the floor, otherwise we wouldn't be able to see them)
-* iterate through sorted entities and render each of them as an image
-* finally, present to the screen
+A continuación tenemos la implementación del sistema de renderizado. Se encarga de algunas cosas:
+* limpiar la pantalla (asegurándose de que no mantenemos nada del estado renderizado en el cuadro anterior)
+* obtener todas las entidades con un componente renderizable y ordenarlas por su componente z (esto es para asegurarnos de que podemos renderizar algunas encima de otras, por ejemplo el jugador debe estar sobre el piso, de otra forma no podríamos verlo)
+* itera las entidades ya ordenadas y renderiza cada una de ellas como una imagen
+* finalmente, mostrar todo en la pantalla
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-04/src/main.rs:56:83}}
 ```
 
-## Add some test entities
+## Agregar entidades de prueba
 
-Let's create some test entities to make sure things are working correctly.
+Creemos algunas entidades de prueba para asegurarnos de que todo funciona correctamente.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-04/src/main.rs:179:204}}
 ```
 
-Finally, let's put everything together and run. You should see something like this! This is super exciting, now we have a proper rendering system and we can actually see something on the screen for the first time. Next up, we're going to work on the gameplay so it can actually feel like a game!
+Finalmente, unamos todo y pongámoslo a correr. ¡Deberías ver algo como esto! Es súper emocionante, ahora tenemos un sistema de renderizado adecuado y podemos ver algo en la pantalla por primera vez. A continuación, vamos a trabajar en la jugabilidad ¡para que realmente se sienta como un juego!
 
 ![Screenshot](./images/rendering.png)
 
-Final code below.
+El código final se encuentra a continuación.
 
-> **_NOTE:_**  Note that this is a very basic implementation of rendering and as the number of entities grow the performance will not be good enough. A more advanced implementation of rendering which uses batch rendering can be found in [Chapter 3 - Batch Rendering](/c03-04-batch-rendering.html).
+> **_NOTE:_**  Nota que esta es una implementación muy básica de renderizado y que conforme el número de entidades crezca el desempeño no será lo suficientemente bueno. Una implementación de renderizado más avanzada que utiliza renderizado por lotes puede verse en [Capítulo 3 - Renderizado por lotes](/c03-04-batch-rendering.html).
 
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-04/src/main.rs}}
 ```
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-04).
+> **_CODELINK:_**  ¡Puedes ver el código completo de este ejemplo [aquí!](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-04).
