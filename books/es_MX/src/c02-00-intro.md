@@ -1,2 +1,2 @@
-# Chapter 2: Gameplay
-Welcome to Chapter 2 and congratulations of making it so far! In this chapter we are going to work on gameplay and make things happen!
+# Chapter 2: Jugabilidad
+¡Bievenido al capítulo 2 y felicitaciones por haber llegado hasta aquí! ¡En este capítulo vamos a trabajar en la jugabilidad y hacer que ocurran las cosas!
