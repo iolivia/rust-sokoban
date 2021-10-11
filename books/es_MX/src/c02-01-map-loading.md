@@ -1,46 +1,47 @@
-# Map loading
+# Carga del mapa
 
-Last chapter we left off at creating some entities to test our rendering system, but now it's time to render a proper map. In this section we will create a text based map configuration which we will load.
+En el anterior capítulo concluímos con la creación de algunas entidades para probar nuestro sistema de renderizado, ahora es momento de renderizar el mapa. En esta sección crearemos
+la configuración del mapa cargándola desde un texto.
 
-## Map config
-First step, let's try to load a level based on a 2d map that looks like this.
+## Configuración del mapa
+Primer paso, intentemos cargar un nivel con base en un mapa 2d que luce como este.
 
 ```
 {{#include ../../../code/rust-sokoban-c02-01/src/main.rs:181:189}}
 
-where:
-. is an empty spot
-W is a wall
-P is the player
-B is a box
-S is a box spot
-N is nothing: used for the outer edges of the map
+donde:
+. es un espacio libre
+W es una pared (Wall)
+P es el jugador (Player)
+B es una caja (Box)
+S es un espacio para una caja (box Spot)
+N es nada: se usa para los puntos fuera del mapa
 ```
 
-Let's make a string for this, eventually we can load from a file but for simplicity let's go with a constant in the code for now.
+Colocaremos la información del mapa en una cadena de texto, eventualmente la podemos cargar desde un archivo pero por ahora utilizaremos una constante por simplicidad.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-01/src/main.rs:179:193}}
 ```
 
-And here is the implementation of load map.
+Y aquí tenemos la implementación de carga del mapa.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-01/src/main.rs:195:234}}
 ```
 
-The most interesting Rust concept here is probably the `match`. We are using the basic feature of pattern matching here, we are simply matching on the values of each token found in the map config, but we could do a lot of more advanced conditions or types of patterns.
+El concepto más interesante de Rust en este código probablemente es `match`. Aquí estamos utilizando la característica básica de coincidencia de patrones, simplemente buscamos la coincidencia de valores de cada elemento que se encuentra en la configuración del mapa, pero podríamos tener condiciones más avanzadas o más tipos de patrones.
 
-> **_MORE:_**  Read more about pattern matching [here](https://doc.rust-lang.org/book/ch06-02-match.html).
+> **_MORE:_**  Lee más sobre coincidencia de patrones [aquí](https://doc.rust-lang.org/book/ch06-02-match.html).
 
-Now let's run the game and see what our map looks like.
+Ahora ejecutemos el juego y veamos cómo luce nuestro mapa.
 
 ![Screenshot](./images/map.png)
 
-Final code below.
+A continuación tenemos el código final
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-01/src/main.rs}}
 ```
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-01).
+> **_CODELINK:_**  Puedes ver el código completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-01).
