@@ -7,7 +7,7 @@
     - [Sistema de renderizado](./c01-04-rendering.md)
 - [Jugabilidad](./c02-00-intro.md)
     - [Carga del mapa](./c02-01-map-loading.md)
-    - [Moving the player](./c02-02-move-player.md)
+    - [Moviendo al jugador](./c02-02-move-player.md)
     - [Pushing boxes](./c02-03-push-box.md)
     - [Modules](./c02-04-modules.md)
     - [Gameplay](./c02-05-gameplay.md)

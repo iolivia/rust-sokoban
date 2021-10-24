@@ -1,17 +1,17 @@
-# Moving the player
+# Moviendo al jugador
 
-It wouldn't be a game if we couldn't move the player, would it? In this section we will figure out how to grab input events.
+No podemos tener un juego si no es posible mover al jugador, ¿o si? En esta sección veremos cómo capturar los eventos de entrada.
 
-## Input events
-The first step for making our player move is to start listening to input events. If we take a quick look at the [ggez input example](https://github.com/ggez/ggez/blob/master/examples/input_test.rs#L59) we can see we can subscribe to all sort of mouse and keyboard related events, for now we probably only want `key_down_event`.
+## Eventos de entrada
+El primer paso para hacer que nuestro jugador se mueva es escuchar los eventos de entrada. Si damos un vistazo rápido al [ejemplo de entrada de ggez](https://github.com/ggez/ggez/blob/master/examples/input_test.rs#L59) podemos ver que nos podemos suscribir a todo tipo de eventos relacionados con el ratón y el teclado, por ahora solo queremos el evento de pulsación del teclado `key_down_event`.
 
-Let's start listening to key events. First we'll bring a few more modules into scope:
+Empecemos por escuchar los eventos de teclado. Primero importaremos algunos módulos adicionales:
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:1:11}}
 ```
 
-Then, we'll add this code inside the `event::EventHandler` implementation block for our Game:
+Ahora, agregaremos el código siguiente dentro del bloque de implementación de `event::EventHandler` de nuestra estructura Game:
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:134}}
@@ -26,7 +26,7 @@ Then, we'll add this code inside the `event::EventHandler` implementation block 
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:167}}
 ```
 
-If we run this we should see the print lines in the console.
+Si ejecutamos el código anterior deberíamos ver las siguientes líneas impresas en la consola.
 
 ```
 Key pressed: Left
@@ -37,16 +37,16 @@ Key pressed: Down
 Key pressed: Left
 ```
 
-If you are not familiar with the `{:?}` notation used when printing, this is just a convenient way that Rust allows us to print objects for debugging. In this case we can print a KeyCode object (which is an enum) because the KeyCode type implements the Debug trait using the Debug macro (remember we discussed macros in [Chapter 1.3](./c01-03-entities-components.html), so head back there if you need a refresher). If KeyCode didn't implement Debug we would not be able to use this syntax and instead we would get a compiler error. This saves us writing some custom code to convert the key codes to strings, so we can rely on the built-in functionalily for that.   
+Si no estás familiarizado con la notación `{:?}` utilizada al imprimir, se trata de una manera conveniente en la que Rust nos permite imprimir objetos para depurar. En este caso imprimimos un objeto KeyCode (que es un enum) porque el tipo KeyCode implementa el trait Debug utilizando la macro Debug (recuerda que comentamos sobre las macros en el [Capítulo 1.3](./c01-03-entities-components.html), puedes revisarlo nuevamente si necesitas un repaso). Si KeyCode no implementara Debug no podríamos utilizar esta sintaxis y en su lugar obtendríamos un error del compilador. Esto nos ahorra el tener que escribir código adicional para convertir los códigos de teclas a textos, podemos confiar en la funcionalidad ya construída para ello.
 
-## Resources
-Next up we'll add a resource, which is the specs way of sharing some state across systems which isn't part of your world. We'll use a resource for modelling the input queue of key presses, since that doesn't really fit into our existing components/entities model.
+## Recursos
+A continuación agregaremos un recurso, que es la forma como specs comparte información de estado a través de los sistemas que no forman parte del mundo. Utilizaremos un recurso para modelar la cola de entrada de teclas presionadas, ya que esta no encaja dentro de nuestro modelo de componentes/entidades.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:48:52}}
 ```
 
-And then we'll push the new key presses into the queue when `key_down_event` is called.
+Y entonces moveremos las nuevas teclas presionadas dentro de la cola cuando se llama al evento `key_down_event`.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:134}}
@@ -60,34 +60,34 @@ And then we'll push the new key presses into the queue when `key_down_event` is 
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:167}}
 ```
 
-Finally, we need to register the resources into specs like we did for components.
+Finalmente, necesitamos registrar los recursos con specs como lo hicimos con los componentes.
 
 ```rust
-// Registering resources
+// Registrando recursos
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:179:181}}
 
-// Registering resources in main
+// Registrando recursos en main
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:295:312}}
 ```
 
-## Input system
+## Sistema de entrada
 
-Using this code we have a resource that is a continuous queue of input key presses. Next up, we'll start processing these inputs in a system.
+Utilizando el siguiente código tenemos un recurso que es una cola continua de eventos de entrada de teclado. A continuación, empezaremos a procesar estas entradas en un sistema.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:94:121}}
 ```
 
-Finally we need to run the system in our update loop.
+Finalmente necesitamos ejecutar el sistema dentro de nuestro ciclo de actualización.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:135:143}}
 ```
 
-The input system is pretty simple, it grabs all the players and positions (we should only have one player but this code doesn't need to care about that, it could in theory work if we have multiple players that we want to control with the same input). And then for every player and position combination, it will grab the first key pressed and remove it from the input queue. It will then figure out what is the required transformation - for example if we press up we want to move one tile up and so on, and then applies this position update.
+El sistema de entrada es bastante simple, toma todos los jugadores y posiciones (deberíamos tener solo un jugador pero todavía no necesitamos preocuparnos por ello, en teoría podría funcionar si tuviéramos varios jugadores que quisiéramos controlar con el mismo tipo de entrada). Y luego para cada combinación de jugador y posición, tomará la primera tecla presionada y la removerá de la cola de entrada. Entonces tiene que determinar cuál es la transformación requerida - por ejemplo, si presionamos la tecla arriba significa que queremos mover una casilla hacia arriba, y luego aplica esta actualización de posición.
 
-Pretty cool! Here's how it should look like. Notice we can go through walls and boxes. We'll fix that up in the next section when we add the movable component.
+¡Genial! Así es como debería verse. Nota que podemos atravesar las paredes y las cajas. Lo arreglaremos en la siguiente sección cuando agreguemos el componente Movable.
 
-![Moving player](./images/input.gif)
+![Jugador moviéndose](./images/input.gif)
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-02).
+> **_CODELINK:_**  Puedes ver el código completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-02).
