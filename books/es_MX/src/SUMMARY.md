@@ -8,7 +8,7 @@
 - [Jugabilidad](./c02-00-intro.md)
     - [Carga del mapa](./c02-01-map-loading.md)
     - [Moviendo al jugador](./c02-02-move-player.md)
-    - [Pushing boxes](./c02-03-push-box.md)
+    - [Empujando cajas](./c02-03-push-box.md)
     - [Modules](./c02-04-modules.md)
     - [Gameplay](./c02-05-gameplay.md)
 - [Advanced gameplay](./c03-00-intro.md)
