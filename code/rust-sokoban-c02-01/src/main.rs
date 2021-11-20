@@ -2,7 +2,7 @@ use ggez;
 use ggez::graphics;
 use ggez::graphics::DrawParam;
 use ggez::graphics::Image;
-use ggez::nalgebra as na;
+use glam::Vec2;
 use ggez::{conf, event, Context, GameResult};
 use specs::{
     join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
@@ -73,7 +73,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
             let y = position.y as f32 * TILE_WIDTH;
 
             // draw
-            let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
+            let draw_params = DrawParam::new().dest(Vec2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 
@@ -94,7 +94,7 @@ struct Game {
 // two things:
 // - updating
 // - rendering
-impl event::EventHandler for Game {
+impl event::EventHandler<ggez::GameError> for Game {
     fn update(&mut self, _context: &mut Context) -> GameResult {
         Ok(())
     }
@@ -243,10 +243,10 @@ pub fn main() -> GameResult {
         .window_mode(conf::WindowMode::default().dimensions(800.0, 600.0))
         .add_resource_path(path::PathBuf::from("./resources"));
 
-    let (context, event_loop) = &mut context_builder.build()?;
+    let (context, event_loop) = context_builder.build()?;
 
     // Create the game state
-    let game = &mut Game { world };
+    let game = Game { world };
     // Run the main event loop
     event::run(context, event_loop, game)
 }

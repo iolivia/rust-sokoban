@@ -10,7 +10,7 @@ struct Game {}
 // two things:
 // - updating
 // - rendering
-impl event::EventHandler for Game {
+impl event::EventHandler<ggez::GameError> for Game {
     fn update(&mut self, _context: &mut Context) -> GameResult {
         // TODO: update game logic here
         Ok(())
@@ -29,9 +29,9 @@ pub fn main() -> GameResult {
         .window_mode(conf::WindowMode::default().dimensions(800.0, 600.0))
         .add_resource_path(path::PathBuf::from("./resources"));
 
-    let (context, event_loop) = &mut context_builder.build()?;
+    let (context, event_loop) = context_builder.build()?;
     // Create the game state
-    let game = &mut Game {};
+    let game = Game {};
     // Run the main event loop
     event::run(context, event_loop, game)
 }

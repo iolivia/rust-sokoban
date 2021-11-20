@@ -3,7 +3,7 @@ use crate::constants::TILE_WIDTH;
 use ggez::graphics;
 use ggez::graphics::DrawParam;
 use ggez::graphics::Image;
-use ggez::nalgebra as na;
+use glam::Vec2;
 use ggez::Context;
 use specs::{Join, ReadStorage, System};
 
@@ -36,7 +36,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
             let y = position.y as f32 * TILE_WIDTH;
 
             // draw
-            let draw_params = DrawParam::new().dest(na::Point2::new(x, y));
+            let draw_params = DrawParam::new().dest(Vec2::new(x, y));
             graphics::draw(self.context, &image, draw_params).expect("expected render");
         }
 

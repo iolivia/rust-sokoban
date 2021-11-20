@@ -7,10 +7,12 @@ use crate::{
 use specs::{Entities, Join, ReadStorage, System, Write};
 use std::collections::HashMap;
 
-pub struct EventSystem {}
+pub struct EventSystem<'a> {
+    pub context: &'a mut ggez::Context,
+}
 
 // System implementation
-impl<'a> System<'a> for EventSystem {
+impl<'a> System<'a> for EventSystem<'a> {
     // Data
     type SystemData = (
         Write<'a, EventQueue>,
@@ -32,7 +34,7 @@ impl<'a> System<'a> for EventSystem {
             match event {
                 Event::PlayerHitObstacle => {
                     // play sound here
-                    audio_store.play_sound(&"wall".to_string());
+                    audio_store.play_sound(self.context, &"wall".to_string());
                 }
                 Event::EntityMoved(EntityMoved { id }) => {
                     // An entity was just moved, check if it was a box and fire
@@ -65,7 +67,7 @@ impl<'a> System<'a> for EventSystem {
                         "incorrect"
                     };
 
-                    audio_store.play_sound(&sound.to_string())
+                    audio_store.play_sound(self.context, &sound.to_string())
                 }
             }
         }

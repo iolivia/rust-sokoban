@@ -44,7 +44,7 @@ Hello, world!
 
 ```toml
 [dependencies]
-ggez = "0.5.1"
+{{#include ../../../code/rust-sokoban-c01-01/Cargo.toml:10}}
 ```
 
 > **_MORE:_** 更多关于Cargo.toml的信息可以看 [这里](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html).

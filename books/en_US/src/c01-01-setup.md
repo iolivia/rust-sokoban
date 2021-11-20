@@ -44,8 +44,9 @@ Remember that `Cargo.toml` file we saw in our directory? That file is used for d
 
 ```toml
 [dependencies]
-ggez = "0.5.1"
+{{#include ../../../code/rust-sokoban-c01-01/Cargo.toml:10}}
 ```
+
 
 Now let's run `cargo run` again and you should see something like this. It should take slightly longer this time as it will be fetching these new dependencies from [crates.io](https://crates.io), then compiling them and finally linking them into our lib.
 
