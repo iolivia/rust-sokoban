@@ -5,7 +5,7 @@ use ggez::graphics;
 use ggez::graphics::Color;
 use ggez::graphics::DrawParam;
 use ggez::graphics::Image;
-use ggez::nalgebra as na;
+use glam::Vec2;
 use ggez::{timer, Context};
 use graphics::spritebatch::SpriteBatch;
 use itertools::Itertools;
@@ -19,9 +19,9 @@ pub struct RenderingSystem<'a> {
 impl RenderingSystem<'_> {
     pub fn draw_text(&mut self, text_string: &str, x: f32, y: f32) {
         let text = graphics::Text::new(text_string);
-        let destination = na::Point2::new(x, y);
+        let destination = Vec2::new(x, y);
         let color = Some(Color::new(0.0, 0.0, 0.0, 1.0));
-        let dimensions = na::Point2::new(0.0, 20.0);
+        let dimensions = Vec2::new(0.0, 20.0);
 
         graphics::queue_text(self.context, &text, dimensions, color);
         graphics::draw_queued_text(
@@ -84,7 +84,7 @@ impl<'a> System<'a> for RenderingSystem<'a> {
             let z = position.z;
 
             // Add to rendering batches
-            let draw_param = DrawParam::new().dest(na::Point2::new(x, y));
+            let draw_param = DrawParam::new().dest(Vec2::new(x, y));
             rendering_batches
                 .entry(z)
                 .or_default()

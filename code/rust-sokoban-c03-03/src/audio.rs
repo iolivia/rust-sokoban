@@ -9,12 +9,12 @@ pub struct AudioStore {
 }
 
 impl AudioStore {
-    pub fn play_sound(&mut self, sound: &String) {
+    pub fn play_sound(&mut self, context: &mut Context, sound: &String) {
         let _ = self
             .sounds
             .get_mut(sound)
             .expect("expected sound")
-            .play_detached();
+            ..play_detached(context);
     }
 }
 
