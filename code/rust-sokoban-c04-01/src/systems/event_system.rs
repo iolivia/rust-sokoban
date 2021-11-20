@@ -67,7 +67,7 @@ impl<'a> System<'a> for EventSystem<'a> {
                         "incorrect"
                     };
 
-                    audio_store.play_sound(self.context,self.context, &sound.to_string())
+                    audio_store.play_sound(self.context, &sound.to_string())
                 }
             }
         }

@@ -7,7 +7,7 @@ Let's start by adding an FPS counter, there are two parts to this:
 1. getting or calculating the FPS value
 1. rendering the value on the screen
 
-For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/ggez/0.1.0/ggez/timer/fn.get_fps.html). For 2 we already have a way to render text in the rendering system, so we just need to get the FPS there. Let's put all this together in the code.
+For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/ggez/0.7.0/ggez/timer/?search=fps). For 2 we already have a way to render text in the rendering system, so we just need to get the FPS there. Let's put all this together in the code.
 
 ```rust
 // rendering_system.rs
@@ -76,7 +76,7 @@ Let's now write the code to populate the rendering_batches hash map.
 {{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
 ```
 
-Finally, let's actually render the batches. We will not be able to use the draw(image) function we used before but luckily ggez has a batching API - [SpriteBatch](https://docs.rs/ggez/0.5.1/ggez/graphics/spritebatch/struct.SpriteBatch.html). Also note the `sorted_by` here, that is provided to us to itertools. 
+Finally, let's actually render the batches. We will not be able to use the draw(image) function we used before but luckily ggez has a batching API - [SpriteBatch](https://docs.rs/ggez/0.7.0/ggez/graphics/spritebatch/struct.SpriteBatch.html). Also note the `sorted_by` here, that is provided to us to itertools. 
 
 ```rust
 // rendering_system.rs

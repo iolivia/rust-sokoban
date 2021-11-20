@@ -106,8 +106,8 @@ pub fn main() -> GameResult {
         .window_mode(conf::WindowMode::default().dimensions(800.0, 600.0))
         .add_resource_path(path::PathBuf::from("./resources"));
 
-    let (context, event_loop) = context_builder.build()?;
-    initialize_sounds(&mut world, context);
+    let (mut context, event_loop) = context_builder.build()?;
+    initialize_sounds(&mut world, &mut context);
 
     // Create the game state
     let game = Game { world };
