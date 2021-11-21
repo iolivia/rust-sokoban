@@ -1,7 +1,7 @@
 use ggez::event::KeyCode;
 use specs::World;
-use std::fmt;
-use std::{fmt::Display, time::Duration};
+
+use std::{fmt::{self, Display}, time::Duration};
 
 // Resources
 #[derive(Default)]

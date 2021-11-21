@@ -1,13 +1,13 @@
+
 use crate::components::*;
-use crate::constants::TILE_WIDTH;
 use crate::resources::*;
-use ggez::graphics;
-use ggez::graphics::Color;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
+use crate::constants::TILE_WIDTH;
+
+use ggez::{Context, graphics::{self, DrawParam, Image, Color}};
+use specs::{Join, ReadStorage, System, Read};
 use glam::Vec2;
-use ggez::Context;
-use specs::{Join, Read, ReadStorage, System};
+
+
 use std::time::Duration;
 
 pub struct RenderingSystem<'a> {
