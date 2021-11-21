@@ -1,6 +1,6 @@
 use specs::{Component, NullStorage, VecStorage, World, WorldExt};
-use std::fmt;
-use std::fmt::Display;
+
+use std::fmt::{self, Display};
 
 // Components
 #[derive(Debug, Component, Clone, Copy)]

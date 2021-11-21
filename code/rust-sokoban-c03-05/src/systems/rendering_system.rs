@@ -1,16 +1,16 @@
+
+
+
 use crate::components::*;
-use crate::constants::TILE_WIDTH;
 use crate::resources::*;
-use ggez::graphics;
-use ggez::graphics::Color;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
+use crate::constants::TILE_WIDTH;
+
+use ggez::{Context, graphics::{self, DrawParam, Image, Color, spritebatch::SpriteBatch}, timer};
+use specs::{Join, ReadStorage, System, Read};
 use glam::Vec2;
-use ggez::{timer, Context};
-use graphics::spritebatch::SpriteBatch;
 use itertools::Itertools;
-use specs::{Join, Read, ReadStorage, System};
-use std::{collections::HashMap, time::Duration};
+
+use std::{time::Duration, collections::HashMap};
 
 pub struct RenderingSystem<'a> {
     pub context: &'a mut Context,

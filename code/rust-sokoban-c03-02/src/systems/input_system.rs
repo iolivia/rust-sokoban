@@ -2,8 +2,8 @@ use crate::components::*;
 use crate::constants::*;
 use crate::resources::{InputQueue, Gameplay};
 use ggez::event::KeyCode;
-use specs::world::Index;
-use specs::{Entities, Join, ReadStorage, System, Write, WriteStorage};
+use specs::{world::Index, Entities, Join, ReadStorage, System, Write, WriteStorage};
+
 use std::collections::HashMap;
 
 pub struct InputSystem {}

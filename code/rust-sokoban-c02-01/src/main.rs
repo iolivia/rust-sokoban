@@ -1,9 +1,9 @@
-use ggez;
-use ggez::graphics;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
+// Rust sokoban
+// main.rs
+
 use glam::Vec2;
-use ggez::{conf, event, Context, GameResult};
+use ggez::{conf, event, Context, GameResult,
+    graphics::{self, DrawParam, Image}};
 use specs::{
     join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
 };

@@ -1,11 +1,11 @@
-use ggez;
-use ggez::graphics;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
+// Rust sokoban
+// main.rs
+
+
+
 use ggez::{conf, event, Context, GameResult};
-use specs::{
-    join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
-};
+use specs::{Builder, Component, VecStorage, World, WorldExt};
+
 
 use std::path;
 
@@ -52,7 +52,7 @@ impl event::EventHandler<ggez::GameError> for Game {
         Ok(())
     }
 
-    fn draw(&mut self, context: &mut Context) -> GameResult {
+    fn draw(&mut self, _context: &mut Context) -> GameResult {
         Ok(())
     }
 }
