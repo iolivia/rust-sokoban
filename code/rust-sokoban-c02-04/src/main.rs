@@ -1,7 +1,7 @@
-use ggez;
-use ggez::event::KeyCode;
-use ggez::event::KeyMods;
-use ggez::{conf, event, Context, GameResult};
+// Rust sokoban
+// main.rs
+
+use ggez::{conf, event::{self, KeyCode, KeyMods}, Context, GameResult};
 use specs::{RunNow, World, WorldExt};
 use std::path;
 

@@ -1,8 +1,8 @@
 use crate::components::*;
 use crate::constants::*;
 use crate::resources::{InputQueue, Gameplay};
-use specs::{world::Index, event::KeyCode};
-use specs::{Entities, Join, ReadStorage, System, Write, WriteStorage};
+use ggez::event::KeyCode;
+use specs::{world::Index, Entities, Join, ReadStorage, System, Write, WriteStorage};
 
 use std::collections::HashMap;
 

@@ -1,12 +1,12 @@
-use ggez;
-use ggez::event::{KeyCode, KeyMods};
-use ggez::graphics;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
+// Rust sokoban
+// main.rs
+
 use glam::Vec2;
-use ggez::{conf, event, Context, GameResult};
+use ggez::{conf, Context, GameResult,
+    event::{self, KeyCode, KeyMods}, 
+    graphics::{self, DrawParam, Image}};
 use specs::{
-    join::Join, Builder, Component, Read, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
+    join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
     Write, WriteStorage,
 };
 

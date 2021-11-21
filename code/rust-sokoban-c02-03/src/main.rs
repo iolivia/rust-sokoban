@@ -1,19 +1,19 @@
-use ggez;
-use ggez::event::KeyCode;
-use ggez::event::KeyMods;
-use ggez::graphics;
-use ggez::graphics::DrawParam;
-use ggez::graphics::Image;
+// Rust sokoban
+// main.rs
+
+
+
 use glam::Vec2;
-use ggez::{conf, event, Context, GameResult};
-use specs::world::Index;
-use specs::Entities;
-use specs::NullStorage;
-use specs::WriteStorage;
+use ggez::{
+    conf, Context, GameResult,
+    event::{self, KeyCode, KeyMods}, 
+    graphics::{self, DrawParam, Image}};
 use specs::{
-    join::Join, Builder, Component, Read, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
-    Write,
+    join::Join, Builder, Component, ReadStorage, RunNow, 
+    System, VecStorage, World, WorldExt,
+    Write, WriteStorage, NullStorage, Entities, world::Index
 };
+
 use std::collections::HashMap;
 use std::path;
 
@@ -129,11 +129,11 @@ impl<'a> System<'a> for InputSystem {
             // Get the first key pressed
             if let Some(key) = input_queue.keys_pressed.pop() {
                 // get all the movables and immovables
-                let mut mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
+                let mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
                     .join()
                     .map(|t| ((t.2.x, t.2.y), t.0.id()))
                     .collect::<HashMap<_, _>>();
-                let mut immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
+                let immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
                     .join()
                     .map(|t| ((t.2.x, t.2.y), t.0.id()))
                     .collect::<HashMap<_, _>>();
@@ -171,7 +171,7 @@ impl<'a> System<'a> for InputSystem {
                             // if it exists, we need to stop and not move anything
                             // if it doesn't exist, we stop because we found a gap
                             match immov.get(&pos) {
-                                Some(id) => to_move.clear(),
+                                Some(_id) => to_move.clear(),
                                 None => break,
                             }
                         }

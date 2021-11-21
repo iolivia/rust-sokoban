@@ -9,6 +9,7 @@ use specs::{Join, ReadStorage, System, Read};
 use glam::Vec2;
 
 use std::time::Duration;
+
 pub struct RenderingSystem<'a> {
     pub context: &'a mut Context,
 }
