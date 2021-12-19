@@ -10,7 +10,7 @@
     - [Moviendo al jugador](./c02-02-move-player.md)
     - [Empujando cajas](./c02-03-push-box.md)
     - [Módulos](./c02-04-modules.md)
-    - [Gameplay](./c02-05-gameplay.md)
+    - [Jugabilidad](./c02-05-gameplay.md)
 - [Advanced gameplay](./c03-00-intro.md)
     - [Coloured boxes](./c03-01-colours.md)
     - [Animations](./c03-02-animations.md)
