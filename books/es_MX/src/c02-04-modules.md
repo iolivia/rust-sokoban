@@ -1,8 +1,8 @@
-# Modules
+# Módulos
 
-The main file is getting quite big and as you can imagine, that will not be very sustainable as our project grows. Luckily, Rust has the concept of modules which will alow us to nicely split out functionality based on concerns into separate files.
+El archivo main se está volviendo bastante grande y como puedes imaginar, esto no será muy sostenible conforme continúe creciendo nuestro proyecto. Afortunadamente, Rust cuenta con el concepto de módulos que nos permitirá dividir muy bien la funcionalidad en archivos separados.
 
-For now, let's aim for this folder structure. Eventually as we get more components and systems, we'll probably want more than one file, but this should be a pretty good place to start.
+Por ahora, apuntemos a la siguiente estructura de carpetas. Conforme tengamos más componentes y sistemas, probablemente querremos más de un solo archivo, pero este debe ser un buen punto de partida.
 
 ```
 ├── resources
@@ -26,46 +26,46 @@ For now, let's aim for this folder structure. Eventually as we get more componen
 └── Cargo.toml
 ```
 
-> **_MORE:_**  Read more about modules and managing growing projects [here](https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html).
+> **_MORE:_**  Lee más sobre los módulos y la administración de proyectos en crecimiento [aquí](https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html).
 
-Let's start by moving all the components into a file. There should be no changes apart from making some fields public. The reason why we need to make the fields public is because when everything was in the same file everything had access to everything else, which was convenient to start with, but now that we have split things out we need to pay more attention to visibilities. For now we'll make the fields public to get things working again, but there is a better way which we will discuss in a later section. We've also moved the components registration at the bottom of this file which is quite handy when we add components we only need to change this file.
+Empecemos por mover todos los componentes a un archivo. No debería haber más cambios además de hacer que algunos campos sean públicos. La razón por la que necesitamos hacer públicos los campos es porque cuando todo estaba en el mismo archivo todos los elementos tenían acceso a todos los demás, lo que fue conveniente para empezar, pero ahora que queremos separar las cosas necesitamos poner más atención a la visibilidad. Por ahora haremos los campos públicos para que todo funcione nuevamente, pero hay una mejor forma que discutiremos más adelante en esta sección. También hemos movido el registro de los componentes a la parte inferior de este archivo lo cual es bastante práctico para cuando agreguemos componentes ya que solo necesitamos modificar este archivo.
 
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/components.rs:}}
 ```
 
-Now for the resources.
+Ahora para los recursos.
 
 ```rust
 // resources.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/resources.rs:}}
 ```
 
-Next up, let's move the constants into their own file. For now we are hardcoding the map dimensions, we need them for the movement to know when we've reached the edge of the map, but as an improvement would could later store the dimensions of the map and make them dynamic based on the map loading.
+Siguiente, movamos las constantes a su propio archivo. Por ahora estamos colocando directo en código "duro" las dimensiones del mapa, las necesitamos para que en el movimiento sepamos cuándo hemos alcanzado la orilla del mapa, pero como mejora podríamos más tarde almacenar las dimensiones del mapa y hacerlas dinámicas como parte de la carga del mapa.
 
 ```rust
 // constants.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/constants.rs}}
 ```
 
-Next up, entity creation code is now into an entities file.
+Siguiente, el código de creación de entidades ahora se encuentra en el archivo entities.
 
 ```rust
 // entities.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/entities.rs}}
 ```
 
-Now for the map loading.
+Ahora para la carga del mapa.
 
 ```rust
 // map.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/map.rs}}
 ```
 
-Finally, we'll move the systems code into their own files (RenderingSystem to rendering_system.rs and InputSystem to input_system.rs). It should just be a copy paste from main with some import removals, so go ahead and do that.
+Finalmente, moveremos el código de los sistemas a sus propios archivos (RenderingSytem a rendering_system.rs e InputSystem a input_system.rs). Debiera ser un copiar y pegar del archivo main con algunas importaciones removidas, así que sigue adelante y hazlo.
 
-Now the interesting thing about systems is that it's a folder with multiple files inside. If we do nothing else and try to use `RenderingSystem` or `InputSystem` in main we will get some compilation failures. We will have to add a `mod.rs` file in the `systems` folder and tell Rust what we want to export out of this folder. All this bit is doing is it's telling Rust we want the outside world (the world out of this folder) to be able to access RenderingSystem and InputSystem types.
+Ahora la cuestión interesante sobre los sistemas es que es una carpeta con varios archivos en su interior. Si no hacemos nada más e intentamos hacer uso de `RenderingSystem` o `InputSystem` en el archivo main tendremos algunos errores de compilación. Tendremos que agregar un archivo `mod.rs` en la carpeta `systems` e indicar a Rust que queremos exportarlo fuera de esta carpeta. Todo lo que este código está haciendo es indicarle a Rust que queremos que el mundo exterior (el mundo fuera de esta carpeta) pueda acceder los tipos RenderingSystem e InputSystem.
 
 
 ```rust
@@ -73,15 +73,15 @@ Now the interesting thing about systems is that it's a folder with multiple file
 {{#include ../../../code/rust-sokoban-c02-04/src/systems/mod.rs}}
 ```
 
-Awesome, now that we've done that here is how our simplified main file looks like. Notice the mod and use declarations after the imports, those are again telling Rust that we want to use those modules.
+Asombroso, habiendo hecho lo anterior aquí tenemos cómo debería verse nuestro archivo main simplificado. Nota las declaraciones mod y use después de las importaciones, están indicándole a Rust que queremos hacer uso de esos módulos.
 
 ```rust
 // main.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/main.rs}}
 ```
 
-Feel free to run at this point, everything should work just the same, the only difference is now our code is much nicer and ready for more amazing Sokoban features.
+Siéntete libre de ejecutar el programa hasta este punto, todo debería funcionar de la misma forma que antes, la única diferencia es que ahora nuestro código es mucho más bonito y está listo para que agreguemos más características asombrosas de Sokoban.
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04).
+> **_CODELINK:_**  Puedes ver el código completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04).
 
 
