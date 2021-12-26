@@ -42,5 +42,13 @@ $ cargo run --release
 ### Create an issue
 Have a look in the issues list of any duplicates, if you can't find anything create a new one!
 
+### Help with a translation
+1. Make a copy of the books/en_US folder with the new translation ISO code (for example fr_FR, see [list](http://www.lingoes.net/en/translator/langcode.htm))
+1. Modify the language in book.toml
+1. Translate SUMMARY.md first
+1. Translate each chapter/sub-chapter, try to not modify any images/sounds/videos or any of the book structure
+1. Feel free to create a draft pull request as soon as you have a few pages translated, this will make other contributors aware of the work
+1. When this is ready, notify the repo owner, a CI change is required to publish the book to a new subdomain (sokoban.iolivia.me/fr_fr in this example)
+
 ## :car: License
 MIT
