@@ -11,7 +11,7 @@
     - [Empujando cajas](./c02-03-push-box.md)
     - [Módulos](./c02-04-modules.md)
     - [Jugabilidad](./c02-05-gameplay.md)
-- [Advanced gameplay](./c03-00-intro.md)
+- [Jugabilidad avanzada](./c03-00-intro.md)
     - [Coloured boxes](./c03-01-colours.md)
     - [Animations](./c03-02-animations.md)
     - [Sounds and events](./c03-03-sounds-events.md)
