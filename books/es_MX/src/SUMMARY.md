@@ -12,7 +12,7 @@
     - [Módulos](./c02-04-modules.md)
     - [Jugabilidad](./c02-05-gameplay.md)
 - [Jugabilidad avanzada](./c03-00-intro.md)
-    - [Coloured boxes](./c03-01-colours.md)
+    - [Cajas de colores](./c03-01-colours.md)
     - [Animations](./c03-02-animations.md)
     - [Sounds and events](./c03-03-sounds-events.md)
     - [Batch rendering](./c03-04-batch-rendering.md)

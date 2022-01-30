@@ -1,15 +1,15 @@
-# Coloured boxes
-It's time for a little more flair in our game! The gameplay so far is quite simple, put the box on the spot. Let's make it more exciting by adding different coloured boxes. We'll go with red and blue for now but feel free to adapt this to your preference, and create more colours! To win now you'll have to put the box on the same colour spot to win.
+# Cajas de colores
+¡Es momento de que agreguemos un poco de estilo a nuestro juego! La jugabilidad hasta el momento es bastante sencilla, colocar la caja en el lugar especificado. Hagamos esto un poco más interesante agregando cajas de diferentes colores. Utilizaremos rojo y azul por ahora pero siéntete libre de adaptarlo a tu preferencia, ¡y crear más colores! Ahora deberás colocar la caja en el destino del mismo color.
 
-## Assets
-First let's add the new assets, right click and download these as images, or create your own!
+## Recursos
+Primero agreguemos los nuevos recursos, clic derecho y descarga estas imágenes, ¡o crea las propias!
 
-![Blue box](./images/box_blue.png)
-![Red box](./images/box_red.png)
-![Blue box spot](./images/box_spot_blue.png)
-![Red box spot](./images/box_spot_red.png)
+![Caja azul](./images/box_blue.png)
+![Caja roja](./images/box_red.png)
+![Meta azul](./images/box_spot_blue.png)
+![Meta roja](./images/box_spot_red.png)
 
-The directory structure should look like this (notice we've removed the old default box and default spot).
+La estructura de carpetas debería lucir así (nota que hemos eliminado la caja y meta anteriores).
 
 ```
 ├── resources
@@ -37,79 +37,79 @@ The directory structure should look like this (notice we've removed the old defa
 ├── Cargo.toml
 ```
 
-## Component changes
-Now let's add an enum for the colour (if you chose to implement more than two colours you'll have to add them here).
+## Cambios a los componentes
+Ahora agreguemos un enum para el color (si elegiste implementar más de dos colores deberás agregarlos aquí).
 
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/components.rs:29:32}}
 ```
 
-Now let's use this enum both for the box and the spot. 
+Ahora utilicemos este enum tanto para la caja como para la meta.
 
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/components.rs:44:54}}
 ```
 
-## Entity creation
-Let's also add the colour as a parameter when we created boxes and spots and make sure we pass the correct asset path based on the colour enum. 
+## Creación de entidades
+Agreguemos también el color como un parámetro cuando creamos las cajas y las metas, asegurándonos de pasar la ruta correcta al recurso con base en el enum de color.
 
-In order to create the correct string for the asset path we basically want `"/images/box_{}.png"` where `{}` is the colour of the box we are trying to create. The challenge we have now is that we are using an enum for the colour, so the Rust compiler will not know how to convert `BoxColour::Red` into `"red"`. It would be really cool to be able to do `colour.to_string()` and get the right value. Fortunately, Rust has a nice way for us to do this, we need to implement the `Display` trait on the `BoxColour` enum. Here is how that looks like, we simply specify how to map each variant of the enum into a string.
+Para crear la cadena de texto correcta para la ruta del recurso básicamente queremos `"/images/box_{}.png"` donde `{}` es el color de la caja que estamos creando. El reto que ahora tenemos es que estamos utilizando un enum para el color, por lo que el compilador de Rust no sabrá covertir `BoxColour::Red` a `"red"`. Sería genial que se pudiera hacer `colour.to_string()` y obtener el valor correcto. Afortunadamente, Rust tiene una buena manera para que hagamos esto, necesitamos implementar el trait `Display` en el enum `BoxColour`. A continuación tienes cómo luce, simplemente especificamos cómo relacionar cada variante del enum con una cadena de texto.
 
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/components.rs:34:43}}
 ```
 
-Now let's include the colour in our entity creation code and use the fancy `colour.to_string()` we just made possible in the previous snippet.
+Ahora incluyamos el color en nuestro código de creación de la entidad y usemos el elegante `colour.to_string()` que recién hicimos posible en el anterior trozo de código.
 
 ```rust
 // entities.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/entities.rs:27:48}}
 ```
 
-## Map
-Now let's change our map code to allow new options for coloured boxes and spots:
-* "BB" for blue box
-* "RB" for red box
-* "BS" for blue spot 
-* "RS" for red spot
+## Mapa
+Ahora cambiemos nuestro código del mapa para permitir nuevas opciones para cajas de colores y metas:
+* "BB" para caja azul
+* "RB" para caja roja
+* "BS" para meta azul
+* "RS" para meta roja
 
 ```rust
 // map.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/map.rs}}
 ```
 
-And let's update our static map in the main.
+Y actualicemos nuestro mapa estático en main.
 
 ```rust
 // main.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/main.rs:65:80}}
 ```
 
-## Gameplay
-Now we've done the hard work, so we can go ahead and test this code out. You'll notice everything works, but there is a big gameplay bug. You can win by putting the red box on the blue spot and viceversa. Let's fix that. 
+## Jugabilidad
+Ya hemos hecho el trabajo difíci, así que ahora podemos continuar y probar nuestro código. Notarás que todo funciona, pero hay un gran bug en la jugabilidad. Puedes ganar colocando la caja roja en la meta azul y viceversa. Arreglémoslo.
 
-We've learnt before that data goes in components and behaviour goes in systems - as per ECS methodology. What we are discussing now is behaviour, so it must be in a system. Remember how we added a system for checking whether you've won or not? Well that is the exact place we are after.
+Antes aprendimos que los datos van en los componentes y el comportamiento en los sistemas - siguiendo la metodología ECS. Lo que ahora discutimos es comportamiento, así que debe ir en un sistema. ¿Recuerdas que agregamos un sistema para validar si se había ganado o no? Pues bien, ese es el lugar exacto que buscamos.
 
-Let's modify the run function and check the colour of the spot and the box match.
+Modifiquemos la función run y validemos si el color de la meta y de la caja coinciden.
 
 ```rust
 // gameplay_state_system.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/systems/gameplay_state_system.rs:20:52}}
 ```
 
-Now if you compile the code at this point it should complain about the fact that we are trying to compare two enums with `==`. Rust doesn't know by default how to handle this, so we must tell it. The best way we can do that is add an implementation for the `PartialEq` trait.
+Si compilas el código en este punto debería quejarse del hecho de que estamos intentando comparar dos enums con `==`. Rust no sabe por defecto cómo manejar esto, así que debemos indicárselo. La mejor forma en la que podemos hacerlo es agregar una implementación del trait `PartialEq`.
 
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c03-01/src/components.rs:28:32}}
 ```
 
-Now is a good time to discuss these unusual `derive` annotations. We've used them before, but never got too deep into what they do. Derive attributes can be applied to structs or enums and they allow us to add default trait implementations to our types. For example here we are telling Rust to add the `PartialEq` default trait implementations to our `BoxColour` enum.
+Ahora es un buen momento para comentar sobre las inusuales anotaciones `derive`. Las hemos utilizado antes, pero no profundizamos sobre lo que hacen. Los atributos derive pueden aplicarse a structs o enums y nos permiten agregar implementaciones por defecto de algún trait a nuestros tipos. Por ejemplo aquí le estamos indicando a Rust que agregue la implementación por defecto del trait `PartialEq` a nuestro enum `BoxColour`.
 
-Here is how the `PartialEq` default implementation looks like, it just checks if something equals itself. If it does, the comparison succeeds and if it doesn't it fails. Don't worry too much about this if it doesn't make sense. 
+A continuación vemos cómo luce la implementación por defecto de `PartialEq`, checa si algo es igual a si mismo. Si es así, la comparación es exitosa y si no, ésta falla. No te preocupes demasiado si no te hace sentido.
 
 ```rust
 pub trait PartialEq {
@@ -118,12 +118,12 @@ pub trait PartialEq {
 }
 ```
 
-So by adding the `#[derive(PartialEq)]` on top of the enum we are telling Rust that `BoxColour` now implements the partial eq trait we saw before, which means if we try to do `box_colour_1 == box_colour_2` it will use this implementation which will just check if the colour_1 object is the same as the colour_2 object. This is not the most sophisticated partial equality implementation, but it should do just fine for our usecase. 
+Así que al agregar `#[derive(PartialEq)]` en la parte superior del enum le indicamos a Rust que `BoxColour` ahora implementa el trait de igualdad parcial que vimos antes, lo que significa que si intentamos hacer `box_colour_1 == box_colour_2` se utilizará esta implementación que validará si el objeto box_colour_1 es el mismo que el objeto box_colour_2. Esta no es la implementación más sofisticada de igualdad parcial, pero debiera funcionar bien para nuestro caso de uso.
 
-> **_MORE:_**  Read more about PartialEq [here](https://doc.rust-lang.org/std/cmp/trait.PartialEq.html) and more about derivable traits [here](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html).
+> **_MORE:_**  Lee más sobre PartialEq [aquí](https://doc.rust-lang.org/std/cmp/trait.PartialEq.html) y más sobre traits derivables [aquí](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html).
 
-Now we can compile the code the reap the rewards of our efforts by seeing the game run and telling us we've won only when we put the right box in the right spot!
+¡Ahora podemos compilar el código y cosechar las recompensas de nuestros esfuerzos, viendo el juego correr e indicándonos que hemos ganado solo cuando colocamos la caja correcta en la meta correcta¡
 
 ![Sokoban play](./images/colours.gif)
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-01).
+> **_CODELINK:_**  Puedes ver el código fuente completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-01).
