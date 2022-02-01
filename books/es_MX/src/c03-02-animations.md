@@ -1,30 +1,30 @@
-# Animations
-In this section we are going to look at adding animations to our game, we'll start with some basic ones but feel free to add more complex ones given the ideas in this tutorial. We'll add two animations: making the player blink and making the boxes jiggle slightly in place. 
+# Animaciones
+En esta sección agregaremos animaciones a nuestro juego, empezaremos con algunas animaciones básicas pero siéntete libre de agregar más complejas con las ideas en este tutorial. Agregaremos dos animaciones: hacer que el jugador parpadee y que las cajas se sacudan levemente en su lugar.
 
-## What is an animation?
-An animation is simply a set of frames played at a specific time interval that gives the illusion of movement. Think of it like a video (a video is just a set of images played in sequence), but much lower framerate. 
+## ¿Qué es una animación?
+Una animación es sencillamente un conjunto de fotogramas reproducidos en un intervalo de tiempo específico que da la ilusión de movimiento. Piensa en esto como en un video (un video es solo un conjunto de imágenes reproducidas en secuencia), pero a muchos menos cuadros por segundo (o fotogramas por segundo).
 
-For example, to get our player blinking we'll have three animation frames: 
-1. our current player with the eyes open
-1. player with eyes a little bit closed
-1. player with eyes completely closed
+Por ejemplo, para hacer que nuestro jugador parpadee tendremos tres fotogramas de animación:
+1. nuestro jugador actual con los ojos abiertos
+1. el jugador con los ojos levemente cerrados
+1. el jugador con los ojos completamente cerrados
 
-If we play these three frames in sequence you'll notice it looks like the player is blinking. You can try this out by opening the images and shifting between them quickly on the image preview. 
+Si reproducimos estos tres fotogramas en secuencia notarás que parece que el jugador estuviera parpadeando. Puedes intentarlo abriendo las imágenes y cambiando entre ellas rápidamente en la vista previa de tu visor de imágenes.
 
-There are a few gotchas on this: 
-* the assets need to be done with a specific framerate in mind - for us we will go with 250 milliseconds, meaning we will play a new animation frame every 250ms, so we will have 4 frames per second
-* the assets need to be consistent with each other - imagine we had two types of players which had different assets and different looking eyes, we would have to make sure that when we create the three frames mentioned above they would be consistent, otherwise the two players would blink at different rates
-* designing assets for a lot of frames is a lot of work, so we'll try to keep our animations quite simple and stick to the key frames
+Hay algunos detalles con lo anterior:
+* los recursos deben crearse tomando en cuenta una velocidad de fotogramas específica - nosotros consideraremos 250 milisegundos, lo que significa que reproduciremos un nuevo cuadro cada 250ms, así que tendremos 4 fotogramas por segundo
+* los recursos deben ser consistentes entre si - imagina que tuviéramos dos tipos de jugadores que tuvieran recursos y ojos diferentes, tendríamos que asegurarnos de que cuando creáramos los tres fotogramas mencionados anteriormente fueran consistentes, de otra forma los jugadores parpadearían a diferentes velocidades
+* diseñar recursos para muchos fotogramas es mucho trabajo, por lo que trataremos de mantener nuestras animaciones simples y enfocarnos en los fotogramas clave
 
-## How will it work?
-So how is this going to work in our existing Sokoban game? We'll have to:
-1. Change our renderable component to allow multiple frames - we could also create a new renderable component that handles animated renderables and keep the one we have for static renderables, but it feels a bit cleaner to keep them together for now
-1. Modify the player entity construction to take multiple frames
-1. Keep track of time in our rendering loop - we'll discuss this one in more detail so don't worry if it's not obvious why we need to do this
-1. Change the rendering system taking into account the number of frames, the time and the frame that is supposed to be rendered at a given time
+## ¿Cómo funcionará?
+Entonces ¿cómo funcionará todo esto en nuestro juego Sokoban? Tendremos que:
+1. Cambiar nuestro componente renderizable para que soporte múltiples fotogramas - también podríamos crear un nuevo componente renderizable que maneje animaciones y mantener el que ya tenemos para renderizables estáticos, pero por ahora se siente un poco más limpio unirlos.
+1. Modificar la construcción de la entidad del jugador para que maneje fotogramas múltiples.
+1. Mantener registro del tiempo que ha transcurrido en nuestro ciclo de renderizado - comentaremos sobre esto con más detalle así que no te preocupes si no es obvio porqué lo necesitamos.
+1. Cambiar el sistema de renderizado tomando en cuenta el número de fotogramas, el tiempo y el fotograma que se supone se debe renderizar en un instante específico.
 
-## Assets
-Let's add the new assets for the player, it should then look like this. Notice we created a convention to name the frames sequentially, this is not strictly necessary, but it will help us keep track of the order easily.
+## Recursos
+Agreguemos los nuevos recursos para el jugador, deberían verse como siguen. Nota que creamos una convención para nombrar los fotogramas de forma ordenada, no es estrictamente necesario, pero nos ayudará a seguir fácilmente su secuencia.
 
 ![Player 1](./images/player_1.png)
 ![Player 2](./images/player_2.png)
@@ -45,11 +45,11 @@ Let's add the new assets for the player, it should then look like this. Notice w
 ```
 
 ## Renderable
-Now let's update our renderable component to receive multiple frames, instead of having a single path, we'll have a list of paths, this should be pretty straightforward. 
+Actualicemos nuestro componente renderizable para que pueda recibir múltiples fotogramas, en lugar de tener una sola ruta, tendremos una lista de rutas, esto debería ser bastante sencillo.
 
-Let's also add two new functions to construct the two types of renderables, either with a single path or with multiple paths. These two functions are associated functions, because they are associated with the struct `Renderable`, but they are the equivalent of static functions in other languages since they don't operate on instances (notice they don't receive `&self` or `&mut self` as the first argument, which means we can call them in the context of the struct not an instance of the struct). They are also similar to factory functions, since they encapsulate the logic and validation required before actually constructing an object.
+También agregaremos dos nuevas funciones para constuir los dos tipos de renderizables, ya sea con una o con múltiples rutas. Estas dos funciones son funciones asociadas, porque están asociadas con la estructura `Renderable`, pero son el equivalente a funciones estáticas en otros lenguajes ya que no operan sobre instancias (nota que no reciben `&self` o `&mut self` como su primer argumento, lo que indica que las podemos llamar en el contexto de la estructura y no en una instancia de la estructura). También son similares a las funciones  de fábrica, ya que encapsulan la lógica y validación necesarias antes de construir un objeto.
 
-> **_MORE:_**  Read more about associated functions [here](https://doc.rust-lang.org/book/ch05-03-method-syntax.html#associated-functions).
+> **_MORE:_**  Lee más sobre funciones asociadas [aquí](https://doc.rust-lang.org/book/ch05-03-method-syntax.html#associated-functions).
 
 ```rust
 // components.rs
@@ -57,14 +57,14 @@ Let's also add two new functions to construct the two types of renderables, eith
 {{#include ../../../code/rust-sokoban-c03-02/src/components.rs:48}}
 ```
 
-Next, we need a way of telling if a renderable is animated or static, which we will use in the rendering system. We could leave the paths member variable public and allow the rendering system to get the length of the paths and infer based on the length, but there is a more idiomatic way. We can add an enum for the kind of renderable, and add a method on the renderable to get that kind, in this way we encapsulate the logic of the kind within the renderable, and we can keep paths private. You can put the kind declaration anywhere in the components.rs, but ideally next to the renderable declaration.
+A continuación, necesitamos una forma de indicar si un renderizable es animado o estático, lo que usaremos en el sistema de renderizado. Podríamos hacer que la variable miembro paths fuera pública y permitirle al sistema de renderizado obtener su longitud e inferir el tipo de renderizable con base en dicha longitud, pero hay una forma más idiomática. Podemos agregar un enum RenderableKind que indique el tipo de renderizable, y agregar a Renderable un método para obtener dicho tipo, de esta forma encapsulamos la lógica dentro del renderizable, y podemos mantener la variable paths como privada. Puedes colocar la declaración de este nuevo enum en cualquier lugar de components.rs, pero idealmente debería estar a un lado de la declaración de Renderable.
 
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/components.rs:14:18}}
 ```
 
-Now let's add a function to tell us the kind of a renderable based on the internal paths.
+Ahora agreguemos una función que nos indique el tipo de renderizable con base en la variable interna paths.
 
 ```rust
 // components.rs
@@ -72,7 +72,7 @@ Now let's add a function to tell us the kind of a renderable based on the intern
 {{#include ../../../code/rust-sokoban-c03-02/src/components.rs:48}}
 ```
 
-And finally, because we made paths private, we need to allow users of renderable to get a specific path from our list. For static renderables, this will be the 0th path (the only one) and for animated paths we'll let the rendering system decide which path should be rendered based on the time. The only tricky bit here is if we get asked for a frame bigger than what we have, we will wrap that around by modding with the length. 
+Y finalmente, como la variable paths es privada, necesitamos permitir a los usuarios del renderizable obtener una ruta específica de nuestra lista. Para renderizables estáticos este sería el índice 0 de paths (el único índice) y para renderizables con animación necesitaremos que el sistema de renderizado decida cuál de los fotogramas debería ser renderizado con base en el tiempo transcurrido. La única parte complicada es si se solicita un fotograma con índice mayor a los que tenemos, lo envolveremos utilizando el módulo del índice a obtener con la longitud de paths.
 
 ```rust
 // components.rs
@@ -83,54 +83,53 @@ And finally, because we made paths private, we need to allow users of renderable
 {{#include ../../../code/rust-sokoban-c03-02/src/components.rs:42:48}}
 ```
 
-## Entity creation
-Next up, let's update our player entity creation to account for multiple paths. Notice now we are using the `new_animated` function to construct the renderable.
+## Creación de entidades
+Siguiente, actualicemos la entidad de nuestro jugador para que tome en cuenta múltiples rutas. Nota que ahora utilizamos la función `new_animated` para crear el renderizable.
 
 ```rust
 // entities.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/entities.rs:48:60}}
 ```
 
-And let's update everything else to use the `new_static` function - here is how we are doing it for the wall entity creation, feel free to go ahead and apply this to the other static entities.
+Y actualicemos todo lo demás para que haga uso de la función `new_static` - aquí tenemos cómo hacerlo para la creación de la entidad pared, siéntete libre de continuar y aplicarlo a todas las otras entidades estáticas.
 
 ```rust
 // entities.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/entities.rs:5:14}}
 ```
 
-## Time
-Another component we will need for this is keeping track of time. What does time have to do with this and how does this connect with frame rate? The basic idea is this: ggez controls how often the rendering system gets called, and this depends on the frame rate which in turn depends on how much work we are doing on every iteration of the game loop. Because we don't control this, in the span of a second we could get called 60 times or 57 times or maybe even 30 times. This means we cannot base our animation system on the framerate, and instead we need to keep it based on time. 
+## Tiempo
+Otro componente que necesitaremos para las animaciones es llevar la cuenta del tiempo. ¿Qué tiene que ver el tiempo y cómo se conecta con los fotogramas por segundo? La idea básica es esta: ggez controla qué tan frecuentemente se llama al sistema de renderizado, y esto depende en los cuadros por segundo que a su vez dependen de qué tanto trabajo estamos realizando en cada iteración del ciclo del juego. Ya que es algo sobre lo que no tenemos control, en el transcurso de un segundo podría llamarse 60, 57 o incluso 30 veces. Esto nos indica que no podemos basar nuestra animación en los cuadros por segundo, en su lugar debemos hacerlo en función del tiempo.
 
-Because of this we need to keep track of the delta time - or how much time passes between the previous loop and the current loop. And because the delta time is much smaller than our animation frame interval (which we have decided on 250ms), we need to keep the cumulative delta - or how much time has passed since the beginning of the game being launched.
+Debido a esto necesitamos llevar cuenta de un tiempo al que llamaremos delta - o cuánto tiempo pasa entre el ciclo anterior y el actual. Y debido a que el tiempo delta es mucho más pequeño que el intervalo de fotogramas de nuestra animación (que decidimos fuera 250 ms), necesitamos mantener el delta acumulativo - o cuánto tiempo ha transcurrido desde el inicio del juego.
 
-> **_MORE:_**  Read more about delta time, frame rate and game loops [here](https://medium.com/@dr3wc/understanding-delta-time-b53bf4781a03#:~:text=Delta%20time%20describes%20the%20time,drawn%20and%20the%20current%20frame.&text=If%20you%20read%20my%20article,until%20the%20game%20is%20stopped.), [here](https://www.reddit.com/r/pcmasterrace/comments/29qcqr/an_explanation_of_game_loops_fps_and_delta_time/) or [here](https://www.youtube.com/watch?v=pctGOMDW-HQ&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=37) .
+> **_MORE:_**  Lee más sobre el tiempo delta, cuadros por segundo y ciclos de juego [aquí](https://medium.com/@dr3wc/understanding-delta-time-b53bf4781a03#:~:text=Delta%20time%20describes%20the%20time,drawn%20and%20the%20current%20frame.&text=If%20you%20read%20my%20article,until%20the%20game%20is%20stopped.), [aquí](https://www.reddit.com/r/pcmasterrace/comments/29qcqr/an_explanation_of_game_loops_fps_and_delta_time/) o [aquí](https://www.youtube.com/watch?v=pctGOMDW-HQ&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=37) .
 
-Let's now add a resource for time, this doesn't fit into our component model since time is just some global state that needs to be kept.
+Ahora agreguemos un recurso para el tiempo, no sigue nuestro modelo de componentes ya que el tiempo es solo un estado global del que debemos llevar registro.
 
 ```rust
 // resources.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/resources.rs:45:48}}
 ```
 
-And don't forget to register the new resource.
+Y no olvidemos registrar el nuevo recurso.
 
 ```rust
 // resources.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/resources.rs:12:16}}
 ```
 
-And now let's update this time in our main loop. Luckily ggez provides a function to get the delta, so all we have to do is accumulate it.
+Y actualicemos este tiempo en nuestro ciclo principal. Afortunadamente ggez nos provee una función para obtener el delta, lo único que tenemos que hacer es acumularlo.
 
 ```rust
 // main.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/main.rs:24:45}}
 ```
 
+## Sistema de renderizado
+Ahora actualicemos nuestro sistema de renderizado. Obtendremos el tipo del renderizable, si es estático simplemente utilizaremos el primer fotograma, de lo contrario averiguamos qué fotograma utilizar con base en el tiempo delta.
 
-## Rendering system
-Now let's update our rendering system. We will get the kind from the renderable, if it's static we simply use the first frame, otherwise we figure out which frame to get based on the delta time.
-
-Let's first add a function to enapsulate this logic of getting the correct image.
+Primero agreguemos una función para encapsular la lógica para obtener la imagen correcta.
 
 ```rust
 // rendering_system.rs
@@ -139,7 +138,7 @@ Let's first add a function to enapsulate this logic of getting the correct image
 {{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering_system.rs:34:54}}
 ```
 
-And finally, let's use the new `get_image` function inside the run function (we will also have to add time to the `SystemData` definition and a couple of imports, but that should be pretty much it).
+Y finalmente, usemos la nueva función `get_image` dentro de la función run (también tendremos que agregar time a la definición de `SystemData` y algunas importaciones más, pero eso debería ser todo más o menos).
 
 ```rust
 // rendering_system.rs
@@ -156,20 +155,20 @@ And finally, let's use the new `get_image` function inside the run function (we 
 
 ```
 
-## Box animations
-Now that we've learned how to do this, let's extend this to make the boxes animate as well. All we have to do is add new assets and fix the entity creation and everything should just work. Here are the assets I used, feel free to re-use them or create new ones!
+## Animaciones de las cajas
+Ahora que hemos aprendido cómo hacer animaciones, extendámoslo para hacer que también las cajas tengan animación. Todo lo que debemos hacer es agregar nuevos recursos y actualizar la creación de las entidades, y todo debería funcionar. Aquí están los recursos que utilicé, siéntete libre de usarlos o ¡de crear nuevos!
 
 ![Box red 1](./images/box_red_1.png)
 ![Box red 2](./images/box_red_2.png)
 ![Box blue 1](./images/box_blue_1.png)
 ![Box blue 2](./images/box_blue_2.png)
 
-## Wrap up
-That was a long section, but I hope you enjoyed it! Here is how the game should look now.
+## Terminando
+Esta fue una sección larga, ¡pero espero que la hayas disfrutado! Aquí tienes cómo debería lucir el juego ahora.
 
 ![Sokoban animations](./images/animations.gif)
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-02).
+> **_CODELINK:_**  Puedes ver el código completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-02).
 
 
 
