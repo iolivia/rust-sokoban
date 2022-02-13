@@ -41,7 +41,7 @@ Before we get deep into the rendering code, we will need to do some collection g
 
 ```toml
 // Cargo.toml
-{{#include ../../../code/rust-sokoban-c03-04/Cargo.toml:9:12}}
+{{#include ../../../code/rust-sokoban-c03-04/Cargo.toml:9:13}}
 ```
 
 Let's also import it in the rendering system
