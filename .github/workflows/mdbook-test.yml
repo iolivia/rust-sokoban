@@ -1,0 +1,32 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  calculate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: echo "::set-output name=matrix::{\"sample_path\":$(echo [$(ls -d books/*/ | xargs printf '\"%s\",'  | tr -d ' ')])}"
+  test:
+    needs: calculate-matrix
+    name: Test ${{ matrix.sample_path }}
+    strategy:
+      matrix: ${{fromJson(needs.calculate-matrix.outputs.matrix)}}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Install Rust
+      run: |
+        rustup set profile minimal
+        rustup toolchain install stable
+        rustup default stable
+    - name: Install mdbook
+      run: |
+        mkdir bin
+        curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=bin
+        echo "$(pwd)/bin" >> $GITHUB_PATH
+    - name: Run tests
+      run: cd ${{ matrix.sample_path }} && mdbook test
