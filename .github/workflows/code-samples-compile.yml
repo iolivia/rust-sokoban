@@ -23,6 +23,9 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - uses: Swatinem/rust-cache@v1
+        with:
+          working-directory: ${{ matrix.sample_path }}
       - run: sudo apt-get install libudev-dev libasound2-dev
       - name: Build ${{ matrix.sample_path }}
         run: cd ${{ matrix.sample_path }} && cargo check
