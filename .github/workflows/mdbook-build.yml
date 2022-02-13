@@ -1,0 +1,36 @@
+name: mdbook build
+on: [push, pull_request]
+# on:
+#   push:
+#     branches:
+#       - master
+
+jobs:
+  calculate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: echo "::set-output name=matrix::{\"sample_path\":$(echo [$(ls -d books/*/ | xargs printf '\"%s\",'  | tr -d ' ')])}"
+  build:
+    needs: calculate-matrix
+    name: Build ${{ matrix.sample_path }}
+    strategy:
+      matrix: ${{fromJson(needs.calculate-matrix.outputs.matrix)}}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install mdbook
+      run: |
+        mkdir mdbook
+        curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
+        echo `pwd`/mdbook >> $GITHUB_PATH
+    - name: Build
+      run: |
+        # This assumes your book is in the root of your repository.
+        # Just add a `cd` here if you need to change to another directory.
+        cd ${{ matrix.sample_path }} && mdbook build
