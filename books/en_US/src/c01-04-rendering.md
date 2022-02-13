@@ -31,6 +31,12 @@ Running the game now should compile, but it will probably not do anything yet, s
 
 ## Rendering system implementation
 
+**Note:** We're going to add [glam](https://lib.rs/crates/glam) as a dependency here that is a simple and fast 3D library that offers some performance improvements.
+
+```
+{{#include ../../../code/rust-sokoban-c01-03/Cargo.toml:9:11}}
+```
+
 Here is the implementation of the rendering system. It does a few things:
 * clear the screen (ensuring we don't keep any of the state rendered on the previous frame)
 * get all entities with a renderable component and sort them by z (we do this in order to ensure we can render things on top of each other, for example the player should be above the floor, otherwise we wouldn't be able to see them)
