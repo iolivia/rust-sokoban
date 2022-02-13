@@ -1,4 +1,4 @@
-name: Code-samples-compile
+name: Lint code samples
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - id: set-matrix
         run: echo "::set-output name=matrix::{\"sample_path\":$(echo [$(ls -d code/*/ | xargs printf '\"%s\",'  | tr -d ' ')])}"
-  check:
+  clippy:
     needs: calculate-matrix
     runs-on: ubuntu-latest
     strategy:
@@ -24,6 +24,6 @@ jobs:
         with:
           toolchain: stable
       - run: sudo apt-get install libudev-dev libasound2-dev
-      - name: Build ${{ matrix.sample_path }}
-        run: cd ${{ matrix.sample_path }} && cargo check
-
+      - run: rustup component add clippy
+      - name: Lint ${{ matrix.sample_path }}
+        run: cd ${{ matrix.sample_path }} && cargo clippy -A clippy::type-complexity
