@@ -24,4 +24,4 @@ jobs:
       - run: sudo apt-get install libudev-dev libasound2-dev
       - run: rustup component add clippy
       - name: Lint ${{ matrix.sample_path }}
-        run: cd ${{ matrix.sample_path }} && cargo clippy -A clippy::type-complexity
+        run: cd ${{ matrix.sample_path }} && cargo clippy -- -A clippy::type-complexity
