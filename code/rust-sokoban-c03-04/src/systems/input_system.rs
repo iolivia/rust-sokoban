@@ -96,7 +96,7 @@ impl<'a> System<'a> for InputSystem {
         }
 
         // We've just moved, so let's increase the number of moves
-        if to_move.len() > 0 {
+        if !to_move.is_empty() {
             gameplay.moves_count += 1;
         }
 
