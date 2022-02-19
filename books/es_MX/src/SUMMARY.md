@@ -14,6 +14,6 @@
 - [Jugabilidad avanzada](./c03-00-intro.md)
     - [Cajas de colores](./c03-01-colours.md)
     - [Animaciones](./c03-02-animations.md)
-    - [Sounds and events](./c03-03-sounds-events.md)
+    - [Sonidos y eventos](./c03-03-sounds-events.md)
     - [Batch rendering](./c03-04-batch-rendering.md)
 

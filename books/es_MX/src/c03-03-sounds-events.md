@@ -1,48 +1,48 @@
-# Sounds and events
+# Sonidos y eventos
 
-In this section we will work on adding sound effects. In short, we want to play sounds in these circumstances: 
-1. when the player hits a wall or an obstacle - to let them know they cannot get through
-1. when the player places a box on the correct spot - as an indication of "you've done it correctly"
-1. when the player places a box on the incorrect spot - as an indication that the move was wrong
+En esta sección trabajaremos en agregar efectos de sonido. De forma breve, queremos reproducir sonidos en estas circunstancias:
+1. cuando el jugador encuentra una pared o un obstáculo - para hacerle saber que no puede continuar avanzando
+1. cuando el jugador coloca una caja en el lugar correcto - como indicación de "lo has hecho correctamente"
+1. cuando el jugador coloca una caja en un lugar incorrecto - como una indicación de que el movimiento fue incorrecto
 
-Actually playing audio will not be too difficult as ggez provides this ability, but the biggest issue we have right now is that we need to determine *when* to play the sounds. 
+En realidad reproducir audio no será muy difícil ya que ggez nos provee de esta habilidad, pero el problema más grande que tenemos ahora es que necesitamos determinar *cuándo* reproducir los sonidos.
 
-Let's take the box on correct spot example. We could probably use our game state system and loop through the boxes and the spots and determine when we are in this state and play the sound. But that is not going to work because we will be interating many times per second, and we will always be in this state as long as the box doesn't move, so we will attempt to play many times per second, which is not what we want. We could try to keep some state to know what we are currently playing, but that doesn't feel right. The problem is we cannot do this by iteratively checking state, we instead need a reactive model where we can be told something has just happenned, and we need to take an action. What I've described here is an event model, we need to fire an event when a box gets placed on a spot, and then when we receive this event on the other end we need to play the sound. The really good thing about this is that we will be able to re-use this event system for many other purposes.
+Tomemos como ejemplo el colocar la caja en el lugar correcto. Probablemente podríamos utilizar nuestro sistema de estado del juego e iterar las cajas y las metas para determinar cuándo estamos en el estado deseado y reproducir el sonido. Pero no funcionará porque estaríamos iterando muchas veces por segundo, y siempre estaremos en este estado mientras la caja no se mueva, así que intentaríamos reproducir el sonido muchas veces, lo cual no es lo que queremos. Podríamos mantener algún estado para saber si en efecto nos encontramos jugando o no, pero tampoco parece correcto. El problema es que no podemos conseguirlo revisando el estado del juego de forma iterativa, necesitamos en su lugar tener un modelo reactivo donde se nos indique cuando algo ha ocurrido, y necesitamos tomar acción. Lo que acabamos de describir es un modelo de eventos, necesitamos disparar un evento cuando una caja se coloque en una meta, y entonces cuando recibamos este evento en otro punto necesitamos reproducir el sonido. El punto realmente bueno de esto es que podremos reutilizar este sistema de eventos para muchos otros propósitos.
 
-## Events infrastructure: How
-Let's start by discussing how we will implement events. We will not use components or entities (although we could), instead we will use a resource very similar to the input queue. The parts of the code that need to enqueue events will need to get access to this resource, and we will then have a system which processes these events and take the appropriate actions.
+## Infraestructura de eventos: Cómo
+Comencemos discutiendo cómo implementaremos los eventos. No utilizaremos componentes ni entidades (aunque podríamos), en su lugar utilizaremos un recurso muy similar a la cola de entrada. Las partes del código que necesitan encolar eventos necesitarán acceso a este recurso, y entonces tendremos un sistema que procesa estos que procesa estos eventos y ejecuta las acciones apropiadas.
 
-## What events
-Let's discuss in more detail what events we will need:
-1. player hit obstacle - this can be an event in itself which we fire from the input system when we try to move but can't
-1. box placed on correct/incorrect spot - we can model this as a single event with a property inside it that tells us if the box/spot combination is correct - thinking a bit deeper about how we can achieve this, we can have an entity moved event, and when we receive that event we can check the entity id of that entity that just moved to see if it's a box and if it's on the right/wrong/any spot (this is an example of creating an event chain - an event from an event)
+## Qué eventos
+Discutamos con más detalle qué eventos necesitaremos:
+1. el jugador golpea un obstáculo - este puede ser un evento que generamos desde el sistema de entrada cuando intentamos movernos pero no es posible hacerlo
+1. caja colocada en una meta correcta/incorrecta - podemos modelar esto como un solo evento con una propiedad interna que nos indique si la combinación caja/meta es correcta - pensando un poco más sobre cómo podemos conseguir esto, podemos tener un evento cuando se mueve una entidad, y cuando recibimos este evento podemos revisar el id de la entidad que acaba de moverse para ver si es una caja y si está en una meta correcta/incorrecta/ninguna (este es un ejemplo de cómo crear una cadena de eventos - un evento a partir de otro evento)
 
-## Events types
-Now let's go into the implementation of events. We'll use an enum to define various event types. Now, we've used enums before (for the rendering type and the box colours) but this time we will take full advantage of the power of Rust enums. One of the most interesting things about them is that we actually attach properties to each enum variant. 
+## Tipos de eventos
+Vayamos ahora a la implementación de los eventos. Utilizaremos un enum para definir varios tipos de eventos. Ahora, hemos utilizado enums anteriormente (para el tipo renderizable y para los colores de las cajas) pero esta vez aprovecharemos al máximo el poder de los enums de Rust. Una de las características más interesantes de ellas es que podemos adjuntar propiedades a cada variante de un enum.
 
-Let's look at our events enum.
+Veamos nuestro enum de eventos.
 
 ```rust
 // events.rs
 {{#include ../../../code/rust-sokoban-c03-03/src/events.rs:13:23}}
 ```
 
-Note the second `EntityMoved` and the second `BoxPlacedOnSpot`. Those are actually struct definitions where we can attach properties. Let's look at those structs now.
+Nota el segundo `EntityMoved` y el segundo `BoxPlacedOnSpot`. Esas son en realidad definiciones de estructuras donde podemos adjuntar propiedades. Veamos ahora esas estructuras.
 
 ```rust
 // events.rs
 {{#include ../../../code/rust-sokoban-c03-03/src/events.rs:1:11}}
 ```
 
-## Event queue resource
-Now let's add a resource for the event queue. We will have various systems writing to this queue and one system (the event system) consuming this queue. It's basically a multiple producer single consumer model. 
+## Recurso cola de eventos
+Ahora agregaremos un recurso para la cola de eventos. Tendremos varios sistemas que escribirán a esta cola y un sistema (el sistema de eventos) que la consumirá. Básicamente es un modelo de múltiples productores y un solo consumidor.
 
 ```rust
 // resources.rs
 {{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:54:57}}
 ```
 
-And as always let's register this resource.
+Y como siempre registremos este recurso.
 
 ```rust
 // resources.rs
@@ -50,8 +50,8 @@ And as always let's register this resource.
 {{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:20}}
 ```
 
-## Sending events
-Now that we have a way to enqueue events, let's add the two events we need in the input_system: EntityMoved and PlayerHitObstacle.
+## Generando eventos
+Ahora que tenemos una forma de encolar eventos, agreguemos los dos eventos que necesitamos en el sistema de entrada: EntityMoved y PlayerHitObstacle.
 
 ```rust
 // input_system.rs
@@ -61,15 +61,15 @@ Now that we have a way to enqueue events, let's add the two events we need in th
 {{#include ../../../code/rust-sokoban-c03-03/src/systems/input_system.rs:83:124}}
 ```
 
-I've omitted some of the code in the original file for readability, but we are really just adding two lines in the right places. 
+Omití parte del código en el archivo para facilitar la lectura, pero en realidad solo estamos agregando dos líneas en los lugares correctos.
 
-## Consuming events - event system
-Now it's time to add a way to consume the events, which will be the events system. This system will contain the logic for what should happen when a specific event is received.
+## Consumiendo eventos - sistema de eventos
+Es hora de agregar una forma de consumir los eventos, lo que será el sistema de eventos. Este sistema contendrá la lógica para lo que deba ocurrir cuando se recibe un evento en específico.
 
-Let discuss how we will handle each event:
-* Event::PlayerHitObstacle -> this is where the sound playing will go, but we'll come back to this when we add the audio bits
-* Event::EntityMoved(EntityMoved { id }) -> this is where we will add the logic for checking if the entity that just moved is a box and whether it's on a spot or not 
-* Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) -> this is where the sound playing will go, but we'll come back to this when we add the audio bits
+Discutamos cómo manejaremos cada evento:
+* Event::PlayerHitObstacle -> aquí es donde irá la reproducción del sonido, pero volveremos a ello más tarde
+* Event::EntityMoved(EntityMoved { id }) -> aquí agregaremos la lógica para validar si la entidad que se movió es una caja y si está en una meta o no
+* Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) -> este es donde se reproducirá el sonido, pero regresaremos a esto más tarde
 
 ```rust
 // event_system.rs
@@ -79,16 +79,16 @@ Let discuss how we will handle each event:
 
 ```
 
-## Audio assets
-Now that we have the event bits in place, let's add audio assets. I've selected 3 sounds from this [asset pack](https://opengameart.org/content/512-sound-effects-8-bit-style), but feel free to select your own.
+## Recursos de audio
+Ahora que tenemos los eventos en su lugar, agreguemos los recursos de audio. He seleccionado 3 sonidos de este [paquete de recursos](https://opengameart.org/content/512-sound-effects-8-bit-style), pero puedes seleccionar los que gustes.
 
-Correct sound [here](./sounds/correct.wav)
+Sonido correcto [aquí](./sounds/correct.wav)
 
-Incorrect sound [here](./sounds/incorrect.wav)
+Sonido incorrecto [aquí](./sounds/incorrect.wav)
 
-Wall sound [here](./sounds/wall.wav)
+Sonido de la pared [aquí](./sounds/wall.wav)
 
-Let's add these sounds to a new folder under resources.
+Agreguemos estos sonidos a una nueva carpeta dentro de resources.
 
 ```
 .
@@ -113,39 +113,39 @@ Let's add these sounds to a new folder under resources.
 └── Cargo.toml
 ```
 
-## Audio store
-Now in order to play the sound the wav files need to be loaded. To avoid loading them on the fly every time before we play the sound we'll create an audio store and load them up at the beginning of the game. 
+## Depósito de audio
+Para reproducir el sonido los archivos wav deben ser cargados. Para evitar cargarlos al vuelo cada vez que se desee reproducirlos crearemos un depósito de audio y los cargaremos al inicio del juego.
 
-We'll use a resource for the audio store.
+Utilizaremos un recurso para almacenar el audio.
 
 ```rust
 // audio.rs
 {{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:6:9}}
 ```
 
-And as always let's register this resource.
+Y registremos este recurso como siempre.
 
 ```rust
 // resources.rs
 {{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:14:20}}
 ```
 
-And let's add the code for initializing the store.
+Y agreguemos el código para inicializar el depósito.
 
 ```rust
 // audio.rs
 {{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:21:32}}
 ```
 
-## Playing audio
-Finally, let's add the ability to play the sound in the store.
+## Reproduciendo audio
+Finalmente, agreguemos la habilidad para reproducir el sonido que se encuentra en el depósito.
 
 ```rust
 // audio.rs
 {{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:11:19}}
 ```
 
-And now let's play in the event system.
+Y ahora reproduzcamos el sonido desde el sistema de eventos.
 
 ```rust
     // event_system.rs
@@ -154,10 +154,11 @@ And now let's play in the event system.
 {{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:61:73}}
 ```
 
-Now let's run the game and enjoy those sound effects!
+¡Ahora ejecuta el juego y disfruta esos efectos de sonido!
+
 
 <video width="75%" controls>
     <source src="./videos/audio.mov" type="video/mp4">
 </video>
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-03).
+> **_CODELINK:_**  Puedes ver el código completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-03).
