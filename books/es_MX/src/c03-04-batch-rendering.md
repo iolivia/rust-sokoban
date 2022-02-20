@@ -1,13 +1,13 @@
-# Batch rendering
+# Renderizado por lotes
 
-You might have noticed while playing the game that the input feels a bit slow. Let's add an FPS counter to see how fast we are rendering. If you are not familiar with the term FPS, it stands for Frames Per Second, and we are basically aiming for 60FPS.
+Puedes haber notado mientras jugabas el juego que la entrada se siente un tanto lenta. Agreguemos un contador de FPS para ver qué tan rápido estamos renderizando. Si no estás familiarizado con el término FPS, significa fotogramas/cuadros por segundo (del inglés Frames Per Second), y básicamente estamos apuntando a tener 60FPS.
 
-## FPS counter
-Let's start by adding an FPS counter, there are two parts to this:
-1. getting or calculating the FPS value
-1. rendering the value on the screen
+## Contador de FPS
+Empecemos agregando un contador de FPS, hay dos partes para ello:
+1. obtener o calcular el valor FPS
+1. renderizar el valor a la pantalla
 
-For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/ggez/0.1.0/ggez/timer/fn.get_fps.html). For 2 we already have a way to render text in the rendering system, so we just need to get the FPS there. Let's put all this together in the code.
+Para el 1 afortunadamente ggez nos provee una forma de obtener los fps - ve [aquí](https://docs.rs/ggez/0.7.0/ggez/timer/?search=fps). Para el 2 ya tenemos una forma de renderizar texto en el sistema de renderizado, así que solo debemos llevar el valor de FPS ahí. Pongamos todo esto en el código.
 
 ```rust
 // rendering_system.rs
@@ -20,50 +20,50 @@ For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/gg
 {{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
 ```
 
-Run the game and move around with the keys a bit and you will see the FPS drops quite significantly from the expected 60. For me it looks to be in the range of 20-30 but depending on your machine it might be more or less. 
+Ejecuta el juego y muévete con las teclas un poco y verás que el valor FPS cae muy abajo del esperado 60. A mi me parece que está en el intervalo de 20-30 pero dependiendo de tu máquina podría ser más o menos.
 
 ![low fps](./images/low_fps.png)
 
-## What is causing the FPS drop?
-Now you might be asking yourself, what have we done to make this so low? We have a fairly simple game and our logic for input and movement is not actually that complex, we also don't have that many entities or components to warrant such a big FPS drop. Well, to understand this we need to go a bit deeper into how our current rendering system works. 
+## ¿Qué está causando la caída de FPS?
+Ahora podrías estar preguntándote, ¿qué hemos hecho para que sea tan lento? Tenemos un juego bastante simple y nuestra lógica para la entrada y el movimiento en realidad no es tan compleja, tampoco tenemos muchas entidades o componentes para justificar tan grande caída de FPS. Bien, para entender esto necesitamos profundizar en cómo funciona nuestro sistema actual de renderizado.
 
-Currently, for every renderable entity, we figure out which image to render and we render it. This means that if we have 20 floor tiles we will load the floor image 20 times and issue 20 separate rendering calls. This is too expensive and it's the cause for our massive FPS drop. 
+Actualmente, por cada entidad renderizable, determinamos qué imagen se debe dibujar y la renderizamos. Esto significa que si tenemos 20 casillas de piso cargaremos la imagen 20 veces y lanzaremos 20 llamadas para renderizar de forma separada. Esto es muy costoso y es la causa de nuestra caída masiva de FPS.
 
-How can we fix this? Well, we can use a technique called batch rendering. With this technique, what we have to do is only load the image once, and tell ggez to render it in all the 20 positions where it needs to be rendered. This way we not only load the image once, but we also only call render once per image, which will speed things up significantly. As a side note, some engines will do this render batching under the hood for you, but ggez doesn't, hence why we need to care. 
+¿Cómo podemos arreglarlo? Bien, podemos utilizar una técnica llamada renderizado por lotes. Con esta técnica, lo que hacemos es cargar la imagen una sola vez, e indicar a ggez que la renderice en las 20 posiciones donde debe renderizarse. De esta manera no solo cargamos la imagen una sola vez, sino que también llamamos a renderizar una sola vez por imagen, lo que acelerará las cosas significativamente. Como nota, algunos motores harán este renderizado por lotes por ti, pero ggez no lo hace, por lo que necesitamos ocuparnos de ello nosotros mismos.
 
-## Batch rendering
-Here is what we'll have to do to implement batch rendering:
-* for every renderable entity, figure out which image we need to render and at which DrawParams (this is what we currently give ggez as an indication of where to render)
-* save all the (image, DrawParams) into a convenient format
-* iterate through (image, DrawParams) on a per images basis sorted by z and make a single render call per image
+## Renderizado por lotes
+Aquí está lo que tendremos que hacer para implementar el renderizado por lotes:
+* por cada entidad renderizable, determinar cuál imagen necesitamos renderizar y con cuales parámetros de tipo DrawParams (así es como actualmente le indicamos a ggez dónde renderizar)
+* guardar todo (la imagen, los DrawParams) en un formato conveniente
+* iterar todo (la imagen, los DrawParam) con base en las imágenes ordenadas por z y hacer una sola llamada de renderizado por imagen
 
-Before we get deep into the rendering code, we will need to do some collection grouping and sorting, and we will use the itertools crate for that. We could implement this grouping ourselves, but there is no point re-inventing the wheel. Let's add itertools as a dependency to our project.
+Antes de adentrarnos de lleno al código de renderizado, necesitaremos agrupación y ordenamiento de colecciones, y para ello utilizaremos el crate itertools. Podríamos implementar este agrupamiento por nosotros mismos, pero no hay razón para reinventar la rueda. Agreguemos la dependencia itertools a nuestro proyecto.
 
 ```toml
 // Cargo.toml
-{{#include ../../../code/rust-sokoban-c03-04/Cargo.toml:9:12}}
+{{#include ../../../code/rust-sokoban-c03-04/Cargo.toml:9:13}}
 ```
 
-Let's also import it in the rendering system
+También importemoslo en el sistema de renderizado
 
 ```rust
 // rendering_system.rs
 {{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:11}}
 ```
 
-Now, remember that get_image function we wrote in the Animations chapter to figure out which image we need for every frame? We'll be able to re-use that we just need to ensure we don't actually load the image, but instead return the path to the image.
+Ahora, ¿recuerdas la función get_image que escribimos en el capítulo Animaciones para determinar la imagen que necesitábamos para cada fotograma? Podremos reutilizarla solo necesitamos asegurarnos de que no hagamos la carga de la imagen, sino en su lugar retornar su ruta.
 
 ```rust
 // rendering_system.rs
 {{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:36:53}}
 ```
 
-Now let's figure out the format we want our batched data to be in. We will use a `HashMap<u8, HashMap<String, Vec<DrawParam>>>` where:
-* the first key (`u8`) is the z position - remember we need to respect the z positions and draw from highest to smallest z to ensure the right order (for example floors should be below player, etc)
-* the value is another `HashMap`, where the second key (`String`) is the path to the image
-* finally, the last value is a `Vec<DrawParam>` which are all the params at which we must render that particular image
+Ahora determinemos el formato en el que queremos que estén nuestros datos por lotes. Utilizaremos un `HashMap<u8, HashMap<String, Vec<DrawParam>>>` donde:
+* la primera clave (`u8`) es la posición z - recuerda que tenemos que respetar las posiciones z y dibujar desde el valor mayor de z hasta el menor para asegurar el orden correcto (por ejemplo los pisos deberían estar debajo del jugador ,etc)
+* el valor es otro `HashMap`, donde la segunda clave (`String`) es la ruta a la imagen
+* finalmente, el último valor es un `Vec<DrawParam>` que son todos los parámetros con los cuales debemos renderizar esa imagen en particular
 
-Let's now write the code to populate the rendering_batches hash map.
+Escribamos el código para llenar el mapa hash rendering_batches.
 
 ```rust
 // rendering_system.rs
@@ -76,7 +76,7 @@ Let's now write the code to populate the rendering_batches hash map.
 {{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
 ```
 
-Finally, let's actually render the batches. We will not be able to use the draw(image) function we used before but luckily ggez has a batching API - [SpriteBatch](https://docs.rs/ggez/0.5.1/ggez/graphics/spritebatch/struct.SpriteBatch.html). Also note the `sorted_by` here, that is provided to us to itertools. 
+Finalmente, rendericemos los lotes. No podremos utilizar la función draw(image) que empleamos antes pero afortunadamente ggez tiene una API por lotes  - [SpriteBatch](https://docs.rs/ggez/0.7.0/ggez/graphics/spritebatch/struct.SpriteBatch.html). También nota aquí el `sorted_by`, que nos es provisto por itertools.
 
 ```rust
 // rendering_system.rs
@@ -89,10 +89,10 @@ Finally, let's actually render the batches. We will not be able to use the draw(
 {{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
 ```
 
-And that's it! Run the game again and you should see a shiny 60FPS and everything should feel much smoother!
+¡Y eso es todo! Ejecuta nuevamente el juego y debieras ver un brillante 60FPS y todo debería sentirse mucho más fluido!
 
 ![low fps](./images/high_fps.png)
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-04).
+> **_CODELINK:_**  Puedes ver el código completo de este ejemplo [aquí](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-04).
 
 
