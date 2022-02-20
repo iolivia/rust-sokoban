@@ -31,6 +31,12 @@ En este momento el juego debería compilar, pero probablemente no hará nada tod
 
 ## Implementación del sistema de renderizado
 
+**Nota:** Vamos a agregar [glam](https://lib.rs/crates/glam) como dependencia, la cual es una biblioteca 3D sencilla y rápida que ofrece algunas mejoras de desempeño.
+
+```
+{{#include ../../../code/rust-sokoban-c01-03/Cargo.toml:9:11}}
+```
+
 A continuación tenemos la implementación del sistema de renderizado. Se encarga de algunas cosas:
 * limpiar la pantalla (asegurándose de que no mantenemos nada del estado renderizado en el cuadro anterior)
 * obtener todas las entidades con un componente renderizable y ordenarlas por su componente z (esto es para asegurarnos de que podemos renderizar algunas encima de otras, por ejemplo el jugador debe estar sobre el piso, de otra forma no podríamos verlo)

@@ -43,8 +43,9 @@ Hello, world!
 
 ```toml
 [dependencies]
-ggez = "0.5.1"
+{{#include ../../../code/rust-sokoban-c01-01/Cargo.toml:10}}
 ```
+
 
 Ahora ejecutemos `cargo run` nuevamente y deberías ver algo como lo siguiente. Debería tomar un poco más de tiempo ya que buscará estas nuevas dependencias en [crates.io](https://crates.io), luego las compilará y finalmente las enlazará a nuestra biblioteca.
 
