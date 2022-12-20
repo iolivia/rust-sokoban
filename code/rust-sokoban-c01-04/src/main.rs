@@ -1,5 +1,6 @@
 // Rust sokoban
 // main.rs
+
 use ggez::{
     conf, event,
     graphics::{self, Canvas, DrawParam, Image},

@@ -1,13 +1,15 @@
 // Rust sokoban
 // main.rs
 
+use ggez::{
+    conf, event,
+    graphics::{self, DrawParam, Image},
+    Context, GameResult,
+};
 use glam::Vec2;
-use ggez::{conf, event, Context, GameResult,
-    graphics::{self, DrawParam, Image}};
 use specs::{
     join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
 };
-
 use std::path;
 
 const TILE_WIDTH: f32 = 32.0;
@@ -56,8 +58,9 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     fn run(&mut self, data: Self::SystemData) {
         let (positions, renderables) = data;
 
-        // Clearing the screen (this gives us the backround colour)
-        graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
+        // Clearing the screen (this gives us the background colour)
+        let mut canvas =
+            Canvas::from_frame(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
         // Get all the renderables with their positions and sort by the position z
         // This will allow us to have entities layered visually.
@@ -68,18 +71,19 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // and draw it at the specified position.
         for (position, renderable) in rendering_data.iter() {
             // Load the image
-            let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
+            let image =
+                Image::from_path(self.context, renderable.path.clone()).expect("expected image");
             let x = position.x as f32 * TILE_WIDTH;
             let y = position.y as f32 * TILE_WIDTH;
 
             // draw
             let draw_params = DrawParam::new().dest(Vec2::new(x, y));
-            graphics::draw(self.context, &image, draw_params).expect("expected render");
+            canvas.draw(&image, draw_params);
         }
 
         // Finally, present the context, this will actually display everything
         // on the screen.
-        graphics::present(self.context).expect("expected to present");
+        canvas.finish(self.context).expect("expected to present");
     }
 }
 
@@ -232,6 +236,7 @@ pub fn load_map(world: &mut World, map_string: String) {
         }
     }
 }
+
 pub fn main() -> GameResult {
     let mut world = World::new();
     register_components(&mut world);
