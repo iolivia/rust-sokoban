@@ -6,7 +6,7 @@ It's time for our first system, the rendering system. This system will be respon
 First we'll define the `RenderingSystem` struct, it will need access to the ggez context in order to actually render.
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:47:49}}
+{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:48:50}}
 ```
 
 We've got some new syntax here; `'a` is called a lifetime annotation. It's needed because the compiler can't see how long the reference in `RenderingSystem` is valid, meaning that we have to specify the lifetime annotation.
@@ -16,15 +16,15 @@ We've got some new syntax here; `'a` is called a lifetime annotation. It's neede
 Now let's implement the System trait for our Rendering system. This doesn't do anything yet, we're just setting up the scaffolding. The definition of SystemData means that we will have access to the storage of position and renderable components, and the fact that it's read storage means we only get immutable access, which is exactly what we need.
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:51:57}}
+{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:52:58}}
         // implementation here
-{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:83:84}}
+{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:86:87}}
 ```
 
 Finally let's run the rendering system in our draw loop. This means that every time the game updates we will render the latest state of all our entities.
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:97:111}}
+{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:100:114}}
 ```
 
 Running the game now should compile, but it will probably not do anything yet, since we haven't filled in any of the implementation of the rendering system and also we haven't created any entities.
@@ -34,7 +34,7 @@ Running the game now should compile, but it will probably not do anything yet, s
 **Note:** We're going to add [glam](https://lib.rs/crates/glam) as a dependency here that is a simple and fast 3D library that offers some performance improvements.
 
 ```
-{{#include ../../../code/rust-sokoban-c01-03/Cargo.toml:9:11}}
+{{#include ../../../code/rust-sokoban-c01-04/Cargo.toml:9:12}}
 ```
 
 Here is the implementation of the rendering system. It does a few things:
@@ -44,7 +44,7 @@ Here is the implementation of the rendering system. It does a few things:
 * finally, present to the screen
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:56:83}}
+{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:57:86}}
 ```
 
 ## Add some test entities
@@ -52,7 +52,7 @@ Here is the implementation of the rendering system. It does a few things:
 Let's create some test entities to make sure things are working correctly.
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:179:204}}
+{{#include ../../../code/rust-sokoban-c01-04/src/main.rs:182:207}}
 ```
 
 Finally, let's put everything together and run. You should see something like this! This is super exciting, now we have a proper rendering system and we can actually see something on the screen for the first time. Next up, we're going to work on the gameplay so it can actually feel like a game!
