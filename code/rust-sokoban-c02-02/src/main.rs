@@ -1,15 +1,18 @@
 // Rust sokoban
 // main.rs
 
+use ggez::{
+    conf, event,
+    graphics::{self, Canvas, DrawParam, Image},
+    input::keyboard::KeyInput,
+    winit::event::VirtualKeyCode,
+    Context, GameResult,
+};
 use glam::Vec2;
-use ggez::{conf, Context, GameResult,
-    event::{self, KeyCode, KeyMods}, 
-    graphics::{self, DrawParam, Image}};
 use specs::{
     join::Join, Builder, Component, ReadStorage, RunNow, System, VecStorage, World, WorldExt,
     Write, WriteStorage,
 };
-
 use std::path;
 
 const TILE_WIDTH: f32 = 32.0;
@@ -48,7 +51,7 @@ pub struct BoxSpot {}
 // Resources
 #[derive(Default)]
 pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
+    pub keys_pressed: Vec<VirtualKeyCode>,
 }
 
 // Systems
@@ -64,8 +67,9 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     fn run(&mut self, data: Self::SystemData) {
         let (positions, renderables) = data;
 
-        // Clearing the screen (this gives us the backround colour)
-        graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
+        // Clearing the screen (this gives us the background colour)
+        let mut canvas =
+            Canvas::from_frame(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
         // Get all the renderables with their positions and sort by the position z
         // This will allow us to have entities layered visually.
@@ -76,18 +80,19 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // and draw it at the specified position.
         for (position, renderable) in rendering_data.iter() {
             // Load the image
-            let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
+            let image =
+                Image::from_path(self.context, renderable.path.clone()).expect("expected image");
             let x = position.x as f32 * TILE_WIDTH;
             let y = position.y as f32 * TILE_WIDTH;
 
             // draw
             let draw_params = DrawParam::new().dest(Vec2::new(x, y));
-            graphics::draw(self.context, &image, draw_params).expect("expected render");
+            canvas.draw(&image, draw_params);
         }
 
         // Finally, present the context, this will actually display everything
         // on the screen.
-        graphics::present(self.context).expect("expected to present");
+        canvas.finish(self.context).expect("expected to present");
     }
 }
 
@@ -109,10 +114,11 @@ impl<'a> System<'a> for InputSystem {
             if let Some(key) = input_queue.keys_pressed.pop() {
                 // Apply the key to the position
                 match key {
-                    KeyCode::Up => position.y -= 1,
-                    KeyCode::Down => position.y += 1,
-                    KeyCode::Left => position.x -= 1,
-                    KeyCode::Right => position.x += 1,
+                    VirtualKeyCode::Up => position.y -= 1,
+                    VirtualKeyCode::Down => position.y += 1,
+                    VirtualKeyCode::Left => position.x -= 1,
+                    VirtualKeyCode::Right => position.x += 1,
+
                     _ => (),
                 }
             }
@@ -155,14 +161,15 @@ impl event::EventHandler<ggez::GameError> for Game {
     fn key_down_event(
         &mut self,
         _context: &mut Context,
-        keycode: KeyCode,
-        _keymod: KeyMods,
+        keyinput: KeyInput,
         _repeat: bool,
-    ) {
-        println!("Key pressed: {:?}", keycode);
+    ) -> GameResult {
+        println!("Key pressed: {:?}", keyinput.keycode.unwrap());
 
         let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
+        input_queue.keys_pressed.push(keyinput.keycode.unwrap());
+
+        Ok(())
     }
 }
 
