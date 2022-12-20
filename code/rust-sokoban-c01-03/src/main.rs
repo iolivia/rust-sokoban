@@ -1,12 +1,7 @@
 // Rust sokoban
 // main.rs
-
-
-
 use ggez::{conf, event, Context, GameResult};
 use specs::{Builder, Component, VecStorage, World, WorldExt};
-
-
 use std::path;
 
 // Components
@@ -67,7 +62,6 @@ pub fn register_components(world: &mut World) {
     world.register::<BoxSpot>();
 }
 
-// Create a wall entity
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
