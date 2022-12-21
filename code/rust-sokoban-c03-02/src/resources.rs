@@ -1,41 +1,29 @@
-use ggez::event::KeyCode;
+use ggez::winit::event::VirtualKeyCode;
 use specs::World;
+use std::{
+    fmt::{Display, Formatter, Result},
+    time::Duration,
+};
 
-use std::{fmt::{self, Display}, time::Duration};
-
-// Resources
 #[derive(Default)]
 pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
+    pub keys_pressed: Vec<VirtualKeyCode>,
 }
-
-pub fn register_resources(world: &mut World) {
-    world.insert(InputQueue::default());
-    world.insert(Gameplay::default());
-    world.insert(Time::default());
-}
-
+#[derive(Debug, Default, Clone, Copy)]
 pub enum GameplayState {
+    #[default]
     Playing,
     Won,
 }
 
 impl Display for GameplayState {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.write_str(match self {
-            GameplayState::Playing => "Playing",
-            GameplayState::Won => "Won",
-        })?;
-        Ok(())
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        match self {
+            GameplayState::Playing => write!(f, "Playing"),
+            GameplayState::Won => write!(f, "Won"),
+        }
     }
 }
-
-impl Default for GameplayState {
-    fn default() -> Self {
-        Self::Playing
-    }
-}
-
 #[derive(Default)]
 pub struct Gameplay {
     pub state: GameplayState,
@@ -45,4 +33,10 @@ pub struct Gameplay {
 #[derive(Default)]
 pub struct Time {
     pub delta: Duration,
+}
+
+pub fn register_resources(world: &mut World) {
+    world.insert(InputQueue::default());
+    world.insert(Gameplay::default());
+    world.insert(Time::default());
 }
