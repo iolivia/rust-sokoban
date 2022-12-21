@@ -1,7 +1,6 @@
 use crate::components::*;
 use specs::{Builder, World, WorldExt};
 
-// Create a wall entity
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()

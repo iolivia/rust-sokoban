@@ -1,9 +1,9 @@
 use crate::components::*;
 use crate::constants::*;
-use crate::resources::{InputQueue, Gameplay};
-use ggez::event::KeyCode;
-use specs::{world::Index, Entities, Join, ReadStorage, System, Write, WriteStorage};
+use crate::resources::{Gameplay, InputQueue};
 
+use ggez::winit::event::VirtualKeyCode;
+use specs::{world::Index, Entities, Join, ReadStorage, System, Write, WriteStorage};
 use std::collections::HashMap;
 
 pub struct InputSystem {}
@@ -22,7 +22,8 @@ impl<'a> System<'a> for InputSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut input_queue, mut gameplay, entities, mut positions, players, movables, immovables) = data;
+        let (mut input_queue, mut gameplay, entities, mut positions, players, movables, immovables) =
+            data;
 
         let mut to_move = Vec::new();
 
@@ -42,10 +43,10 @@ impl<'a> System<'a> for InputSystem {
                 // Now iterate through current position to the end of the map
                 // on the correct axis and check what needs to move.
                 let (start, end, is_x) = match key {
-                    KeyCode::Up => (position.y, 0, false),
-                    KeyCode::Down => (position.y, MAP_HEIGHT, false),
-                    KeyCode::Left => (position.x, 0, true),
-                    KeyCode::Right => (position.x, MAP_WIDTH, true),
+                    VirtualKeyCode::Up => (position.y, 0, false),
+                    VirtualKeyCode::Down => (position.y, MAP_HEIGHT, false),
+                    VirtualKeyCode::Left => (position.x, 0, true),
+                    VirtualKeyCode::Right => (position.x, MAP_WIDTH, true),
                     _ => continue,
                 };
 
@@ -91,10 +92,10 @@ impl<'a> System<'a> for InputSystem {
             let position = positions.get_mut(entities.entity(id));
             if let Some(position) = position {
                 match key {
-                    KeyCode::Up => position.y -= 1,
-                    KeyCode::Down => position.y += 1,
-                    KeyCode::Left => position.x -= 1,
-                    KeyCode::Right => position.x += 1,
+                    VirtualKeyCode::Up => position.y -= 1,
+                    VirtualKeyCode::Down => position.y += 1,
+                    VirtualKeyCode::Left => position.x -= 1,
+                    VirtualKeyCode::Right => position.x += 1,
                     _ => (),
                 }
             }
