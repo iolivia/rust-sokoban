@@ -1,6 +1,5 @@
 use specs::{Component, NullStorage, VecStorage, World, WorldExt};
 
-// Components
 #[derive(Debug, Component, Clone, Copy)]
 #[storage(VecStorage)]
 pub struct Position {

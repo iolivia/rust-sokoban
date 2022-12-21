@@ -1,10 +1,9 @@
-use ggez::event::KeyCode;
+use ggez::winit::event::VirtualKeyCode;
 use specs::World;
 
-// Resources
 #[derive(Default)]
 pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
+    pub keys_pressed: Vec<VirtualKeyCode>,
 }
 
 pub fn register_resources(world: &mut World) {
