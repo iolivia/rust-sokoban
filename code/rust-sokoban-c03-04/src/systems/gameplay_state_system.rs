@@ -27,15 +27,13 @@ impl<'a> System<'a> for GameplayStateSystem {
             .collect::<HashMap<_, _>>();
 
         // loop through all box spots and check if there is a corresponding
-        // box at that position. since we now have different types of boxes
-        // we need to make sure the right type of box is on the right
-        // type of spot.
+        // box at that position
         for (box_spot, position) in (&box_spots, &positions).join() {
             if let Some(the_box) = boxes_by_position.get(&(position.x, position.y)) {
-                if the_box.colour == box_spot.colour {
+                if the_box.color == box_spot.color {
                     // continue
                 } else {
-                    // return, haven't won yet
+                    // haven't won yet
                     return;
                 }
             } else {

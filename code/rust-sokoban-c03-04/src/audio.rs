@@ -1,21 +1,14 @@
 use audio::SoundSource;
-use ggez::{audio, Context};
+use ggez::{
+    audio::{self},
+    Context,
+};
 use specs::{World, WorldExt};
 use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct AudioStore {
     pub sounds: HashMap<String, audio::Source>,
-}
-
-impl AudioStore {
-    pub fn play_sound(&mut self, context: &mut Context, sound: &String) {
-        let _ = self
-            .sounds
-            .get_mut(sound)
-            .expect("expected sound")
-            .play_detached(context);
-    }
 }
 
 pub fn initialize_sounds(world: &mut World, context: &mut Context) {
@@ -28,5 +21,15 @@ pub fn initialize_sounds(world: &mut World, context: &mut Context) {
         let sound_source = audio::Source::new(context, sound_path).expect("expected sound loaded");
 
         audio_store.sounds.insert(sound_name, sound_source);
+    }
+}
+
+impl AudioStore {
+    pub fn play_sound(&mut self, context: &mut Context, sound: &String) {
+        let _ = self
+            .sounds
+            .get_mut(sound)
+            .expect("expected sound")
+            .play_detached(context);
     }
 }

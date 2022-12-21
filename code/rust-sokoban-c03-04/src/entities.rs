@@ -1,7 +1,7 @@
-use crate::components::*;
 use specs::{Builder, World, WorldExt};
 
-// Create a wall entity
+use crate::components::*;
+
 pub fn create_wall(world: &mut World, position: Position) {
     world
         .create_entity()
@@ -20,28 +20,28 @@ pub fn create_floor(world: &mut World, position: Position) {
         .build();
 }
 
-pub fn create_box(world: &mut World, position: Position, colour: BoxColour) {
+pub fn create_box(world: &mut World, position: Position, color: BoxColor) {
     world
         .create_entity()
         .with(Position { z: 10, ..position })
         .with(Renderable::new_animated(vec![
-            format!("/images/box_{}_1.png", colour),
-            format!("/images/box_{}_2.png", colour),
+            format!("/images/box_{}_1.png", color),
+            format!("/images/box_{}_2.png", color),
         ]))
-        .with(Box { colour })
+        .with(Box { color })
         .with(Movable)
         .build();
 }
 
-pub fn create_box_spot(world: &mut World, position: Position, colour: BoxColour) {
+pub fn create_box_spot(world: &mut World, position: Position, color: BoxColor) {
     world
         .create_entity()
         .with(Position { z: 9, ..position })
         .with(Renderable::new_static(format!(
             "/images/box_spot_{}.png",
-            colour
+            color
         )))
-        .with(BoxSpot { colour })
+        .with(BoxSpot { color })
         .build();
 }
 
