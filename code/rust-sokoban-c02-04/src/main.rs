@@ -1,7 +1,7 @@
 // Rust sokoban
 // main.rs
 
-use ggez::{conf, event::{self, KeyCode, KeyMods}, Context, GameResult};
+use ggez::{conf, event, input::keyboard::KeyInput, Context, GameResult};
 use specs::{RunNow, World, WorldExt};
 use std::path;
 
@@ -45,14 +45,12 @@ impl event::EventHandler<ggez::GameError> for Game {
     fn key_down_event(
         &mut self,
         _context: &mut Context,
-        keycode: KeyCode,
-        _keymod: KeyMods,
+        keyinput: KeyInput,
         _repeat: bool,
-    ) {
-        println!("Key pressed: {:?}", keycode);
-
+    ) -> GameResult {
         let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
+        input_queue.keys_pressed.push(keyinput.keycode.unwrap());
+        Ok(())
     }
 }
 

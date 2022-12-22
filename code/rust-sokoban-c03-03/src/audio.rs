@@ -1,5 +1,8 @@
 use audio::SoundSource;
-use ggez::{audio, Context};
+use ggez::{
+    audio::{self},
+    Context,
+};
 use specs::{World, WorldExt};
 use std::collections::HashMap;
 

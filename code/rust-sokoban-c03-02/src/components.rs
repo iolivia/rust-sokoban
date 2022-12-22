@@ -1,8 +1,7 @@
-use specs::{Component, NullStorage, VecStorage, World, WorldExt};
-
 use std::fmt::{self, Display};
 
-// Components
+use specs::{Component, NullStorage, VecStorage, World, WorldExt};
+
 #[derive(Debug, Component, Clone, Copy)]
 #[storage(VecStorage)]
 pub struct Position {
@@ -11,6 +10,7 @@ pub struct Position {
     pub z: u8,
 }
 
+#[derive(Component)]
 pub enum RenderableKind {
     Static,
     Animated,
@@ -19,7 +19,7 @@ pub enum RenderableKind {
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Renderable {
-    paths: Vec<String>,
+    pub paths: Vec<String>,
 }
 
 impl Renderable {
@@ -33,7 +33,7 @@ impl Renderable {
 
     pub fn kind(&self) -> RenderableKind {
         match self.paths.len() {
-            0 => panic!("invalid renderable"),
+            0 => panic!("invalid renderable!"),
             1 => RenderableKind::Static,
             _ => RenderableKind::Animated,
         }
@@ -55,17 +55,25 @@ pub struct Wall {}
 #[storage(VecStorage)]
 pub struct Player {}
 
+#[derive(Component, Default)]
+#[storage(NullStorage)]
+pub struct Movable;
+
+#[derive(Component, Default)]
+#[storage(NullStorage)]
+pub struct Immovable;
+
 #[derive(PartialEq)]
-pub enum BoxColour {
-    Red,
+pub enum BoxColor {
     Blue,
+    Red,
 }
 
-impl Display for BoxColour {
+impl Display for BoxColor {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(match self {
-            BoxColour::Red => "red",
-            BoxColour::Blue => "blue",
+            BoxColor::Red => "red",
+            BoxColor::Blue => "blue",
         })?;
         Ok(())
     }
@@ -74,22 +82,14 @@ impl Display for BoxColour {
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Box {
-    pub colour: BoxColour,
+    pub color: BoxColor,
 }
 
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct BoxSpot {
-    pub colour: BoxColour,
+    pub color: BoxColor,
 }
-
-#[derive(Component, Default)]
-#[storage(NullStorage)]
-pub struct Movable;
-
-#[derive(Component, Default)]
-#[storage(NullStorage)]
-pub struct Immovable;
 
 pub fn register_components(world: &mut World) {
     world.register::<Position>();

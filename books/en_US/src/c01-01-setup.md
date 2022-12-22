@@ -4,9 +4,9 @@ Let's install [rustup](https://www.rust-lang.org/tools/install), this will insta
 
 ```
 $ rustc --version
-rustc 1.40.0
+rustc 1.65.0
 $ cargo --version
-cargo 1.40.0
+cargo 1.65.0
 ```
 
 ## Creating a project

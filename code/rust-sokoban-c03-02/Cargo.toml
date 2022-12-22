@@ -2,11 +2,11 @@
 name = "rust-sokoban"
 version = "0.1.0"
 authors = ["Olivia <olivia_github@outlook.com>"]
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ggez = "0.7"
-glam = { version = "0.20.0", features = ["mint"] }
-specs = { version = "0.17.0", features = ["specs-derive"] }
+ggez = "0.8.1"
+glam = { version = "0.22.0", features = ["mint"]}
+specs = { version = "0.18.0", features = ["specs-derive"] }

@@ -1,11 +1,12 @@
+use specs::{Entities, Join, ReadStorage, System, Write};
+use std::collections::HashMap;
+
 use crate::{
     audio::AudioStore,
     components::*,
     events::{BoxPlacedOnSpot, EntityMoved, Event},
     resources::EventQueue,
 };
-use specs::{Entities, Join, ReadStorage, System, Write};
-use std::collections::HashMap;
 
 pub struct EventSystem<'a> {
     pub context: &'a mut ggez::Context,
@@ -53,7 +54,7 @@ impl<'a> System<'a> for EventSystem<'a> {
                                 box_spots_with_positions.get(&(box_position.x, box_position.y))
                             {
                                 new_events.push(Event::BoxPlacedOnSpot(BoxPlacedOnSpot {
-                                    is_correct_spot: (box_spot.colour == the_box.colour),
+                                    is_correct_spot: (box_spot.color == the_box.color),
                                 }));
                             }
                         }

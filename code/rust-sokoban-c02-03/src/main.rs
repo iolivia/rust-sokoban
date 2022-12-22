@@ -1,21 +1,19 @@
 // Rust sokoban
 // main.rs
 
-
-
-use glam::Vec2;
 use ggez::{
-    conf, Context, GameResult,
-    event::{self, KeyCode, KeyMods}, 
-    graphics::{self, DrawParam, Image}};
-use specs::{
-    join::Join, Builder, Component, ReadStorage, RunNow, 
-    System, VecStorage, World, WorldExt,
-    Write, WriteStorage, NullStorage, Entities, world::Index
+    conf, event,
+    graphics::{self, Canvas, DrawParam, Image},
+    input::keyboard::KeyInput,
+    winit::event::VirtualKeyCode,
+    Context, GameResult,
 };
-
-use std::collections::HashMap;
-use std::path;
+use glam::Vec2;
+use specs::{
+    join::Join, world::Index, Builder, Component, Entities, NullStorage, ReadStorage, RunNow,
+    System, VecStorage, World, WorldExt, Write, WriteStorage,
+};
+use std::{collections::HashMap, path};
 
 const TILE_WIDTH: f32 = 32.0;
 const MAP_WIDTH: u8 = 8;
@@ -63,7 +61,7 @@ pub struct Immovable;
 // Resources
 #[derive(Default)]
 pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
+    pub keys_pressed: Vec<VirtualKeyCode>,
 }
 
 // Systems
@@ -79,8 +77,9 @@ impl<'a> System<'a> for RenderingSystem<'a> {
     fn run(&mut self, data: Self::SystemData) {
         let (positions, renderables) = data;
 
-        // Clearing the screen (this gives us the backround colour)
-        graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
+        // Clearing the screen (this gives us the background colour)
+        let mut canvas =
+            Canvas::from_frame(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
 
         // Get all the renderables with their positions and sort by the position z
         // This will allow us to have entities layered visually.
@@ -91,24 +90,24 @@ impl<'a> System<'a> for RenderingSystem<'a> {
         // and draw it at the specified position.
         for (position, renderable) in rendering_data.iter() {
             // Load the image
-            let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
-            let x = position.x as f32 * TILE_WIDTH;
-            let y = position.y as f32 * TILE_WIDTH;
+            let image =
+                Image::from_path(self.context, renderable.path.clone()).expect("expected image");
+            let x: f32 = position.x as f32 * TILE_WIDTH;
+            let y: f32 = position.y as f32 * TILE_WIDTH;
 
             // draw
             let draw_params = DrawParam::new().dest(Vec2::new(x, y));
-            graphics::draw(self.context, &image, draw_params).expect("expected render");
+            canvas.draw(&image, draw_params);
         }
 
         // Finally, present the context, this will actually display everything
         // on the screen.
-        graphics::present(self.context).expect("expected to present");
+        canvas.finish(self.context).expect("expected to present");
     }
 }
 
 pub struct InputSystem {}
 
-// System implementation
 impl<'a> System<'a> for InputSystem {
     // Data
     type SystemData = (
@@ -141,10 +140,10 @@ impl<'a> System<'a> for InputSystem {
                 // Now iterate through current position to the end of the map
                 // on the correct axis and check what needs to move.
                 let (start, end, is_x) = match key {
-                    KeyCode::Up => (position.y, 0, false),
-                    KeyCode::Down => (position.y, MAP_HEIGHT, false),
-                    KeyCode::Left => (position.x, 0, true),
-                    KeyCode::Right => (position.x, MAP_WIDTH, true),
+                    VirtualKeyCode::Up => (position.y, 0, false),
+                    VirtualKeyCode::Down => (position.y, MAP_HEIGHT, false),
+                    VirtualKeyCode::Left => (position.x, 0, true),
+                    VirtualKeyCode::Right => (position.x, MAP_WIDTH, true),
                     _ => continue,
                 };
 
@@ -185,10 +184,10 @@ impl<'a> System<'a> for InputSystem {
             let position = positions.get_mut(entities.entity(id));
             if let Some(position) = position {
                 match key {
-                    KeyCode::Up => position.y -= 1,
-                    KeyCode::Down => position.y += 1,
-                    KeyCode::Left => position.x -= 1,
-                    KeyCode::Right => position.x += 1,
+                    VirtualKeyCode::Up => position.y -= 1,
+                    VirtualKeyCode::Down => position.y += 1,
+                    VirtualKeyCode::Left => position.x -= 1,
+                    VirtualKeyCode::Right => position.x += 1,
                     _ => (),
                 }
             }
@@ -231,15 +230,17 @@ impl event::EventHandler<ggez::GameError> for Game {
     fn key_down_event(
         &mut self,
         _context: &mut Context,
-        keycode: KeyCode,
-        _keymod: KeyMods,
+        keyinput: KeyInput,
         _repeat: bool,
-    ) {
-        println!("Key pressed: {:?}", keycode);
-
+    ) -> GameResult {
         let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
+        input_queue.keys_pressed.push(keyinput.keycode.unwrap());
+        Ok(())
     }
+}
+
+pub fn register_resources(world: &mut World) {
+    world.insert(InputQueue::default())
 }
 
 // Register components with the world
@@ -250,12 +251,8 @@ pub fn register_components(world: &mut World) {
     world.register::<Wall>();
     world.register::<Box>();
     world.register::<BoxSpot>();
-    world.register::<Movable>();
     world.register::<Immovable>();
-}
-
-pub fn register_resources(world: &mut World) {
-    world.insert(InputQueue::default())
+    world.register::<Movable>();
 }
 
 // Create a wall entity
@@ -316,23 +313,6 @@ pub fn create_player(world: &mut World, position: Position) {
         .build();
 }
 
-// Initialize the level
-pub fn initialize_level(world: &mut World) {
-    const MAP: &str = "
-    N N W W W W W W
-    W W W . . . . W
-    W . . . B . . W
-    W . . . . . . W 
-    W . P . . . . W
-    W . . . . . . W
-    W . . S . . . W
-    W . . . . . . W
-    W W W W W W W W
-    ";
-
-    load_map(world, MAP.to_string());
-}
-
 pub fn load_map(world: &mut World, map_string: String) {
     // read all lines
     let rows: Vec<&str> = map_string.trim().split('\n').map(|x| x.trim()).collect();
@@ -373,6 +353,24 @@ pub fn load_map(world: &mut World, map_string: String) {
         }
     }
 }
+
+// Initialize the level
+pub fn initialize_level(world: &mut World) {
+    const MAP: &str = "
+    N N W W W W W W
+    W W W . . . . W
+    W . . . B . . W
+    W . . . . . . W 
+    W . P . . . . W
+    W . . . . . . W
+    W . . S . . . W
+    W . . . . . . W
+    W W W W W W W W
+    ";
+
+    load_map(world, MAP.to_string());
+}
+
 pub fn main() -> GameResult {
     let mut world = World::new();
     register_components(&mut world);

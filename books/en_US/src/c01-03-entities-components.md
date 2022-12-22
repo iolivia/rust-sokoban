@@ -8,7 +8,7 @@ This should hopefully be straight-forward, the position components stores the x,
 
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:13:42}}
+{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:16:36}}
 ```
 
 Among the familiar Rust code we've got some new syntax, we're using a powerful Rust feature called `Procedural Macros` which is used in `#[storage(VecStorage)]`. These type of macros are essentially functions that at compile time consume some syntax and produce some new syntax.
@@ -19,7 +19,7 @@ Among the familiar Rust code we've got some new syntax, we're using a powerful R
 In order for specs to be happy we have to tell it ahead of time what components we will be using. Let's create a function to register components into specs.
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:61:69}}
+{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:56:63}}
 ```
 
 ## Creating entities
@@ -28,7 +28,7 @@ An entity is simply a numeric identifier tied to a set of components. So the way
 This is how entity creation looks now.
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:71:124}}
+{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:65:117}}
 ```
 
 ## Assets
