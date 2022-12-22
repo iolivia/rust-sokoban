@@ -1,8 +1,8 @@
 // Rust sokoban
 // main.rs
-use ggez::{conf, event::{self, KeyCode, KeyMods}, timer, Context, GameResult};
-use specs::{RunNow, World, WorldExt};
 
+use ggez::{conf, event, input::keyboard::KeyInput, Context, GameResult};
+use specs::{RunNow, World, WorldExt};
 use std::path;
 
 mod audio;
@@ -41,7 +41,7 @@ impl event::EventHandler<ggez::GameError> for Game {
         // Get and update time resource
         {
             let mut time = self.world.write_resource::<Time>();
-            time.delta += timer::delta(context);
+            time.delta += context.time.delta();
         }
 
         // Run event system
@@ -66,14 +66,12 @@ impl event::EventHandler<ggez::GameError> for Game {
     fn key_down_event(
         &mut self,
         _context: &mut Context,
-        keycode: KeyCode,
-        _keymod: KeyMods,
+        keyinput: KeyInput,
         _repeat: bool,
-    ) {
-        println!("Key pressed: {:?}", keycode);
-
+    ) -> GameResult {
         let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
+        input_queue.keys_pressed.push(keyinput.keycode.unwrap());
+        Ok(())
     }
 }
 
@@ -90,7 +88,6 @@ pub fn initialize_level(world: &mut World) {
     W . . . . . . W
     W W W W W W W W
     ";
-
     load_map(world, MAP.to_string());
 }
 
