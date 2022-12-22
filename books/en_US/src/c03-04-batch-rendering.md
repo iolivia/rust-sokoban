@@ -13,7 +13,7 @@ For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/gg
 
 ```rust
 // rendering_system.rs
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:62}}
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:61}}
         ...
 
 {{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:109:113}}

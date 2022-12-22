@@ -144,7 +144,7 @@ And let's add the code for initializing the store.
 
 ```rust
 // audio.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:14:25}}
+{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:24:35}}
 ```
 
 ## Playing audio
@@ -153,7 +153,7 @@ Finally, let's add the ability to play the sound in the store.
 
 ```rust
 // audio.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:27:35}}
+{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:14:22}}
 ```
 
 And now let's play in the event system.
