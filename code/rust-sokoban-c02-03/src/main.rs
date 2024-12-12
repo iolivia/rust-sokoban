@@ -255,13 +255,12 @@ fn run_input(world: &World, context: &mut Context) {
         } else {
             continue;
         };
-        println!("Key pressed: {:?}", key);
 
         let (start, end, is_x) = match key {
-            KeyCode::Up => (position.y, 0, true),
-            KeyCode::Down => (position.y, MAP_HEIGHT - 1, true),
-            KeyCode::Left => (position.x, 0, false),
-            KeyCode::Right => (position.x, MAP_WIDTH - 1, false),
+            KeyCode::Up => (position.y, 0, false),
+            KeyCode::Down => (position.y, MAP_HEIGHT - 1, false),
+            KeyCode::Left => (position.x, 0, true),
+            KeyCode::Right => (position.x, MAP_WIDTH - 1, true),
             _ => continue,
         };
 
@@ -277,7 +276,6 @@ fn run_input(world: &World, context: &mut Context) {
             } else {
                 (position.x, x_or_y)
             };
-            println!("Searching for pos {:?}", pos);
 
             // find a movable
             // if it exists, we try to move it and continue
@@ -299,8 +297,6 @@ fn run_input(world: &World, context: &mut Context) {
 
     // Now actually move what needs to be moved
     for (entity, key) in to_move {
-        println!("Doing a move");
-
         let mut position = world.get::<&mut Position>(entity).unwrap();
 
         match key {
