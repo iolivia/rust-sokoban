@@ -1,3 +1,4 @@
+/* ANCHOR: all */
 // Rust sokoban
 // main.rs
 
@@ -6,7 +7,7 @@ use hecs::{Entity, World};
 
 use std::path;
 
-// Components
+// ANCHOR: components
 pub struct Position {
     x: u8,
     y: u8,
@@ -25,13 +26,18 @@ pub struct Box {}
 
 pub struct BoxSpot {}
 
+// ANCHOR_END: components
+
+// ANCHOR: game
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
 // things shortly.
 struct Game {
     world: World,
 }
+// ANCHOR_END: game
 
+// ANCHOR: handler
 impl event::EventHandler<ggez::GameError> for Game {
     fn update(&mut self, _context: &mut Context) -> GameResult {
         Ok(())
@@ -41,8 +47,9 @@ impl event::EventHandler<ggez::GameError> for Game {
         Ok(())
     }
 }
+// ANCHOR_END: handler
 
-// Create a wall entity
+// ANCHOR: entities
 pub fn create_wall(world: &mut World, position: Position) -> Entity {
     world.spawn((
         Position { z: 10, ..position },
@@ -90,7 +97,9 @@ pub fn create_player(world: &mut World, position: Position) -> Entity {
         Player {},
     ))
 }
+// ANCHOR_END: entities
 
+// ANCHOR: main
 pub fn main() -> GameResult {
     let mut world = World::new();
 
@@ -107,3 +116,6 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+// ANCHOR_END: main
+
+/* ANCHOR_END: all */
