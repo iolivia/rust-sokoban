@@ -12,15 +12,15 @@ use ggez::{
 use glam::Vec2;
 use hecs::{Entity, World};
 
+use std::collections::HashMap;
 use std::path;
-use std::HashMap;
 
 const TILE_WIDTH: f32 = 32.0;
 const MAP_WIDTH: u8 = 8;
 const MAP_HEIGHT: u8 = 9;
 
 // ANCHOR: components
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Position {
     x: u8,
     y: u8,
@@ -176,7 +176,6 @@ pub fn create_box_spot(world: &mut World, position: Position) -> Entity {
             path: "/images/box_spot.png".to_string(),
         },
         BoxSpot {},
-        Immovable {},
     ))
 }
 
@@ -224,50 +223,46 @@ fn run_rendering(world: &World, context: &mut Context) {
 
 // ANCHOR: input_system
 fn run_input(world: &World, context: &mut Context) {
-    let mut to_move = Vec::new();
+    let mut to_move: Vec<(Entity, KeyCode)> = Vec::new();
 
     // get all the movables and immovables
-    let mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
-        .join()
-        .map(|t| ((t.2.x, t.2.y), t.0.id()))
+    let mov: HashMap<(u8, u8), Entity> = world
+        .query::<(&Position, &Movable)>()
+        .iter()
+        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0.clone()))
         .collect::<HashMap<_, _>>();
-    let immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
-        .join()
-        .map(|t| ((t.2.x, t.2.y), t.0.id()))
+    let immov: HashMap<(u8, u8), Entity> = world
+        .query::<(&Position, &Immovable)>()
+        .iter()
+        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0.clone()))
         .collect::<HashMap<_, _>>();
-
-    let relevant_keys = vec![
-        KeyCode::Up,
-        KeyCode::Down,
-        KeyCode::Left,
-        KeyCode::Right,
-    ];
 
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
         if keyboard::is_key_repeated(context) {
             continue;
         }
 
-        if relevant_keys.iter().none(|key| keyboard::is_key_pressed(context, *key)))
-        {
-            continue;
-        }
-
-                // Now iterate through current position to the end of the map
+        // Now iterate through current position to the end of the map
         // on the correct axis and check what needs to move.
-        let (start, end, is_x) = {
-            if keyboard::is_key_pressed(context, KeyCode::Up) {
-                (position.y, 0, false)
-            }
-            if keyboard::is_key_pressed(context, KeyCode::Down) {
-                (position.y, MAP_HEIGHT, false)
-            }
-            if keyboard::is_key_pressed(context, KeyCode::Left) {
-                (position.x, 0, true)
-            }
-            if keyboard::is_key_pressed(context, KeyCode::Right) {
-                (position.x, MAP_WIDTH, true)
-            }
+        let key = if keyboard::is_key_pressed(context, KeyCode::Up) {
+            KeyCode::Up
+        } else if keyboard::is_key_pressed(context, KeyCode::Down) {
+            KeyCode::Down
+        } else if keyboard::is_key_pressed(context, KeyCode::Left) {
+            KeyCode::Left
+        } else if keyboard::is_key_pressed(context, KeyCode::Right) {
+            KeyCode::Right
+        } else {
+            continue;
+        };
+        println!("Key pressed: {:?}", key);
+
+        let (start, end, is_x) = match key {
+            KeyCode::Up => (position.y, 0, true),
+            KeyCode::Down => (position.y, MAP_HEIGHT - 1, true),
+            KeyCode::Left => (position.x, 0, false),
+            KeyCode::Right => (position.x, MAP_WIDTH - 1, false),
+            _ => continue,
         };
 
         let range = if start < end {
@@ -282,12 +277,13 @@ fn run_input(world: &World, context: &mut Context) {
             } else {
                 (position.x, x_or_y)
             };
+            println!("Searching for pos {:?}", pos);
 
             // find a movable
             // if it exists, we try to move it and continue
             // if it doesn't exist, we continue and try to find an immovable instead
             match mov.get(&pos) {
-                Some(id) => to_move.push((key, id.clone())),
+                Some(entity) => to_move.push((*entity, key)),
                 None => {
                     // find an immovable
                     // if it exists, we need to stop and not move anything
@@ -302,16 +298,17 @@ fn run_input(world: &World, context: &mut Context) {
     }
 
     // Now actually move what needs to be moved
-    for (key, id) in to_move {
-        let position = positions.get_mut(entities.entity(id));
-        if let Some(position) = position {
-            match key {
-                KeyCode::Up => position.y -= 1,
-                KeyCode::Down => position.y += 1,
-                KeyCode::Left => position.x -= 1,
-                KeyCode::Right => position.x += 1,
-                _ => (),
-            }
+    for (entity, key) in to_move {
+        println!("Doing a move");
+
+        let mut position = world.get::<&mut Position>(entity).unwrap();
+
+        match key {
+            KeyCode::Up => position.y -= 1,
+            KeyCode::Down => position.y += 1,
+            KeyCode::Left => position.x -= 1,
+            KeyCode::Right => position.x += 1,
+            _ => (),
         }
     }
 }
