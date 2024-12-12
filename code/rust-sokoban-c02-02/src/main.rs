@@ -214,16 +214,17 @@ fn run_rendering(world: &World, context: &mut Context) {
 // ANCHOR: input_system
 fn run_input(world: &World, context: &mut Context) {
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
-        if keyboard::is_key_pressed(context, KeyCode::Up) {
+        if keyboard::is_key_pressed(context, KeyCode::Up) && !keyboard::is_key_repeated(context) {
             position.y -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Down) {
+        if keyboard::is_key_pressed(context, KeyCode::Down) && !keyboard::is_key_repeated(context) {
             position.y += 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Left) {
+        if keyboard::is_key_pressed(context, KeyCode::Left) && !keyboard::is_key_repeated(context) {
             position.x -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Right) {
+        if keyboard::is_key_pressed(context, KeyCode::Right) && !keyboard::is_key_repeated(context)
+        {
             position.x += 1;
         }
     }
