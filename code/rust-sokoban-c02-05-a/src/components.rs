@@ -1,3 +1,6 @@
+use std::fmt;
+use std::fmt::Display;
+
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Position {
     pub x: u8,
@@ -29,6 +32,16 @@ pub enum GameplayState {
 impl Default for GameplayState {
     fn default() -> Self {
         GameplayState::Playing
+    }
+}
+
+impl Display for GameplayState {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.write_str(match self {
+            GameplayState::Playing => "Playing",
+            GameplayState::Won => "Won",
+        })?;
+        Ok(())
     }
 }
 

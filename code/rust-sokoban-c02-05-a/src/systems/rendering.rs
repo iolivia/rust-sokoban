@@ -1,7 +1,7 @@
 use ggez::{
     conf,
     event::{self, KeyCode},
-    graphics::{self, DrawParam, Image},
+    graphics::{self, Color, DrawParam, Image},
     input::keyboard,
     Context, GameResult,
 };
@@ -37,7 +37,29 @@ pub fn run_rendering(world: &World, context: &mut Context) {
         graphics::draw(context, &image, draw_params).expect("expected render");
     }
 
+    // Render any text
+    let mut query = world.query::<&Gameplay>();
+    let gameplay = query.iter().next().unwrap().1;
+    draw_text(context, &gameplay.state.to_string(), 525.0, 80.0);
+    draw_text(context, &gameplay.moves_count.to_string(), 525.0, 100.0);
+
     // Finally, present the context, this will actually display everything
     // on the screen.
     graphics::present(context).expect("expected to present");
+}
+
+pub fn draw_text(context: &mut Context, text_string: &str, x: f32, y: f32) {
+    let text = graphics::Text::new(text_string);
+    let destination = Vec2::new(x, y);
+    let color = Some(Color::new(0.0, 0.0, 0.0, 1.0));
+    let dimensions = Vec2::new(0.0, 20.0);
+
+    graphics::queue_text(context, &text, dimensions, color);
+    graphics::draw_queued_text(
+        context,
+        graphics::DrawParam::new().dest(destination),
+        None,
+        graphics::FilterMode::Linear,
+    )
+    .expect("expected drawing queued text");
 }
