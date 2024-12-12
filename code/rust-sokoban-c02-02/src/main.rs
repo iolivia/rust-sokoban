@@ -4,8 +4,9 @@
 
 use ggez::{
     conf,
-    event::{self, KeyCode, KeyMods},
+    event::{self, KeyCode},
     graphics::{self, DrawParam, Image},
+    input::keyboard,
     Context, GameResult,
 };
 use glam::Vec2;
@@ -35,11 +36,6 @@ pub struct Box {}
 
 pub struct BoxSpot {}
 
-#[derive(Default)]
-pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
-}
-
 // ANCHOR_END: components
 
 // ANCHOR: game
@@ -67,7 +63,6 @@ pub fn initialize_level(world: &mut World) {
     ";
 
     load_map(world, MAP.to_string());
-    let _ = create_input_queue(world);
 }
 
 pub fn load_map(world: &mut World, map_string: String) {
@@ -116,10 +111,10 @@ pub fn load_map(world: &mut World, map_string: String) {
 
 // ANCHOR: handler
 impl event::EventHandler<ggez::GameError> for Game {
-    fn update(&mut self, _context: &mut Context) -> GameResult {
+    fn update(&mut self, context: &mut Context) -> GameResult {
         // Run input system
         {
-            run_input(&self.world);
+            run_input(&self.world, context);
         }
 
         Ok(())
@@ -132,20 +127,6 @@ impl event::EventHandler<ggez::GameError> for Game {
         }
 
         Ok(())
-    }
-
-    fn key_down_event(
-        &mut self,
-        _context: &mut Context,
-        keycode: KeyCode,
-        _keymod: KeyMods,
-        _repeat: bool,
-    ) {
-        println!("Key pressed: {:?}", keycode);
-
-        let mut query = self.world.query::<&mut InputQueue>();
-        let input_queue = query.into_iter().next().unwrap().1;
-        input_queue.keys_pressed.push(keycode);
     }
 }
 // ANCHOR_END: handler
@@ -198,11 +179,6 @@ pub fn create_player(world: &mut World, position: Position) -> Entity {
         Player {},
     ))
 }
-
-pub fn create_input_queue(world: &mut World) {
-    world.spawn((InputQueue::default(),));
-}
-
 // ANCHOR_END: entities
 
 // ANCHOR: rendering_system
@@ -236,36 +212,28 @@ fn run_rendering(world: &World, context: &mut Context) {
 // ANCHOR_END: rendering_system
 
 // ANCHOR: input_system
-fn run_input(world: &World) {
-    let mut query = world.query::<&mut InputQueue>();
-    let keys_pressed = query.iter().next().unwrap().1.keys_pressed.clone();
-
+fn run_input(world: &World, context: &mut Context) {
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
-        // Get the first key pressed
-        for key in keys_pressed.iter() {
-            // Apply the key to the position
-            match key {
-                KeyCode::Up => position.y -= 1,
-                KeyCode::Down => position.y += 1,
-                KeyCode::Left => position.x -= 1,
-                KeyCode::Right => position.x += 1,
-                _ => (),
-            }
+        if keyboard::is_key_pressed(context, KeyCode::Up) {
+            position.y -= 1;
         }
-    }
-
-    // Clear keys pressed at the end of the frame
-    {
-        let mut query = world.query::<&mut InputQueue>();
-        let input_queue = query.iter().next().unwrap().1;
-        input_queue.keys_pressed.clear();
+        if keyboard::is_key_pressed(context, KeyCode::Down) {
+            position.y += 1;
+        }
+        if keyboard::is_key_pressed(context, KeyCode::Left) {
+            position.x -= 1;
+        }
+        if keyboard::is_key_pressed(context, KeyCode::Right) {
+            position.x += 1;
+        }
     }
 }
 // ANCHOR_END: input_system
 
 // ANCHOR: main
 pub fn main() -> GameResult {
-    let world = World::new();
+    let mut world = World::new();
+    initialize_level(&mut world);
 
     // Create a game context and event loop
     let context_builder = ggez::ContextBuilder::new("rust_sokoban", "sokoban")
