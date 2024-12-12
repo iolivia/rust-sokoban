@@ -1,51 +1,52 @@
-use specs::{Component, NullStorage, VecStorage, World, WorldExt};
+use std::fmt;
+use std::fmt::Display;
 
-// Components
-#[derive(Debug, Component, Clone, Copy)]
-#[storage(VecStorage)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Position {
     pub x: u8,
     pub y: u8,
     pub z: u8,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Renderable {
     pub path: String,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Wall {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Player {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Box {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct BoxSpot {}
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
 pub struct Movable;
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
 pub struct Immovable;
 
-pub fn register_components(world: &mut World) {
-    world.register::<Position>();
-    world.register::<Renderable>();
-    world.register::<Player>();
-    world.register::<Wall>();
-    world.register::<Box>();
-    world.register::<BoxSpot>();
-    world.register::<Movable>();
-    world.register::<Immovable>();
+pub enum GameplayState {
+    Playing,
+    Won,
+}
+
+impl Default for GameplayState {
+    fn default() -> Self {
+        GameplayState::Playing
+    }
+}
+
+impl Display for GameplayState {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.write_str(match self {
+            GameplayState::Playing => "Playing",
+            GameplayState::Won => "Won",
+        })?;
+        Ok(())
+    }
+}
+
+#[derive(Default)]
+pub struct Gameplay {
+    pub state: GameplayState,
+    pub moves_count: u32,
 }
