@@ -206,7 +206,7 @@ fn run_rendering(world: &World, context: &mut Context) {
 
 // ANCHOR: main
 pub fn main() -> GameResult {
-    let world = World::new();
+    let mut world = World::new();
     initialize_level(&mut world);
 
     // Create a game context and event loop
