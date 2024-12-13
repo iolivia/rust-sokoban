@@ -1,8 +1,7 @@
 use ggez::{
-    conf,
-    event::{self, KeyCode},
-    graphics::{self, spritebatch::SpriteBatch, Color, DrawParam, Image},
-    input::keyboard,
+    conf, event,
+    graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment},
+    input::keyboard::{self, KeyCode},
     timer, Context, GameResult,
 };
 use glam::Vec2;
@@ -58,15 +57,14 @@ pub fn run_rendering(world: &World, context: &mut Context) {
         .sorted_by(|a, b| Ord::cmp(&a.0, &b.0))
     {
         for (image_path, draw_params) in group {
-            let image = Image::new(context, image_path).expect("expected image");
-            let mut sprite_batch = SpriteBatch::new(image);
+            let image = Image::from_path(context, &image_path).unwrap();
+            let mut mesh_batch = graphics::InstanceArray::new(context, Some(image));
 
             for draw_param in draw_params.iter() {
-                sprite_batch.add(*draw_param);
+                mesh_batch.push(*draw_param);
             }
 
-            graphics::draw(context, &sprite_batch, graphics::DrawParam::new())
-                .expect("expected render");
+            canvas.draw(&mesh_batch, graphics::DrawParam::new());
         }
     }
 
@@ -78,7 +76,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
 
     // Render FPS
     let fps = format!("FPS: {:.0}", timer::fps(context));
-    draw_text(context, &fps, 525.0, 120.0);
+    draw_text(&mut canvas, &fps, 525.0, 120.0);
 
     // Finally, present the canvas, this will actually display everything
     // on the screen.

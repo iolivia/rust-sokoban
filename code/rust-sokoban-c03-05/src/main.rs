@@ -3,10 +3,9 @@
 // main.rs
 
 use ggez::{
-    conf,
-    event::{self, KeyCode},
+    conf, event,
     graphics::{self, DrawParam, Image},
-    input::keyboard,
+    input::keyboard::{self, KeyCode},
     timer, Context, GameResult,
 };
 use glam::Vec2;
