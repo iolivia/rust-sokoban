@@ -37,17 +37,20 @@ pub fn run_rendering(world: &World, context: &mut Context) {
         canvas.draw(&image, draw_params);
     }
 
+    // ANCHOR: draw_gameplay_state
     // Render any text
     let mut query = world.query::<&Gameplay>();
     let gameplay = query.iter().next().unwrap().1;
     draw_text(&mut canvas, &gameplay.state.to_string(), 525.0, 80.0);
     draw_text(&mut canvas, &gameplay.moves_count.to_string(), 525.0, 100.0);
+    // ANCHOR_END: draw_gameplay_state
 
     // Finally, present the canvas, this will actually display everything
     // on the screen.
     canvas.finish(context).expect("expected to present");
 }
 
+// ANCHOR: draw_text
 pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
     let mut text = Text::new(TextFragment {
         text: text_string.to_string(),
@@ -58,3 +61,4 @@ pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
 
     canvas.draw(&text, Vec2::new(x, y));
 }
+// ANCHOR_END: draw_text

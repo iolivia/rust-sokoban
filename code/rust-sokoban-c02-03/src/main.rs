@@ -39,9 +39,11 @@ pub struct Box {}
 
 pub struct BoxSpot {}
 
+// ANCHOR: components_movement
 pub struct Movable;
 
 pub struct Immovable;
+// ANCHOR_END: components_movement
 
 // ANCHOR_END: components
 

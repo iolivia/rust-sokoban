@@ -24,17 +24,28 @@ pub struct Movable;
 
 pub struct Immovable;
 
+// ANCHOR: gameplay_state
 pub enum GameplayState {
     Playing,
     Won,
 }
 
+#[derive(Default)]
+pub struct Gameplay {
+    pub state: GameplayState,
+    pub moves_count: u32,
+}
+// ANCHOR_END: gameplay_state
+
+// ANCHOR: gameplay_state_impl_default
 impl Default for GameplayState {
     fn default() -> Self {
         GameplayState::Playing
     }
 }
+// ANCHOR_END: gameplay_state_impl_default
 
+// ANCHOR: gameplay_state_impl_display
 impl Display for GameplayState {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(match self {
@@ -44,9 +55,4 @@ impl Display for GameplayState {
         Ok(())
     }
 }
-
-#[derive(Default)]
-pub struct Gameplay {
-    pub state: GameplayState,
-    pub moves_count: u32,
-}
+// ANCHOR_END: gameplay_state_impl_display
