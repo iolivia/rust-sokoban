@@ -1,5 +1,6 @@
 use std::fmt;
 use std::fmt::Display;
+use std::time::Duration;
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Position {
@@ -105,6 +106,7 @@ pub struct Gameplay {
     pub moves_count: u32,
 }
 
+#[derive(Default)]
 pub struct Time {
     pub delta: Duration,
 }

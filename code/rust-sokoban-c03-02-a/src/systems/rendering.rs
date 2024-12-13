@@ -10,6 +10,7 @@ use hecs::{Entity, World};
 
 use std::collections::HashMap;
 use std::path;
+use std::time::Duration;
 
 use crate::components::*;
 use crate::constants::*;
@@ -17,6 +18,10 @@ use crate::constants::*;
 pub fn run_rendering(world: &World, context: &mut Context) {
     // Clearing the screen (this gives us the background colour)
     graphics::clear(context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
+
+    // Get time
+    let mut query = world.query::<&Time>();
+    let time = query.iter().next().unwrap().1;
 
     // Get all the renderables with their positions and sort by the position z
     // This will allow us to have entities layered visually.
@@ -28,7 +33,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     // and draw it at the specified position.
     for (_, (position, renderable)) in rendering_data.iter() {
         // Load the image
-        let image = Image::new(context, renderable.path.clone()).expect("expected image");
+        let image = get_image(context, renderable, time.delta);
         let x = position.x as f32 * TILE_WIDTH;
         let y = position.y as f32 * TILE_WIDTH;
 
@@ -62,4 +67,25 @@ pub fn draw_text(context: &mut Context, text_string: &str, x: f32, y: f32) {
         graphics::FilterMode::Linear,
     )
     .expect("expected drawing queued text");
+}
+
+pub fn get_image(context: &mut Context, renderable: &Renderable, delta: Duration) -> Image {
+    let path_index = match renderable.kind() {
+        RenderableKind::Static => {
+            // We only have one image, so we just return that
+            0
+        }
+        RenderableKind::Animated => {
+            // If we have multiple, we want to select the right one based on the delta time.
+            // First we get the delta in milliseconds, we % by 1000 to get the milliseconds
+            // only and finally we divide by 250 to get a number between 0 and 4. If it's 4
+            // we technically are on the next iteration of the loop (or on 0), but we will let
+            // the renderable handle this logic of wrapping frames.
+            ((delta.as_millis() % 1000) / 250) as usize
+        }
+    };
+
+    let image_path = renderable.path(path_index);
+
+    Image::new(context, image_path).expect("expected image")
 }
