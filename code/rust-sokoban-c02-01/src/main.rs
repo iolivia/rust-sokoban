@@ -48,6 +48,7 @@ struct Game {
 // ANCHOR: init
 // Initialize the level// Initialize the level
 pub fn initialize_level(world: &mut World) {
+    // ANCHOR: map
     const MAP: &str = "
     N N W W W W W W
     W W W . . . . W
@@ -59,6 +60,7 @@ pub fn initialize_level(world: &mut World) {
     W . . . . . . W
     W W W W W W W W
     ";
+    // ANCHOR_END: map
 
     load_map(world, MAP.to_string());
 }
