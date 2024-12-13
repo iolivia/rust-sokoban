@@ -82,5 +82,5 @@ pub fn get_image(context: &mut Context, renderable: &Renderable, delta: Duration
 
     let image_path = renderable.path(path_index);
 
-    let image = Image::from_path(context, renderable.path.clone()).unwrap();
+    Image::from_path(context, image_path).unwrap()
 }
