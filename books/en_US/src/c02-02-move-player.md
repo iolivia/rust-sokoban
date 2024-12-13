@@ -3,85 +3,45 @@
 It wouldn't be a game if we couldn't move the player, would it? In this section we will figure out how to grab input events.
 
 ## Input events
-The first step for making our player move is to start listening to input events. If we take a quick look at the [ggez input example](https://github.com/ggez/ggez/blob/master/examples/input_test.rs#L59) we can see we can subscribe to all sort of mouse and keyboard related events, for now we probably only want `key_down_event`.
 
-Let's start listening to key events. First we'll bring a few more modules into scope:
+The first step for making our player move is to start listening to input events. If we take a quick look at the [ggez input example](https://github.com/ggez/ggez/blob/master/examples/input_test.rs#L59) we can see we can check if a given key is pressed using `is_key_pressed`.
+
+Let's start with a very basic implementation of the input system where we simply check if a key is pressed and print to the console.
 
 ```rust
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:1:11}}
+{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:input_system_print}}
 ```
 
 Then, we'll add this code inside the `event::EventHandler` implementation block for our Game:
 
 ```rust
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:134}}
-
-    // ...
-
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:155:162}}
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:166}}
-
-    // ...
-
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:167}}
+{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:handler}}
 ```
 
 If we run this we should see the print lines in the console.
 
-```
-Key pressed: Left
-Key pressed: Left
-Key pressed: Right
-Key pressed: Up
-Key pressed: Down
-Key pressed: Left
-```
-
-If you are not familiar with the `{:?}` notation used when printing, this is just a convenient way that Rust allows us to print objects for debugging. In this case we can print a KeyCode object (which is an enum) because the KeyCode type implements the Debug trait using the Debug macro (remember we discussed macros in [Chapter 1.3](./c01-03-entities-components.html), so head back there if you need a refresher). If KeyCode didn't implement Debug we would not be able to use this syntax and instead we would get a compiler error. This saves us writing some custom code to convert the key codes to strings, so we can rely on the built-in functionalily for that.   
-
-## Resources
-Next up we'll add a resource, which is the specs way of sharing some state across systems which isn't part of your world. We'll use a resource for modelling the input queue of key presses, since that doesn't really fit into our existing components/entities model.
-
-```rust
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:48:52}}
-```
-
-And then we'll push the new key presses into the queue when `key_down_event` is called.
-
-```rust
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:134}}
-
-    // ...
-
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:155:166}}
-
-    // ...
-
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:167}}
-```
-
-Finally, we need to register the resources into specs like we did for components.
-
-```rust
-// Registering resources
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:179:181}}
-
-// Registering resources in main
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:295:312}}
+```sh
+LEFT
+LEFT
+RIGHT
+UP
+DOWN
+LEFT
 ```
 
 ## Input system
 
-Using this code we have a resource that is a continuous queue of input key presses. Next up, we'll start processing these inputs in a system.
+Let's start by implementing the final input system now.
+
+We already have a way to check if a key was pressed, now we need to implement the logic that will move the player. The logic we are aiming to implement:
+
+* if UP is pressed, we move the player one position up on the y axis
+* if DOWN is pressed, we move the player one position down on the y axis
+* if LEFT is pressed, we move the player one position left on the x axis
+* if RIGHT is pressed, we move the player one position right on the x axis
 
 ```rust
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:94:121}}
-```
-
-Finally we need to run the system in our update loop.
-
-```rust
-{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:135:143}}
+{{#include ../../../code/rust-sokoban-c02-02/src/main.rs:input_system}}
 ```
 
 The input system is pretty simple, it grabs all the players and positions (we should only have one player but this code doesn't need to care about that, it could in theory work if we have multiple players that we want to control with the same input). And then for every player and position combination, it will grab the first key pressed and remove it from the input queue. It will then figure out what is the required transformation - for example if we press up we want to move one tile up and so on, and then applies this position update.

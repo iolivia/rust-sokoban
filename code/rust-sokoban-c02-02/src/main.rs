@@ -211,6 +211,23 @@ fn run_rendering(world: &World, context: &mut Context) {
 }
 // ANCHOR_END: rendering_system
 
+// ANCHOR: input_system_print
+fn run_input_print(world: &World, context: &mut Context) {
+    if keyboard::is_key_pressed(context, KeyCode::Up) {
+        println!("UP");
+    }
+    if keyboard::is_key_pressed(context, KeyCode::Down) {
+        println!("DOWN");
+    }
+    if keyboard::is_key_pressed(context, KeyCode::Left) {
+        println!("LEFT");
+    }
+    if keyboard::is_key_pressed(context, KeyCode::Right) {
+        println!("RIGHT");
+    }
+}
+// ANCHOR_END: input_system_print
+
 // ANCHOR: input_system
 fn run_input(world: &World, context: &mut Context) {
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
