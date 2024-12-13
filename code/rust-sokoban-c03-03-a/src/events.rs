@@ -2,7 +2,7 @@ use hecs::Entity;
 
 #[derive(Debug)]
 pub struct EntityMoved {
-    pub id: Entity,
+    pub entity: Entity,
 }
 
 #[derive(Debug)]

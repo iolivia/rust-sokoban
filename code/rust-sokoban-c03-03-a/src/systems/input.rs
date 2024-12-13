@@ -13,6 +13,7 @@ use std::path;
 
 use crate::components::*;
 use crate::constants::*;
+use crate::events::*;
 
 pub fn run_input(world: &World, context: &mut Context) {
     let mut to_move: Vec<(Entity, KeyCode)> = Vec::new();
@@ -111,7 +112,7 @@ pub fn run_input(world: &World, context: &mut Context) {
         }
 
         // Fire an event for the entity that just moved
-        events.push(Event::EntityMoved(EntityMoved { id }));
+        events.push(Event::EntityMoved(EntityMoved { entity }));
     }
 
     // Finally add events back into the world
