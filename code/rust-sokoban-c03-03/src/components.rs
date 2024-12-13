@@ -1,14 +1,18 @@
-use specs::{Component, NullStorage, VecStorage, World, WorldExt};
+use std::fmt;
+use std::fmt::Display;
+use std::time::Duration;
 
-use std::fmt::{self, Display};
+use crate::events::Event;
 
-// Components
-#[derive(Debug, Component, Clone, Copy)]
-#[storage(VecStorage)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Position {
     pub x: u8,
     pub y: u8,
     pub z: u8,
+}
+
+pub struct Renderable {
+    paths: Vec<String>,
 }
 
 pub enum RenderableKind {
@@ -16,19 +20,17 @@ pub enum RenderableKind {
     Animated,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
-pub struct Renderable {
-    paths: Vec<String>,
-}
-
 impl Renderable {
-    pub fn new_static(path: String) -> Self {
-        Self { paths: vec![path] }
+    pub fn new_static(path: &str) -> Self {
+        Self {
+            paths: vec![path.to_string()],
+        }
     }
 
-    pub fn new_animated(paths: Vec<String>) -> Self {
-        Self { paths }
+    pub fn new_animated(paths: Vec<&str>) -> Self {
+        Self {
+            paths: paths.iter().map(|p| p.to_string()).collect(),
+        }
     }
 
     pub fn kind(&self) -> RenderableKind {
@@ -47,12 +49,8 @@ impl Renderable {
     }
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Wall {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Player {}
 
 #[derive(PartialEq)]
@@ -71,33 +69,51 @@ impl Display for BoxColour {
     }
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Box {
     pub colour: BoxColour,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct BoxSpot {
     pub colour: BoxColour,
 }
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
 pub struct Movable;
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
 pub struct Immovable;
 
-pub fn register_components(world: &mut World) {
-    world.register::<Position>();
-    world.register::<Renderable>();
-    world.register::<Player>();
-    world.register::<Wall>();
-    world.register::<Box>();
-    world.register::<BoxSpot>();
-    world.register::<Movable>();
-    world.register::<Immovable>();
+pub enum GameplayState {
+    Playing,
+    Won,
+}
+
+impl Default for GameplayState {
+    fn default() -> Self {
+        GameplayState::Playing
+    }
+}
+
+impl Display for GameplayState {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.write_str(match self {
+            GameplayState::Playing => "Playing",
+            GameplayState::Won => "Won",
+        })?;
+        Ok(())
+    }
+}
+
+#[derive(Default)]
+pub struct Gameplay {
+    pub state: GameplayState,
+    pub moves_count: u32,
+}
+
+#[derive(Default)]
+pub struct Time {
+    pub delta: Duration,
+}
+
+#[derive(Default)]
+pub struct EventQueue {
+    pub events: Vec<Event>,
 }

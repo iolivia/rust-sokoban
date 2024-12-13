@@ -4,7 +4,7 @@ use hecs::World;
 
 use std::collections::HashMap;
 
-fn run_process_events(world: &World) {
+pub fn run_process_events(world: &World) {
     let events = {
         let mut query = world.query::<&mut crate::components::EventQueue>();
         let events = query
