@@ -1,4 +1,6 @@
 use ggez::audio;
+use ggez::audio::SoundSource;
+use ggez::Context;
 use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Display;
@@ -123,4 +125,14 @@ pub struct EventQueue {
 #[derive(Default)]
 pub struct AudioStore {
     pub sounds: HashMap<String, std::boxed::Box<audio::Source>>,
+}
+
+impl AudioStore {
+    pub fn play_sound(&mut self, context: &mut Context, sound: &str) {
+        if let Some(source) = self.sounds.get_mut(sound) {
+            if let Ok(_) = source.play_detached(context) {
+                println!("Playing sound: {}", sound);
+            }
+        }
+    }
 }

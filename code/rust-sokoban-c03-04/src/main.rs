@@ -46,7 +46,7 @@ impl event::EventHandler<ggez::GameError> for Game {
 
         // Run events processing
         {
-            systems::events::run_process_events(&mut self.world);
+            systems::events::run_process_events(&mut self.world, context);
         }
 
         // Get and update time resource
@@ -82,11 +82,12 @@ pub fn main() -> GameResult {
 
     let (mut context, event_loop) = context_builder.build()?;
 
-    map::initialize_level(&mut world, &mut context);
     entities::create_gameplay(&mut world);
     entities::create_time(&mut world);
     entities::create_event_queue(&mut world);
     entities::create_audio_store(&mut world);
+
+    map::initialize_level(&mut world, &mut context);
 
     // Create the game state
     let game = Game { world };
