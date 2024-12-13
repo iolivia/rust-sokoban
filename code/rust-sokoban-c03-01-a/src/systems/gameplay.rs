@@ -16,11 +16,15 @@ pub fn run_gameplay_state(world: &World) {
     let boxes_out_of_position: usize = world
         .query::<(&Position, &BoxSpot)>()
         .iter()
-        .map(|(_, (position, _))| {
-            if boxes_by_position.contains_key(&(position.x, position.y)) {
-                0
+        .map(|(_, (position, box_spot))| {
+            if let Some(the_box) = boxes_by_position.get(&(position.x, position.y)) {
+                if box_spot.colour == the_box.colour {
+                    0
+                } else {
+                    1
+                }
             } else {
-                1
+                0
             }
         })
         .collect::<Vec<usize>>()

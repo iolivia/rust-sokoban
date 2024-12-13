@@ -16,6 +16,7 @@ pub struct Wall {}
 
 pub struct Player {}
 
+#[derive(PartialEq)]
 pub enum BoxColour {
     Red,
     Blue,
