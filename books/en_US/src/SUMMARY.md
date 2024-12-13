@@ -14,6 +14,6 @@
 - [Advanced gameplay](./c03-00-intro.md)
   - [Coloured boxes](./c03-01-colours.md)
   - [Animations](./c03-02-animations.md)
-  - [Events](./c03-03-sounds-events.md)
-  - [Sounds](./c03-04-sounds-events.md)
+  - [Events](./c03-03-events.md)
+  - [Sounds](./c03-04-sounds.md)
   - [Batch rendering](./c03-05-batch-rendering.md)

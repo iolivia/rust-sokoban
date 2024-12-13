@@ -14,6 +14,7 @@ use std::time::Duration;
 use crate::components::*;
 use crate::constants::*;
 
+// ANCHOR: run_rendering
 pub fn run_rendering(world: &World, context: &mut Context) {
     // Clearing the screen (this gives us the background colour)
     let mut canvas =
@@ -52,6 +53,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     // on the screen.
     canvas.finish(context).expect("expected to present");
 }
+// ANCHOR_END: run_rendering
 
 pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
     let mut text = Text::new(TextFragment {
@@ -64,6 +66,7 @@ pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
     canvas.draw(&text, Vec2::new(x, y));
 }
 
+// ANCHOR: get_image
 pub fn get_image(context: &mut Context, renderable: &Renderable, delta: Duration) -> Image {
     let path_index = match renderable.kind() {
         RenderableKind::Static => {
@@ -84,3 +87,4 @@ pub fn get_image(context: &mut Context, renderable: &Renderable, delta: Duration
 
     Image::from_path(context, image_path).unwrap()
 }
+// ANCHOR_END: get_image

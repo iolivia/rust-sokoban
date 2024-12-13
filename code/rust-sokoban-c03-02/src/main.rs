@@ -31,6 +31,7 @@ struct Game {
 
 // ANCHOR: handler
 impl event::EventHandler<ggez::GameError> for Game {
+    // ANCHOR: update
     fn update(&mut self, context: &mut Context) -> GameResult {
         // Run input system
         {
@@ -51,6 +52,7 @@ impl event::EventHandler<ggez::GameError> for Game {
 
         Ok(())
     }
+    // ANCHOR_END: update
 
     fn draw(&mut self, context: &mut Context) -> GameResult {
         // Render game entities
