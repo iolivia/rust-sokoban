@@ -228,20 +228,38 @@ fn run_input_print(world: &World, context: &mut Context) {
 }
 // ANCHOR_END: input_system_print
 
+// ANCHOR: input_system_duplicate
+fn input_system_duplicate(world: &World, context: &mut Context) {
+    for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
+        if keyboard::is_key_pressed(context, KeyCode::Up) {
+            position.y -= 1;
+        }
+        if keyboard::is_key_pressed(context, KeyCode::Down) {
+            position.y += 1;
+        }
+        if keyboard::is_key_pressed(context, KeyCode::Left) {
+            position.x -= 1;
+        }
+        if keyboard::is_key_pressed(context, KeyCode::Right) {
+            position.x += 1;
+        }
+    }
+}
+// ANCHOR_END: input_system_duplicate
+
 // ANCHOR: input_system
 fn run_input(world: &World, context: &mut Context) {
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
-        if keyboard::is_key_pressed(context, KeyCode::Up) && !keyboard::is_key_repeated(context) {
+        if keyboard::is_key_pressed(context, KeyCode::Up) {
             position.y -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Down) && !keyboard::is_key_repeated(context) {
+        if keyboard::is_key_pressed(context, KeyCode::Down) {
             position.y += 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Left) && !keyboard::is_key_repeated(context) {
+        if keyboard::is_key_pressed(context, KeyCode::Left) {
             position.x -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Right) && !keyboard::is_key_repeated(context)
-        {
+        if keyboard::is_key_pressed(context, KeyCode::Right) {
             position.x += 1;
         }
     }
