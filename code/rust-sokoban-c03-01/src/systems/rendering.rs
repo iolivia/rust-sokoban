@@ -1,8 +1,7 @@
 use ggez::{
-    conf,
-    event::{self, KeyCode},
-    graphics::{self, Color, DrawParam, Image},
-    input::keyboard,
+    conf, event,
+    graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment},
+    input::keyboard::{self, KeyCode},
     Context, GameResult,
 };
 use glam::Vec2;
@@ -16,7 +15,7 @@ use crate::constants::*;
 
 pub fn run_rendering(world: &World, context: &mut Context) {
     // Clearing the screen (this gives us the background colour)
-        let mut canvas =
+    let mut canvas =
         graphics::Canvas::from_frame(context, graphics::Color::from([0.95, 0.95, 0.95, 1.0]));
 
     // Get all the renderables with their positions and sort by the position z
@@ -41,26 +40,21 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     // Render any text
     let mut query = world.query::<&Gameplay>();
     let gameplay = query.iter().next().unwrap().1;
-    draw_text(context, &gameplay.state.to_string(), 525.0, 80.0);
-    draw_text(context, &gameplay.moves_count.to_string(), 525.0, 100.0);
+    draw_text(&mut canvas, &gameplay.state.to_string(), 525.0, 80.0);
+    draw_text(&mut canvas, &gameplay.moves_count.to_string(), 525.0, 100.0);
 
     // Finally, present the canvas, this will actually display everything
     // on the screen.
     canvas.finish(context).expect("expected to present");
 }
 
-pub fn draw_text(context: &mut Context, text_string: &str, x: f32, y: f32) {
-    let text = graphics::Text::new(text_string);
-    let destination = Vec2::new(x, y);
-    let color = Some(Color::new(0.0, 0.0, 0.0, 1.0));
-    let dimensions = Vec2::new(0.0, 20.0);
+pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
+    let mut text = Text::new(TextFragment {
+        text: text_string.to_string(),
+        color: Some(Color::new(0.0, 0.0, 0.0, 1.0)),
+        scale: Some(PxScale::from(20.0)),
+        ..Default::default()
+    });
 
-    graphics::queue_text(context, &text, dimensions, color);
-    graphics::draw_queued_text(
-        context,
-        graphics::DrawParam::new().dest(destination),
-        None,
-        graphics::FilterMode::Linear,
-    )
-    .expect("expected drawing queued text");
+    canvas.draw(&text, Vec2::new(x, y));
 }
