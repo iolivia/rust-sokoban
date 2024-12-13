@@ -251,16 +251,16 @@ fn input_system_duplicate(world: &World, context: &mut Context) {
 // ANCHOR: input_system
 fn run_input(world: &World, context: &mut Context) {
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
-        if keyboard::is_key_pressed(context, KeyCode::Up) {
+        if keyboard::is_key_just_pressed(context, KeyCode::Up) {
             position.y -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Down) {
+        if keyboard::is_key_just_pressed(context, KeyCode::Down) {
             position.y += 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Left) {
+        if keyboard::is_key_just_pressed(context, KeyCode::Left) {
             position.x -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Right) {
+        if keyboard::is_key_just_pressed(context, KeyCode::Right) {
             position.x += 1;
         }
     }

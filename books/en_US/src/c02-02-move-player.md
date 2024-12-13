@@ -56,14 +56,12 @@ But you might have noticed there's a problem, a single key press triggers multip
 
 The problem is we are calling the input system multiple times during a given second, which means holding a key pressed for one second will trigger multiple moves for the same key. As you might have noticed this is not a great experience as a player because you don't have good control over the movements and you can easily get into a situation where a box gets stuck next to a wall and there's no way to bring it back.
 
-What options do we have to fix this?
-
-Option 1: Only process the move when the key is released rather than pressed
-Option 2: Add some logic that would prevent the same key being processed more than once in a given time internal
-Option 3: Check if the key is a duplicate press before processing it
+What options do we have to fix this? We could remember if the key was pressed the last frame, and if it was, we skip it. It would require storing state of the previous frame, and comparing against it in the current frame before deciding to move or not, which is very doable. Fortunately, ggez added this functionality to their keyboard api where you can call `is_key_just_pressed` and it will automatically check against the current state. Let's try this, it looks something like this.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-02/src/main.rs:input_system}}
 ```
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-02).
+And now everything works as expected!
+
+> ***CODELINK:***  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-02).
