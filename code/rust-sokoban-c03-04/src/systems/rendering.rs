@@ -17,7 +17,8 @@ use crate::constants::*;
 
 pub fn run_rendering(world: &World, context: &mut Context) {
     // Clearing the screen (this gives us the background colour)
-    graphics::clear(context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
+    let mut canvas =
+        graphics::Canvas::from_frame(context, graphics::Color::from([0.95, 0.95, 0.95, 1.0]));
 
     // Get time
     let mut query = world.query::<&Time>();
@@ -39,7 +40,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
 
         // draw
         let draw_params = DrawParam::new().dest(Vec2::new(x, y));
-        graphics::draw(context, &image, draw_params).expect("expected render");
+        canvas.draw(&image, draw_params);
     }
 
     // Render any text
@@ -48,9 +49,9 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     draw_text(context, &gameplay.state.to_string(), 525.0, 80.0);
     draw_text(context, &gameplay.moves_count.to_string(), 525.0, 100.0);
 
-    // Finally, present the context, this will actually display everything
+    // Finally, present the canvas, this will actually display everything
     // on the screen.
-    graphics::present(context).expect("expected to present");
+    canvas.finish(context).expect("expected to present");
 }
 
 pub fn draw_text(context: &mut Context, text_string: &str, x: f32, y: f32) {

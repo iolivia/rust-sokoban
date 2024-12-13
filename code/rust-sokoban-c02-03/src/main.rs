@@ -3,10 +3,10 @@
 // main.rs
 
 use ggez::{
-    conf,
-    event::{self, KeyCode},
+    conf, event,
     graphics::{self, DrawParam, Image},
     input::keyboard,
+    input::keyboard::{KeyCode, KeyInput},
     Context, GameResult,
 };
 use glam::Vec2;
@@ -194,7 +194,8 @@ pub fn create_player(world: &mut World, position: Position) -> Entity {
 // ANCHOR: rendering_system
 fn run_rendering(world: &World, context: &mut Context) {
     // Clearing the screen (this gives us the background colour)
-    graphics::clear(context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
+    let mut canvas =
+        graphics::Canvas::from_frame(context, graphics::Color::from([0.95, 0.95, 0.95, 1.0]));
 
     // Get all the renderables with their positions and sort by the position z
     // This will allow us to have entities layered visually.
@@ -206,18 +207,18 @@ fn run_rendering(world: &World, context: &mut Context) {
     // and draw it at the specified position.
     for (_, (position, renderable)) in rendering_data.iter() {
         // Load the image
-        let image = Image::new(context, renderable.path.clone()).expect("expected image");
+        let image = Image::from_path(context, renderable.path.clone()).unwrap();
         let x = position.x as f32 * TILE_WIDTH;
         let y = position.y as f32 * TILE_WIDTH;
 
         // draw
         let draw_params = DrawParam::new().dest(Vec2::new(x, y));
-        graphics::draw(context, &image, draw_params).expect("expected render");
+        canvas.draw(&image, draw_params);
     }
 
-    // Finally, present the context, this will actually display everything
+    // Finally, present the canvas, this will actually display everything
     // on the screen.
-    graphics::present(context).expect("expected to present");
+    canvas.finish(context).expect("expected to present");
 }
 // ANCHOR_END: rendering_system
 

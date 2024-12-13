@@ -1,8 +1,8 @@
 use ggez::{
-    conf,
-    event::{self, KeyCode},
+    conf, event,
     graphics::{self, DrawParam, Image},
     input::keyboard,
+    input::keyboard::{KeyCode, KeyInput},
     Context, GameResult,
 };
 use glam::Vec2;
