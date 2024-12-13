@@ -36,13 +36,13 @@ pub fn run_input(world: &World, context: &mut Context) {
 
         // Now iterate through current position to the end of the map
         // on the correct axis and check what needs to move.
-        let key = if keyboard::is_key_pressed(context, KeyCode::Up) {
+        let key = if keyboard::is_key_just_pressed(context, KeyCode::Up) {
             KeyCode::Up
-        } else if keyboard::is_key_pressed(context, KeyCode::Down) {
+        } else if keyboard::is_key_just_pressed(context, KeyCode::Down) {
             KeyCode::Down
-        } else if keyboard::is_key_pressed(context, KeyCode::Left) {
+        } else if keyboard::is_key_just_pressed(context, KeyCode::Left) {
             KeyCode::Left
-        } else if keyboard::is_key_pressed(context, KeyCode::Right) {
+        } else if keyboard::is_key_just_pressed(context, KeyCode::Right) {
             KeyCode::Right
         } else {
             continue;
