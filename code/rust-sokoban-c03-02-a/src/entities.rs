@@ -20,7 +20,10 @@ pub fn create_floor(world: &mut World, position: Position) -> Entity {
 pub fn create_box(world: &mut World, position: Position, colour: BoxColour) -> Entity {
     world.spawn((
         Position { z: 10, ..position },
-        Renderable::new_static(&format!("/images/box_{}_1.png", colour)),
+        Renderable::new_animated(vec![
+            &format!("/images/box_{}_1.png", colour),
+            &format!("/images/box_{}_2.png", colour),
+        ]),
         Box { colour },
         Movable {},
     ))
