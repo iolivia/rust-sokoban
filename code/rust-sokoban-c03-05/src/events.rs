@@ -1,8 +1,8 @@
-pub type EntityId = u32;
+use hecs::Entity;
 
 #[derive(Debug)]
 pub struct EntityMoved {
-    pub id: EntityId,
+    pub entity: Entity,
 }
 
 #[derive(Debug)]

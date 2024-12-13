@@ -9,8 +9,8 @@ Let's think about what we'll need to add to this game to check for the success c
 when they've beaten the level:
 
 - A `resource` for tracking the game state
-    - Is the game in progress or completed?
-    - How many move has the player made?
+  - Is the game in progress or completed?
+  - How many move has the player made?
 - A `system` for checking if the user has completed their objective
 - A `system` for updating the number of moves made
 - UI for reporting game state
@@ -22,17 +22,12 @@ not associated with a specific entity. Let's start by defining a `Gameplay` reso
 
 ```rust
 // resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:38:43}}
+{{#include ../../../code/rust-sokoban-c02-05/src/components.rs:gameplay_state}}
 ```
 
 `Gameplay` has two fields: `state` and `moves_count`. These are used to track the
 current state of the game (is the game still in play, or has the player won?) and
-the number of moves made.  `state` is described by an `enum`, defined like so:
-
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:17:20}}
-```
+the number of moves made.  `state` is described by an `enum`.
 
 The eagle-eyed reader will note that we used a macro to derive the `Default` trait
 for `Gameplay`, but not for the `GameplayState` enum. If we want to use `Gameplay`
@@ -43,14 +38,7 @@ automatically, we must implement `Default` for `Gameplay` ourselves.
 
 ```rust
 // resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:32:36}}
-```
-
-Having defined the resource, let's register it with the world:
-
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:12:15}}
+{{#include ../../../code/rust-sokoban-c02-05/src/components.rs:gameplay_state_impl_default}}
 ```
 
 Now, when the game is started, the `Gameplay` resource will look like this:
@@ -65,15 +53,11 @@ Gameplay {
 ## Step Counter System
 
 We can increment `Gameplay`'s `moves_count` field to track the number of turns taken.
-We already have a system dealing with user input in `InputSystem`, so let's adapt that for this purpose.
-
-Since we need to mutate the `Gameplay` resource, we need to register it with
-`InputSystem` by adding `Write<'a, Gameplay>` to the `SystemData` type
-definition.
+We already have a system dealing with user input in the input system, so let's adapt that for this purpose.
 
 ```rust
 // input_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/input_system.rs:0:25}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/input_system.rs}}
         ...
 ```
 
@@ -81,52 +65,37 @@ Since we've already done the work to check if a player character will move in
 response to a keypress, we can use that to determine when to increment the step
 counter.
 
-```rust
-// input_system.rs
-        ...
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/input_system.rs:83:105}}
-```
-
 ## Gameplay System
 
-Next, let's integrate this resource with a new `GamePlayStateSystem`.  This
+Next, let's integrate this resource with a new gameplay state system.  This
 system will continuously check to see if all the boxes have the same
 position as all the box spots. Once all the boxes are on all the box spots,
 the game has been won!
 
 Aside from `Gameplay`, this system only needs read-only access to the
-`Position`, `Box`, and `BoxSpot` storages.
+`Position`, `Box`, and `BoxSpot` components.
 
-The system uses `Join` to create a vector from the `Box` and `Position`
-storages.  This vector is mapped into a hashmap containing the location of
-each box on the board.
-
-Next, the system uses the `Join` method again to create an iterable from
-entities that have both `BoxSpot` and `Position` components.  The system walks through this iterable.
 If all box spots have a corresponding box at the same position, the game is over and the player has won.
 Otherwise, the game is still in play.
 
 ```rust
 // gameplay_state_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/gameplay_state_system.rs::}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/gameplay.rs}}
 ```
 
 Finally, let's run the gameplay system in our main update loop.
 
 ```rust
 // main.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/main.rs:24:39}}
-    // ...
-{{#include ../../../code/rust-sokoban-c02-05/src/main.rs:63}}
+{{#include ../../../code/rust-sokoban-c02-05/src/main.rs}}
 ```
-
 
 ## Gameplay UI
 
 The last step is to provide feedback to the user letting them know what the
 state of the game is.  This requires a resource to track the state and a
 system to update the state. We can adapt the `GameplayState` resource and
-`RenderingSystem` for this.
+rendering system for this.
 
 First, we'll implement `Display` for `GameplayState` so we can render the
 state of the game as text. We'll use a match expression to allow `GameplayState`
@@ -134,34 +103,33 @@ to render "Playing" or "Won".
 
 ```rust
 // resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:21:30}}
+{{#include ../../../code/rust-sokoban-c02-05/src/components.rs:gameplay_state_impl_display}}
 ```
 
-Next, we'll add a `draw_text` method to `RenderingSystem`, so it can print
+Next, we'll add a `draw_text` method to rendering system, so it can print
 `GameplayState` to the screen...
 
 ```rust
 // rendering_systems.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:16:32}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:draw_text}}
 ```
 
 ...and then we'll add the `Gameplay` resource to `RenderingSystem` so we can
-call `draw_text`.  `RenderingSystem` needs to be able to read the `Gameplay`
-resource.
+call `draw_text`, and use it all to render the state and number of moves.
 
 ```rust
 // rendering_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:35:71}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:draw_gameplay_state}}
 ```
 
 At this point, the game will provide basic feedback to the user:
+
 - Counts the number of steps
 - Tells the player when they have won
 
 Here's how it looks.
 
 ![Sokoban play](./images/moves.gif)
-
 
 There are plenty of other enhancements that can be made!
 

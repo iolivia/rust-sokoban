@@ -1,36 +1,32 @@
-use specs::{Component, NullStorage, VecStorage, World, WorldExt};
+use std::fmt;
+use std::fmt::Display;
 
-use std::fmt::{self, Display};
-
-// Components
-#[derive(Debug, Component, Clone, Copy)]
-#[storage(VecStorage)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Position {
     pub x: u8,
     pub y: u8,
     pub z: u8,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Renderable {
     pub path: String,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Wall {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Player {}
 
+// ANCHOR: box_colour_eq
 #[derive(PartialEq)]
+// ANCHOR: box_colour
 pub enum BoxColour {
     Red,
     Blue,
 }
+// ANCHOR_END: box_colour
+// ANCHOR_END: box_colour_eq
 
+// ANCHOR: box_colour_display
 impl Display for BoxColour {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(match self {
@@ -40,34 +36,45 @@ impl Display for BoxColour {
         Ok(())
     }
 }
+// ANCHOR_END: box_colour_display
 
-#[derive(Component)]
-#[storage(VecStorage)]
+// ANCHOR: box
 pub struct Box {
     pub colour: BoxColour,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct BoxSpot {
     pub colour: BoxColour,
 }
+// ANCHOR_END: box
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
 pub struct Movable;
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
 pub struct Immovable;
 
-pub fn register_components(world: &mut World) {
-    world.register::<Position>();
-    world.register::<Renderable>();
-    world.register::<Player>();
-    world.register::<Wall>();
-    world.register::<Box>();
-    world.register::<BoxSpot>();
-    world.register::<Movable>();
-    world.register::<Immovable>();
+pub enum GameplayState {
+    Playing,
+    Won,
+}
+
+impl Default for GameplayState {
+    fn default() -> Self {
+        GameplayState::Playing
+    }
+}
+
+impl Display for GameplayState {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        fmt.write_str(match self {
+            GameplayState::Playing => "Playing",
+            GameplayState::Won => "Won",
+        })?;
+        Ok(())
+    }
+}
+
+#[derive(Default)]
+pub struct Gameplay {
+    pub state: GameplayState,
+    pub moves_count: u32,
 }

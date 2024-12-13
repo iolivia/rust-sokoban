@@ -1,6 +1,25 @@
 use crate::components::{BoxColour, Position};
 use crate::entities::*;
-use specs::World;
+use ggez::audio::Source;
+use ggez::Context;
+use hecs::World;
+
+pub fn initialize_level(world: &mut World, context: &mut Context) {
+    const MAP: &str = "
+    N N W W W W W W
+    W W W . . . . W
+    W . . . BB . . W
+    W . . RB . . . W 
+    W . P . . . . W
+    W . . . . RS . W
+    W . . BS . . . W
+    W . . . . . . W
+    W W W W W W W W
+    ";
+
+    load_map(world, MAP.to_string());
+    load_sounds(world, context);
+}
 
 pub fn load_map(world: &mut World, map_string: String) {
     // read all lines
@@ -19,7 +38,9 @@ pub fn load_map(world: &mut World, map_string: String) {
 
             // Figure out what object we should create
             match *column {
-                "." => create_floor(world, position),
+                "." => {
+                    create_floor(world, position);
+                }
                 "W" => {
                     create_floor(world, position);
                     create_wall(world, position);
@@ -48,5 +69,22 @@ pub fn load_map(world: &mut World, map_string: String) {
                 c => panic!("unrecognized map item {}", c),
             }
         }
+    }
+}
+
+pub fn load_sounds(world: &mut World, context: &mut Context) {
+    let mut query = world.query::<&mut crate::components::AudioStore>();
+    let mut audio_store = query.iter().next().unwrap().1;
+
+    let sounds = ["correct", "incorrect", "wall"];
+
+    for sound in sounds.iter() {
+        let sound_name = sound.to_string();
+        let sound_path = format!("/sounds/{}.wav", sound_name);
+        let sound_source = Source::new(context, sound_path).expect("expected sound loaded");
+
+        audio_store
+            .sounds
+            .insert(sound_name, Box::new(sound_source));
     }
 }

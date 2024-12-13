@@ -1,6 +1,22 @@
 use crate::components::Position;
 use crate::entities::*;
-use specs::World;
+use hecs::World;
+
+pub fn initialize_level(world: &mut World) {
+    const MAP: &str = "
+    N N W W W W W W
+    W W W . . . . W
+    W . . . B . . W
+    W . . . . . . W 
+    W . P . . . . W
+    W . . . . . . W
+    W . . S . . . W
+    W . . . . . . W
+    W W W W W W W W
+    ";
+
+    load_map(world, MAP.to_string());
+}
 
 pub fn load_map(world: &mut World, map_string: String) {
     // read all lines
@@ -19,7 +35,9 @@ pub fn load_map(world: &mut World, map_string: String) {
 
             // Figure out what object we should create
             match *column {
-                "." => create_floor(world, position),
+                "." => {
+                    create_floor(world, position);
+                }
                 "W" => {
                     create_floor(world, position);
                     create_wall(world, position);

@@ -1,32 +1,41 @@
+/* ANCHOR: all */
 // Rust sokoban
 // main.rs
 
-use ggez::{conf, event::{self, KeyCode, KeyMods}, Context, GameResult};
-use specs::{RunNow, World, WorldExt};
+use ggez::{
+    conf, event,
+    graphics::{self, DrawParam, Image},
+    input::keyboard,
+    input::keyboard::{KeyCode, KeyInput},
+    Context, GameResult,
+};
+use glam::Vec2;
+use hecs::{Entity, World};
+
+use std::collections::HashMap;
 use std::path;
 
 mod components;
 mod constants;
 mod entities;
 mod map;
-mod resources;
 mod systems;
 
-use crate::components::*;
-use crate::map::*;
-use crate::resources::*;
-use crate::systems::*;
-
+// ANCHOR: game
+// This struct will hold all our game state
+// For now there is nothing to be held, but we'll add
+// things shortly.
 struct Game {
     world: World,
 }
+// ANCHOR_END: game
 
+// ANCHOR: handler
 impl event::EventHandler<ggez::GameError> for Game {
-    fn update(&mut self, _context: &mut Context) -> GameResult {
+    fn update(&mut self, context: &mut Context) -> GameResult {
         // Run input system
         {
-            let mut is = InputSystem {};
-            is.run_now(&self.world);
+            systems::input::run_input(&self.world, context);
         }
 
         Ok(())
@@ -35,49 +44,18 @@ impl event::EventHandler<ggez::GameError> for Game {
     fn draw(&mut self, context: &mut Context) -> GameResult {
         // Render game entities
         {
-            let mut rs = RenderingSystem { context };
-            rs.run_now(&self.world);
+            systems::rendering::run_rendering(&self.world, context);
         }
 
         Ok(())
     }
-
-    fn key_down_event(
-        &mut self,
-        _context: &mut Context,
-        keycode: KeyCode,
-        _keymod: KeyMods,
-        _repeat: bool,
-    ) {
-        println!("Key pressed: {:?}", keycode);
-
-        let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
-    }
 }
+// ANCHOR_END: handler
 
-// Initialize the level
-pub fn initialize_level(world: &mut World) {
-    const MAP: &str = "
-    N N W W W W W W
-    W W W . . . . W
-    W . . . B . . W
-    W . . . . . . W 
-    W . P . . . . W
-    W . . . . . . W
-    W . . S . . . W
-    W . . . . . . W
-    W W W W W W W W
-    ";
-
-    load_map(world, MAP.to_string());
-}
-
+// ANCHOR: main
 pub fn main() -> GameResult {
     let mut world = World::new();
-    register_components(&mut world);
-    register_resources(&mut world);
-    initialize_level(&mut world);
+    map::initialize_level(&mut world);
 
     // Create a game context and event loop
     let context_builder = ggez::ContextBuilder::new("rust_sokoban", "sokoban")
@@ -92,3 +70,6 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+// ANCHOR_END: main
+
+/* ANCHOR_END: all */

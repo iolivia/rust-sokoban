@@ -1,18 +1,16 @@
+/* ANCHOR: all */
 // Rust sokoban
 // main.rs
 
-
-
-use glam::Vec2;
 use ggez::{
-    conf, Context, GameResult,
-    event::{self, KeyCode, KeyMods}, 
-    graphics::{self, DrawParam, Image}};
-use specs::{
-    join::Join, Builder, Component, ReadStorage, RunNow, 
-    System, VecStorage, World, WorldExt,
-    Write, WriteStorage, NullStorage, Entities, world::Index
+    conf, event,
+    graphics::{self, DrawParam, Image},
+    input::keyboard,
+    input::keyboard::{KeyCode, KeyInput},
+    Context, GameResult,
 };
+use glam::Vec2;
+use hecs::{Entity, World};
 
 use std::collections::HashMap;
 use std::path;
@@ -21,302 +19,45 @@ const TILE_WIDTH: f32 = 32.0;
 const MAP_WIDTH: u8 = 8;
 const MAP_HEIGHT: u8 = 9;
 
-// Components
-#[derive(Debug, Component, Clone, Copy)]
-#[storage(VecStorage)]
+// ANCHOR: components
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Position {
     x: u8,
     y: u8,
     z: u8,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Renderable {
     path: String,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Wall {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Player {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct Box {}
 
-#[derive(Component)]
-#[storage(VecStorage)]
 pub struct BoxSpot {}
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
+// ANCHOR: components_movement
 pub struct Movable;
 
-#[derive(Component, Default)]
-#[storage(NullStorage)]
 pub struct Immovable;
+// ANCHOR_END: components_movement
 
-// Resources
-#[derive(Default)]
-pub struct InputQueue {
-    pub keys_pressed: Vec<KeyCode>,
-}
+// ANCHOR_END: components
 
-// Systems
-pub struct RenderingSystem<'a> {
-    context: &'a mut Context,
-}
-
-// System implementation
-impl<'a> System<'a> for RenderingSystem<'a> {
-    // Data
-    type SystemData = (ReadStorage<'a, Position>, ReadStorage<'a, Renderable>);
-
-    fn run(&mut self, data: Self::SystemData) {
-        let (positions, renderables) = data;
-
-        // Clearing the screen (this gives us the backround colour)
-        graphics::clear(self.context, graphics::Color::new(0.95, 0.95, 0.95, 1.0));
-
-        // Get all the renderables with their positions and sort by the position z
-        // This will allow us to have entities layered visually.
-        let mut rendering_data = (&positions, &renderables).join().collect::<Vec<_>>();
-        rendering_data.sort_by_key(|&k| k.0.z);
-
-        // Iterate through all pairs of positions & renderables, load the image
-        // and draw it at the specified position.
-        for (position, renderable) in rendering_data.iter() {
-            // Load the image
-            let image = Image::new(self.context, renderable.path.clone()).expect("expected image");
-            let x = position.x as f32 * TILE_WIDTH;
-            let y = position.y as f32 * TILE_WIDTH;
-
-            // draw
-            let draw_params = DrawParam::new().dest(Vec2::new(x, y));
-            graphics::draw(self.context, &image, draw_params).expect("expected render");
-        }
-
-        // Finally, present the context, this will actually display everything
-        // on the screen.
-        graphics::present(self.context).expect("expected to present");
-    }
-}
-
-pub struct InputSystem {}
-
-// System implementation
-impl<'a> System<'a> for InputSystem {
-    // Data
-    type SystemData = (
-        Write<'a, InputQueue>,
-        Entities<'a>,
-        WriteStorage<'a, Position>,
-        ReadStorage<'a, Player>,
-        ReadStorage<'a, Movable>,
-        ReadStorage<'a, Immovable>,
-    );
-
-    fn run(&mut self, data: Self::SystemData) {
-        let (mut input_queue, entities, mut positions, players, movables, immovables) = data;
-
-        let mut to_move = Vec::new();
-
-        for (position, _player) in (&positions, &players).join() {
-            // Get the first key pressed
-            if let Some(key) = input_queue.keys_pressed.pop() {
-                // get all the movables and immovables
-                let mov: HashMap<(u8, u8), Index> = (&entities, &movables, &positions)
-                    .join()
-                    .map(|t| ((t.2.x, t.2.y), t.0.id()))
-                    .collect::<HashMap<_, _>>();
-                let immov: HashMap<(u8, u8), Index> = (&entities, &immovables, &positions)
-                    .join()
-                    .map(|t| ((t.2.x, t.2.y), t.0.id()))
-                    .collect::<HashMap<_, _>>();
-
-                // Now iterate through current position to the end of the map
-                // on the correct axis and check what needs to move.
-                let (start, end, is_x) = match key {
-                    KeyCode::Up => (position.y, 0, false),
-                    KeyCode::Down => (position.y, MAP_HEIGHT, false),
-                    KeyCode::Left => (position.x, 0, true),
-                    KeyCode::Right => (position.x, MAP_WIDTH, true),
-                    _ => continue,
-                };
-
-                let range = if start < end {
-                    (start..=end).collect::<Vec<_>>()
-                } else {
-                    (end..=start).rev().collect::<Vec<_>>()
-                };
-
-                for x_or_y in range {
-                    let pos = if is_x {
-                        (x_or_y, position.y)
-                    } else {
-                        (position.x, x_or_y)
-                    };
-
-                    // find a movable
-                    // if it exists, we try to move it and continue
-                    // if it doesn't exist, we continue and try to find an immovable instead
-                    match mov.get(&pos) {
-                        Some(id) => to_move.push((key, id.clone())),
-                        None => {
-                            // find an immovable
-                            // if it exists, we need to stop and not move anything
-                            // if it doesn't exist, we stop because we found a gap
-                            match immov.get(&pos) {
-                                Some(_id) => to_move.clear(),
-                                None => break,
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Now actually move what needs to be moved
-        for (key, id) in to_move {
-            let position = positions.get_mut(entities.entity(id));
-            if let Some(position) = position {
-                match key {
-                    KeyCode::Up => position.y -= 1,
-                    KeyCode::Down => position.y += 1,
-                    KeyCode::Left => position.x -= 1,
-                    KeyCode::Right => position.x += 1,
-                    _ => (),
-                }
-            }
-        }
-    }
-}
-
+// ANCHOR: game
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
 // things shortly.
 struct Game {
     world: World,
 }
+// ANCHOR_END: game
 
-// This is the main event loop. ggez tells us to implement
-// two things:
-// - updating
-// - rendering
-impl event::EventHandler<ggez::GameError> for Game {
-    fn update(&mut self, _context: &mut Context) -> GameResult {
-        // Run input system
-        {
-            let mut is = InputSystem {};
-            is.run_now(&self.world);
-        }
-
-        Ok(())
-    }
-
-    fn draw(&mut self, context: &mut Context) -> GameResult {
-        // Render game entities
-        {
-            let mut rs = RenderingSystem { context };
-            rs.run_now(&self.world);
-        }
-
-        Ok(())
-    }
-
-    fn key_down_event(
-        &mut self,
-        _context: &mut Context,
-        keycode: KeyCode,
-        _keymod: KeyMods,
-        _repeat: bool,
-    ) {
-        println!("Key pressed: {:?}", keycode);
-
-        let mut input_queue = self.world.write_resource::<InputQueue>();
-        input_queue.keys_pressed.push(keycode);
-    }
-}
-
-// Register components with the world
-pub fn register_components(world: &mut World) {
-    world.register::<Position>();
-    world.register::<Renderable>();
-    world.register::<Player>();
-    world.register::<Wall>();
-    world.register::<Box>();
-    world.register::<BoxSpot>();
-    world.register::<Movable>();
-    world.register::<Immovable>();
-}
-
-pub fn register_resources(world: &mut World) {
-    world.insert(InputQueue::default())
-}
-
-// Create a wall entity
-pub fn create_wall(world: &mut World, position: Position) {
-    world
-        .create_entity()
-        .with(Position { z: 10, ..position })
-        .with(Renderable {
-            path: "/images/wall.png".to_string(),
-        })
-        .with(Wall {})
-        .with(Immovable)
-        .build();
-}
-
-pub fn create_floor(world: &mut World, position: Position) {
-    world
-        .create_entity()
-        .with(Position { z: 5, ..position })
-        .with(Renderable {
-            path: "/images/floor.png".to_string(),
-        })
-        .build();
-}
-
-pub fn create_box(world: &mut World, position: Position) {
-    world
-        .create_entity()
-        .with(Position { z: 10, ..position })
-        .with(Renderable {
-            path: "/images/box.png".to_string(),
-        })
-        .with(Box {})
-        .with(Movable)
-        .build();
-}
-
-pub fn create_box_spot(world: &mut World, position: Position) {
-    world
-        .create_entity()
-        .with(Position { z: 9, ..position })
-        .with(Renderable {
-            path: "/images/box_spot.png".to_string(),
-        })
-        .with(BoxSpot {})
-        .build();
-}
-
-pub fn create_player(world: &mut World, position: Position) {
-    world
-        .create_entity()
-        .with(Position { z: 10, ..position })
-        .with(Renderable {
-            path: "/images/player.png".to_string(),
-        })
-        .with(Player {})
-        .with(Movable)
-        .build();
-}
-
-// Initialize the level
+// ANCHOR: init
+// Initialize the level// Initialize the level
 pub fn initialize_level(world: &mut World) {
     const MAP: &str = "
     N N W W W W W W
@@ -350,7 +91,9 @@ pub fn load_map(world: &mut World, map_string: String) {
 
             // Figure out what object we should create
             match *column {
-                "." => create_floor(world, position),
+                "." => {
+                    create_floor(world, position);
+                }
                 "W" => {
                     create_floor(world, position);
                     create_wall(world, position);
@@ -373,10 +116,206 @@ pub fn load_map(world: &mut World, map_string: String) {
         }
     }
 }
+// ANCHOR_END: init
+
+// ANCHOR: handler
+impl event::EventHandler<ggez::GameError> for Game {
+    fn update(&mut self, context: &mut Context) -> GameResult {
+        // Run input system
+        {
+            run_input(&self.world, context);
+        }
+
+        Ok(())
+    }
+
+    fn draw(&mut self, context: &mut Context) -> GameResult {
+        // Render game entities
+        {
+            run_rendering(&self.world, context);
+        }
+
+        Ok(())
+    }
+}
+// ANCHOR_END: handler
+
+// ANCHOR: entities
+pub fn create_wall(world: &mut World, position: Position) -> Entity {
+    world.spawn((
+        Position { z: 10, ..position },
+        Renderable {
+            path: "/images/wall.png".to_string(),
+        },
+        Wall {},
+        Immovable {},
+    ))
+}
+pub fn create_floor(world: &mut World, position: Position) -> Entity {
+    world.spawn((
+        Position { z: 5, ..position },
+        Renderable {
+            path: "/images/floor.png".to_string(),
+        },
+    ))
+}
+
+pub fn create_box(world: &mut World, position: Position) -> Entity {
+    world.spawn((
+        Position { z: 10, ..position },
+        Renderable {
+            path: "/images/box.png".to_string(),
+        },
+        Box {},
+        Movable {},
+    ))
+}
+
+pub fn create_box_spot(world: &mut World, position: Position) -> Entity {
+    world.spawn((
+        Position { z: 9, ..position },
+        Renderable {
+            path: "/images/box_spot.png".to_string(),
+        },
+        BoxSpot {},
+    ))
+}
+
+pub fn create_player(world: &mut World, position: Position) -> Entity {
+    world.spawn((
+        Position { z: 10, ..position },
+        Renderable {
+            path: "/images/player.png".to_string(),
+        },
+        Player {},
+        Movable {},
+    ))
+}
+// ANCHOR_END: entities
+
+// ANCHOR: rendering_system
+fn run_rendering(world: &World, context: &mut Context) {
+    // Clearing the screen (this gives us the background colour)
+    let mut canvas =
+        graphics::Canvas::from_frame(context, graphics::Color::from([0.95, 0.95, 0.95, 1.0]));
+
+    // Get all the renderables with their positions and sort by the position z
+    // This will allow us to have entities layered visually.
+    let mut query = world.query::<(&Position, &Renderable)>();
+    let mut rendering_data: Vec<(Entity, (&Position, &Renderable))> = query.into_iter().collect();
+    rendering_data.sort_by_key(|&k| k.1 .0.z);
+
+    // Iterate through all pairs of positions & renderables, load the image
+    // and draw it at the specified position.
+    for (_, (position, renderable)) in rendering_data.iter() {
+        // Load the image
+        let image = Image::from_path(context, renderable.path.clone()).unwrap();
+        let x = position.x as f32 * TILE_WIDTH;
+        let y = position.y as f32 * TILE_WIDTH;
+
+        // draw
+        let draw_params = DrawParam::new().dest(Vec2::new(x, y));
+        canvas.draw(&image, draw_params);
+    }
+
+    // Finally, present the canvas, this will actually display everything
+    // on the screen.
+    canvas.finish(context).expect("expected to present");
+}
+// ANCHOR_END: rendering_system
+
+// ANCHOR: input_system
+fn run_input(world: &World, context: &mut Context) {
+    let mut to_move: Vec<(Entity, KeyCode)> = Vec::new();
+
+    // get all the movables and immovables
+    let mov: HashMap<(u8, u8), Entity> = world
+        .query::<(&Position, &Movable)>()
+        .iter()
+        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0.clone()))
+        .collect::<HashMap<_, _>>();
+    let immov: HashMap<(u8, u8), Entity> = world
+        .query::<(&Position, &Immovable)>()
+        .iter()
+        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0.clone()))
+        .collect::<HashMap<_, _>>();
+
+    for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
+        if keyboard::is_key_repeated(context) {
+            continue;
+        }
+
+        // Now iterate through current position to the end of the map
+        // on the correct axis and check what needs to move.
+        let key = if keyboard::is_key_pressed(context, KeyCode::Up) {
+            KeyCode::Up
+        } else if keyboard::is_key_pressed(context, KeyCode::Down) {
+            KeyCode::Down
+        } else if keyboard::is_key_pressed(context, KeyCode::Left) {
+            KeyCode::Left
+        } else if keyboard::is_key_pressed(context, KeyCode::Right) {
+            KeyCode::Right
+        } else {
+            continue;
+        };
+
+        let (start, end, is_x) = match key {
+            KeyCode::Up => (position.y, 0, false),
+            KeyCode::Down => (position.y, MAP_HEIGHT - 1, false),
+            KeyCode::Left => (position.x, 0, true),
+            KeyCode::Right => (position.x, MAP_WIDTH - 1, true),
+            _ => continue,
+        };
+
+        let range = if start < end {
+            (start..=end).collect::<Vec<_>>()
+        } else {
+            (end..=start).rev().collect::<Vec<_>>()
+        };
+
+        for x_or_y in range {
+            let pos = if is_x {
+                (x_or_y, position.y)
+            } else {
+                (position.x, x_or_y)
+            };
+
+            // find a movable
+            // if it exists, we try to move it and continue
+            // if it doesn't exist, we continue and try to find an immovable instead
+            match mov.get(&pos) {
+                Some(entity) => to_move.push((*entity, key)),
+                None => {
+                    // find an immovable
+                    // if it exists, we need to stop and not move anything
+                    // if it doesn't exist, we stop because we found a gap
+                    match immov.get(&pos) {
+                        Some(_id) => to_move.clear(),
+                        None => break,
+                    }
+                }
+            }
+        }
+    }
+
+    // Now actually move what needs to be moved
+    for (entity, key) in to_move {
+        let mut position = world.get::<&mut Position>(entity).unwrap();
+
+        match key {
+            KeyCode::Up => position.y -= 1,
+            KeyCode::Down => position.y += 1,
+            KeyCode::Left => position.x -= 1,
+            KeyCode::Right => position.x += 1,
+            _ => (),
+        }
+    }
+}
+// ANCHOR_END: input_system
+
+// ANCHOR: main
 pub fn main() -> GameResult {
     let mut world = World::new();
-    register_components(&mut world);
-    register_resources(&mut world);
     initialize_level(&mut world);
 
     // Create a game context and event loop
@@ -392,3 +331,6 @@ pub fn main() -> GameResult {
     // Run the main event loop
     event::run(context, event_loop, game)
 }
+// ANCHOR_END: main
+
+/* ANCHOR_END: all */
