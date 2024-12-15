@@ -1,35 +1,41 @@
 [![Code-samples-compile](https://github.com/iolivia/rust-sokoban/workflows/Code-samples-compile/badge.svg)](https://github.com/iolivia/rust-sokoban/actions?query=workflow%3ACode-samples-compile)
 [简体中文](README-zh_CN.md)
+
 # [Rust sokoban](https://sokoban.iolivia.me)
 
 ## :dart: What is it?
-This repository hosts the Rust Sokoban book and source code used in the book. It's using [mdbook](https://github.com/rust-lang/mdBook). You can read the book at [sokoban.iolivia.me](https://sokoban.iolivia.me). 
 
-<img src="src/images/readme.gif" width="80%">
+This repository hosts the Rust Sokoban book and source code used in the book. It's using [mdbook](https://github.com/rust-lang/mdBook). You can read the book at [sokoban.iolivia.me](https://sokoban.iolivia.me).
+
+<img src="readme.gif" width="80%">
 
 ## :running: How to?
 
 ### Host the book locally
+
 If not already done, install mdbook.
 
 ```
-$ cargo install mdbook
+cargo install mdbook
 ```
 
-Serve the book and navigate to http://localhost:3000/ in your local browser.
+Serve the book and navigate to <http://localhost:3000/> in your local browser.
+
 ```
-$ mdbook serve
+mdbook serve
 ```
 
 ### Run the code locally
+
 ```
-$ cd code/rust-sokoban-c01-01
-$ cargo run --release
+cd code/rust-sokoban-c01-01
+cargo run --release
 ```
 
 ## :muscle: Contribute
 
 ### Add a new section
+
 1. Copy the latest `code/rust-sokoban-x` folder to  `code/rust-sokoban-x+1`
 1. Add the code changes of the topic you want to illustrate, try to keep each section self contained and relatively simple to grasp
 1. Make sure the code compiles (ideally without warnings)
@@ -40,9 +46,11 @@ $ cargo run --release
 1. Create a PR and wait for the :clap: :tada:
 
 ### Create an issue
+
 Have a look in the issues list of any duplicates, if you can't find anything create a new one!
 
 ### Help with a translation
+
 1. Make a copy of the books/en_US folder with the new translation ISO code (for example fr_FR, see [list](http://www.lingoes.net/en/translator/langcode.htm))
 1. Modify the language in book.toml
 1. Translate SUMMARY.md first
@@ -51,4 +59,5 @@ Have a look in the issues list of any duplicates, if you can't find anything cre
 1. When this is ready, notify the repo owner, a CI change is required to publish the book to a new subdomain (sokoban.iolivia.me/fr_fr in this example)
 
 ## :car: License
+
 MIT
