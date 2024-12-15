@@ -2,20 +2,22 @@
 
 [English](README.md)
 
-# [Rust编写推箱子游戏教程 ](https://sokoban.iolivia.me)
+# [Rust编写推箱子游戏教程](https://sokoban.iolivia.me)
 
 ## :dart: 这是什么?
+
 这里是使用[mdbook](https://github.com/rust-lang/mdBook)创建的《Rust编写推箱子游戏》教程和相关代码。想在线阅读下？ 好嘞，给您安排，点这里[sokoban.iolivia.me](https://sokoban.iolivia.me)。
 
-<img src="src/images/readme.gif" width="80%">
+<img src="readme.gif" width="80%">
 
 ## :running: 怎么做?
 
 ### 想在自己的电脑上阅读?
+
 正如上面介绍，本教程使用`mdbook`编写，所以如果需要在本机浏览阅读本教程需要先安装`mdbook`,可以使用cargo安装，就像这个样子：
 
 ```bash
-$ cargo install mdbook
+cargo install mdbook
 ```
 
 更多安装方式可以参考[mdbook](https://github.com/rust-lang/mdBook)。
@@ -23,20 +25,20 @@ $ cargo install mdbook
 安装成功后就可以把项目clone到本机并启动`mdbook serve`：
 
 ```bash
-$ git clone  git@github.com:iolivia/rust-sokoban.git  
-$ cd rust-cokoban
-$ mdbook serve
+git clone  git@github.com:iolivia/rust-sokoban.git  
+cd rust-cokoban
+mdbook serve
 ```
 
-启动成功后就可以打开浏览器访问http://localhost:3000/开始阅读本教程了。
+启动成功后就可以打开浏览器访问<http://localhost:3000/开始阅读本教程了。>
 
 ### 运行教程代码
 
 可以像这个样子运行教程中的代码:
 
 ```
-$ cd code/rust-sokoban-c01-01
-$ cargo run --release
+cd code/rust-sokoban-c01-01
+cargo run --release
 ```
 
 ## :muscle: 欢迎参与贡献
@@ -57,7 +59,9 @@ $ cargo run --release
 1. 最后发起一个合并请求 ​，​然后​就​可以​等着:clap: :tada:
 
 ### 问题反馈
+
 你也可以通过提出问题和改进意见的方式支持本项目。在创建新的issue前请先浏览下issue列表以免重复提交.
 
 ## :car: 开源协议
+
 MIT
