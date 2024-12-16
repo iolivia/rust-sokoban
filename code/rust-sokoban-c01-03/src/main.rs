@@ -8,12 +8,14 @@ use hecs::{Entity, World};
 use std::path;
 
 // ANCHOR: components
+#[allow(dead_code)]
 pub struct Position {
     x: u8,
     y: u8,
     z: u8,
 }
 
+#[allow(dead_code)]
 pub struct Renderable {
     path: String,
 }
@@ -32,6 +34,7 @@ pub struct BoxSpot {}
 // This struct will hold all our game state
 // For now there is nothing to be held, but we'll add
 // things shortly.
+#[allow(dead_code)]
 struct Game {
     world: World,
 }
@@ -101,7 +104,7 @@ pub fn create_player(world: &mut World, position: Position) -> Entity {
 
 // ANCHOR: main
 pub fn main() -> GameResult {
-    let mut world = World::new();
+    let world = World::new();
 
     // Create a game context and event loop
     let context_builder = ggez::ContextBuilder::new("rust_sokoban", "sokoban")
