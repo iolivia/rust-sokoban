@@ -26,3 +26,5 @@ jobs:
       - run: sudo apt-get install libudev-dev libasound2-dev
       - name: Build ${{ matrix.sample_path }}
         run: cd ${{ matrix.sample_path }} && cargo check
+      - name: Clippy ${{ matrix.sample_path }}
+        run: cd ${{ matrix.sample_path }} && cargo clippy -- -D warnings
