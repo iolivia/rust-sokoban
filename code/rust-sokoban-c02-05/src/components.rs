@@ -25,7 +25,9 @@ pub struct Movable;
 pub struct Immovable;
 
 // ANCHOR: gameplay_state
+#[derive(Default)]
 pub enum GameplayState {
+    #[default]
     Playing,
     Won,
 }
@@ -38,11 +40,6 @@ pub struct Gameplay {
 // ANCHOR_END: gameplay_state
 
 // ANCHOR: gameplay_state_impl_default
-impl Default for GameplayState {
-    fn default() -> Self {
-        GameplayState::Playing
-    }
-}
 // ANCHOR_END: gameplay_state_impl_default
 
 // ANCHOR: gameplay_state_impl_display
