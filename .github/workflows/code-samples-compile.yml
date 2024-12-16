@@ -12,8 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: set-matrix
-        run: |
-          echo "matrix={\"sample_path\":$(echo [$(ls -d code/*/ | xargs printf '\"%s\",' | tr -d ' ')])}" >> $GITHUB_ENV
+        run: echo "::set-output name=matrix::{\"sample_path\":$(echo [$(ls -d code/*/ | xargs printf '\"%s\",' | tr -d ' ')])}"
   check:
     needs: calculate-matrix
     runs-on: ubuntu-latest
