@@ -2,17 +2,9 @@
 // Rust sokoban
 // main.rs
 
-use ggez::{
-    conf, event,
-    graphics::{self, DrawParam, Image},
-    input::keyboard,
-    input::keyboard::{KeyCode, KeyInput},
-    Context, GameResult,
-};
-use glam::Vec2;
-use hecs::{Entity, World};
+use ggez::{conf, event, Context, GameResult};
+use hecs::World;
 
-use std::collections::HashMap;
 use std::path;
 
 mod components;

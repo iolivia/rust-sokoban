@@ -1,15 +1,7 @@
-use ggez::{
-    conf, event,
-    graphics::{self, DrawParam, Image},
-    input::keyboard,
-    input::keyboard::{KeyCode, KeyInput},
-    Context, GameResult,
-};
-use glam::Vec2;
+use ggez::{input::keyboard::KeyCode, Context};
 use hecs::{Entity, World};
 
 use std::collections::HashMap;
-use std::path;
 
 use crate::components::*;
 use crate::constants::*;
@@ -21,28 +13,28 @@ pub fn run_input(world: &World, context: &mut Context) {
     let mov: HashMap<(u8, u8), Entity> = world
         .query::<(&Position, &Movable)>()
         .iter()
-        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0.clone()))
+        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0))
         .collect::<HashMap<_, _>>();
     let immov: HashMap<(u8, u8), Entity> = world
         .query::<(&Position, &Immovable)>()
         .iter()
-        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0.clone()))
+        .map(|t| ((t.1 .0.x, t.1 .0.y), t.0))
         .collect::<HashMap<_, _>>();
 
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
-        if keyboard::is_key_repeated(context) {
+        if context.keyboard.is_key_repeated() {
             continue;
         }
 
         // Now iterate through current position to the end of the map
         // on the correct axis and check what needs to move.
-        let key = if keyboard::is_key_just_pressed(context, KeyCode::Up) {
+        let key = if context.keyboard.is_key_just_pressed(KeyCode::Up) {
             KeyCode::Up
-        } else if keyboard::is_key_just_pressed(context, KeyCode::Down) {
+        } else if context.keyboard.is_key_just_pressed(KeyCode::Down) {
             KeyCode::Down
-        } else if keyboard::is_key_just_pressed(context, KeyCode::Left) {
+        } else if context.keyboard.is_key_just_pressed(KeyCode::Left) {
             KeyCode::Left
-        } else if keyboard::is_key_just_pressed(context, KeyCode::Right) {
+        } else if context.keyboard.is_key_just_pressed(KeyCode::Right) {
             KeyCode::Right
         } else {
             continue;
