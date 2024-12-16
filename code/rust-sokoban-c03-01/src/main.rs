@@ -2,17 +2,9 @@
 // Rust sokoban
 // main.rs
 
-use ggez::{
-    conf, event,
-    graphics::{self, DrawParam, Image},
-    input::keyboard,
-    input::keyboard::{KeyCode, KeyInput},
-    Context, GameResult,
-};
-use glam::Vec2;
-use hecs::{Entity, World};
+use ggez::{conf, event, Context, GameResult};
+use hecs::World;
 
-use std::collections::HashMap;
 use std::path;
 
 mod components;
@@ -40,7 +32,7 @@ impl event::EventHandler<ggez::GameError> for Game {
 
         // Run gameplay state
         {
-            systems::gameplay::run_gameplay_state(&mut self.world);
+            systems::gameplay::run_gameplay_state(&self.world);
         }
 
         Ok(())
