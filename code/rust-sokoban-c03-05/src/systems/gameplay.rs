@@ -8,7 +8,7 @@ pub fn run_gameplay_state(world: &World) {
     let mut query = world.query::<(&Position, &Box)>();
     let boxes_by_position: HashMap<(u8, u8), &Box> = query
         .iter()
-        .map(|(e, t)| ((t.0.x, t.0.y), t.1))
+        .map(|(_, t)| ((t.0.x, t.0.y), t.1))
         .collect::<HashMap<_, _>>();
 
     // loop through all box spots and check if there is a corresponding
@@ -35,7 +35,7 @@ pub fn run_gameplay_state(world: &World) {
     // game has been won
     if boxes_out_of_position == 0 {
         let mut query = world.query::<&mut Gameplay>();
-        let mut gameplay = query.iter().next().unwrap().1;
+        let gameplay = query.iter().next().unwrap().1;
         gameplay.state = GameplayState::Won;
     }
 }

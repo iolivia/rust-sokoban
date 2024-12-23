@@ -1,15 +1,10 @@
 use ggez::{
-    conf, event,
-    graphics::{self, DrawParam, Image},
-    input::keyboard,
-    input::keyboard::{KeyCode, KeyInput},
-    Context, GameResult,
+    input::keyboard::KeyCode,
+    Context,
 };
-use glam::Vec2;
 use hecs::{Entity, World};
 
 use std::collections::HashMap;
-use std::path;
 
 use crate::components::*;
 use crate::constants::*;
@@ -93,9 +88,9 @@ pub fn run_input(world: &World, context: &mut Context) {
     }
 
     // Update gameplay moves
-    if to_move.len() > 0 {
+    if !to_move.is_empty() {
         let mut query = world.query::<&mut Gameplay>();
-        let mut gameplay = query.iter().next().unwrap().1;
+        let gameplay = query.iter().next().unwrap().1;
         gameplay.moves_count += 1;
     }
 
@@ -118,7 +113,7 @@ pub fn run_input(world: &World, context: &mut Context) {
     // Finally add events back into the world
     {
         let mut query = world.query::<&mut EventQueue>();
-        let mut event_queue = query.iter().next().unwrap().1;
+        let event_queue = query.iter().next().unwrap().1;
         event_queue.events.append(&mut events);
     }
 }

@@ -2,10 +2,7 @@
 // Rust sokoban
 // main.rs
 
-use ggez::{
-    conf, event,
-    timer, Context, GameResult,
-};
+use ggez::{conf, event, Context, GameResult};
 use hecs::World;
 
 use std::path;
@@ -43,7 +40,7 @@ impl event::EventHandler<ggez::GameError> for Game {
         {
             let mut query = self.world.query::<&mut crate::components::Time>();
             let time = query.iter().next().unwrap().1;
-            time.delta += timer::delta(context);
+            time.delta += context.time.delta();
         }
 
         Ok(())

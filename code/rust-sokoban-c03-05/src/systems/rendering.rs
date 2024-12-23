@@ -1,15 +1,12 @@
 use ggez::{
-    conf, event,
     graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment},
-    input::keyboard::{self, KeyCode},
-    timer, Context, GameResult,
+    timer, Context,
 };
 use glam::Vec2;
 use hecs::{Entity, World};
 use itertools::Itertools;
 
 use std::collections::HashMap;
-use std::path;
 use std::time::Duration;
 
 use crate::components::*;
@@ -57,7 +54,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
         .sorted_by(|a, b| Ord::cmp(&a.0, &b.0))
     {
         for (image_path, draw_params) in group {
-            let image = Image::from_path(context, &image_path).unwrap();
+            let image = Image::from_path(context, image_path).unwrap();
             let mut mesh_batch = graphics::InstanceArray::new(context, Some(image));
 
             for draw_param in draw_params.iter() {
@@ -84,7 +81,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
 }
 
 pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
-    let mut text = Text::new(TextFragment {
+    let text = Text::new(TextFragment {
         text: text_string.to_string(),
         color: Some(Color::new(0.0, 0.0, 0.0, 1.0)),
         scale: Some(PxScale::from(20.0)),

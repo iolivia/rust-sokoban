@@ -2,16 +2,9 @@
 // Rust sokoban
 // main.rs
 
-use ggez::{
-    conf, event,
-    graphics::{self, DrawParam, Image},
-    input::keyboard::{self, KeyCode},
-    timer, Context, GameResult,
-};
-use glam::Vec2;
-use hecs::{Entity, World};
+use ggez::{conf, event, Context, GameResult};
+use hecs::World;
 
-use std::collections::HashMap;
 use std::path;
 
 mod components;
@@ -51,8 +44,8 @@ impl event::EventHandler<ggez::GameError> for Game {
         // Get and update time resource
         {
             let mut query = self.world.query::<&mut crate::components::Time>();
-            let mut time = query.iter().next().unwrap().1;
-            time.delta += timer::delta(context);
+            let time = query.iter().next().unwrap().1;
+            time.delta += context.time.delta();
         }
 
         Ok(())

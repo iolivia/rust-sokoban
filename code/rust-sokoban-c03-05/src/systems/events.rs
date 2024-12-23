@@ -5,7 +5,7 @@ use hecs::World;
 
 use std::collections::HashMap;
 
-pub fn run_process_events(world: &World, context: &mut Context) {
+pub fn run_process_events(world: &mut World, context: &mut Context) {
     let events = {
         let mut query = world.query::<&mut crate::components::EventQueue>();
         let events = query
@@ -25,11 +25,11 @@ pub fn run_process_events(world: &World, context: &mut Context) {
     let mut query = world.query::<(&Position, &BoxSpot)>();
     let box_spots_by_position: HashMap<(u8, u8), &BoxSpot> = query
         .iter()
-        .map(|(e, t)| ((t.0.x, t.0.y), t.1))
+        .map(|(_, t)| ((t.0.x, t.0.y), t.1))
         .collect::<HashMap<_, _>>();
 
     let mut query = world.query::<&mut AudioStore>();
-    let mut audio_store = query.iter().next().unwrap().1;
+    let audio_store = query.iter().next().unwrap().1;
 
     for event in events {
         println!("New event: {:?}", event);
@@ -72,7 +72,7 @@ pub fn run_process_events(world: &World, context: &mut Context) {
     // Finally add events back into the world
     {
         let mut query = world.query::<&mut EventQueue>();
-        let mut event_queue = query.iter().next().unwrap().1;
+        let event_queue = query.iter().next().unwrap().1;
         event_queue.events.append(&mut new_events);
     }
 }

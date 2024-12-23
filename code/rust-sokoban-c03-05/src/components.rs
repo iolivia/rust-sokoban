@@ -85,16 +85,13 @@ pub struct Movable;
 
 pub struct Immovable;
 
+#[derive(Default)]
 pub enum GameplayState {
+    #[default]
     Playing,
     Won,
 }
 
-impl Default for GameplayState {
-    fn default() -> Self {
-        GameplayState::Playing
-    }
-}
 
 impl Display for GameplayState {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
@@ -130,7 +127,7 @@ pub struct AudioStore {
 impl AudioStore {
     pub fn play_sound(&mut self, context: &mut Context, sound: &str) {
         if let Some(source) = self.sounds.get_mut(sound) {
-            if let Ok(_) = source.play_detached(context) {
+            if source.play_detached(context).is_ok() {
                 println!("Playing sound: {}", sound);
             }
         }
