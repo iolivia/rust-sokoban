@@ -2,7 +2,7 @@
 // Rust sokoban
 // main.rs
 
-use ggez::{conf, event, timer, Context, GameResult};
+use ggez::{conf, event, Context, GameResult};
 use hecs::World;
 
 use std::path;

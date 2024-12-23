@@ -1,6 +1,5 @@
 use ggez::{
-    graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment},
-    timer, Context,
+    graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment}, Context,
 };
 use glam::Vec2;
 use hecs::{Entity, World};
@@ -33,7 +32,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     // at which drawparams, and then add that to the rendering_batches.
     for (_, (position, renderable)) in rendering_data.iter() {
         // Load the image
-        let image_path = get_image(context, renderable, time.delta);
+        let image_path = get_image(renderable, time.delta);
         let x = position.x as f32 * TILE_WIDTH;
         let y = position.y as f32 * TILE_WIDTH;
         let z = position.z;
@@ -72,7 +71,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     draw_text(&mut canvas, &gameplay.moves_count.to_string(), 525.0, 100.0);
 
     // Render FPS
-    let fps = format!("FPS: {:.0}", timer::fps(context));
+    let fps = format!("FPS: {:.0}", context.time.fps());
     draw_text(&mut canvas, &fps, 525.0, 120.0);
 
     // Finally, present the canvas, this will actually display everything
@@ -91,7 +90,7 @@ pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
     canvas.draw(&text, Vec2::new(x, y));
 }
 
-pub fn get_image(context: &mut Context, renderable: &Renderable, delta: Duration) -> String {
+pub fn get_image(renderable: &Renderable, delta: Duration) -> String {
     let path_index = match renderable.kind() {
         RenderableKind::Static => {
             // We only have one image, so we just return that

@@ -3,8 +3,7 @@
 // main.rs
 
 use ggez::{
-    conf, event,
-    timer, Context, GameResult,
+    conf, event, Context, GameResult,
 };
 use hecs::World;
 
