@@ -8,10 +8,10 @@ pub fn initialize_level(world: &mut World, context: &mut Context) {
     const MAP: &str = "
     N N W W W W W W
     W W W . . . . W
-    W . . . BB . . W
-    W . . RB . . . W 
-    W . P . . . . W
-    W . . . . RS . W
+    W . P W BB . . W
+    W . . . . . . W 
+    W . . . . . . W
+    W . . . . . . W
     W . . BS . . . W
     W . . . . . . W
     W W W W W W W W
