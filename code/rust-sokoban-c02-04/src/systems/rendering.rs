@@ -1,15 +1,9 @@
 use ggez::{
-    conf, event,
     graphics::{self, DrawParam, Image},
-    input::keyboard,
-    input::keyboard::{KeyCode, KeyInput},
-    Context, GameResult,
+    Context,
 };
 use glam::Vec2;
 use hecs::{Entity, World};
-
-use std::collections::HashMap;
-use std::path;
 
 use crate::components::*;
 use crate::constants::*;

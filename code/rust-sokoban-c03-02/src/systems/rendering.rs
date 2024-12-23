@@ -1,14 +1,10 @@
 use ggez::{
-    conf, event,
     graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment},
-    input::keyboard::{self, KeyCode},
-    Context, GameResult,
+    Context,
 };
 use glam::Vec2;
 use hecs::{Entity, World};
 
-use std::collections::HashMap;
-use std::path;
 use std::time::Duration;
 
 use crate::components::*;
@@ -56,7 +52,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
 // ANCHOR_END: run_rendering
 
 pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
-    let mut text = Text::new(TextFragment {
+    let text = Text::new(TextFragment {
         text: text_string.to_string(),
         color: Some(Color::new(0.0, 0.0, 0.0, 1.0)),
         scale: Some(PxScale::from(20.0)),

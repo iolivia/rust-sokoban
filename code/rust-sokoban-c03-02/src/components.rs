@@ -89,16 +89,13 @@ pub struct Movable;
 
 pub struct Immovable;
 
+#[derive(Default)]
 pub enum GameplayState {
+    #[default]
     Playing,
     Won,
 }
 
-impl Default for GameplayState {
-    fn default() -> Self {
-        GameplayState::Playing
-    }
-}
 
 impl Display for GameplayState {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {

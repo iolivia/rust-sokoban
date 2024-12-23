@@ -5,8 +5,7 @@
 use ggez::{
     conf, event,
     graphics::{self, DrawParam, Image},
-    input::keyboard,
-    input::keyboard::{KeyCode, KeyInput},
+    input::keyboard::KeyCode,
     Context, GameResult,
 };
 use glam::Vec2;
@@ -213,35 +212,37 @@ fn run_rendering(world: &World, context: &mut Context) {
 // ANCHOR_END: rendering_system
 
 // ANCHOR: input_system_print
-fn run_input_print(world: &World, context: &mut Context) {
-    if keyboard::is_key_pressed(context, KeyCode::Up) {
+#[allow(dead_code)]
+fn run_input_print(_world: &World, context: &mut Context) {
+    if context.keyboard.is_key_pressed(KeyCode::Up) {
         println!("UP");
     }
-    if keyboard::is_key_pressed(context, KeyCode::Down) {
+    if context.keyboard.is_key_pressed(KeyCode::Down) {
         println!("DOWN");
     }
-    if keyboard::is_key_pressed(context, KeyCode::Left) {
+    if context.keyboard.is_key_pressed(KeyCode::Left) {
         println!("LEFT");
     }
-    if keyboard::is_key_pressed(context, KeyCode::Right) {
+    if context.keyboard.is_key_pressed(KeyCode::Right) {
         println!("RIGHT");
     }
 }
 // ANCHOR_END: input_system_print
 
 // ANCHOR: input_system_duplicate
+#[allow(dead_code)]
 fn input_system_duplicate(world: &World, context: &mut Context) {
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
-        if keyboard::is_key_pressed(context, KeyCode::Up) {
+        if context.keyboard.is_key_pressed(KeyCode::Up) {
             position.y -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Down) {
+        if context.keyboard.is_key_pressed(KeyCode::Down) {
             position.y += 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Left) {
+        if context.keyboard.is_key_pressed(KeyCode::Left) {
             position.x -= 1;
         }
-        if keyboard::is_key_pressed(context, KeyCode::Right) {
+        if context.keyboard.is_key_pressed(KeyCode::Right) {
             position.x += 1;
         }
     }
@@ -251,16 +252,16 @@ fn input_system_duplicate(world: &World, context: &mut Context) {
 // ANCHOR: input_system
 fn run_input(world: &World, context: &mut Context) {
     for (_, (position, _player)) in world.query::<(&mut Position, &Player)>().iter() {
-        if keyboard::is_key_just_pressed(context, KeyCode::Up) {
+        if context.keyboard.is_key_just_pressed(KeyCode::Up) {
             position.y -= 1;
         }
-        if keyboard::is_key_just_pressed(context, KeyCode::Down) {
+        if context.keyboard.is_key_just_pressed(KeyCode::Down) {
             position.y += 1;
         }
-        if keyboard::is_key_just_pressed(context, KeyCode::Left) {
+        if context.keyboard.is_key_just_pressed(KeyCode::Left) {
             position.x -= 1;
         }
-        if keyboard::is_key_just_pressed(context, KeyCode::Right) {
+        if context.keyboard.is_key_just_pressed(KeyCode::Right) {
             position.x += 1;
         }
     }

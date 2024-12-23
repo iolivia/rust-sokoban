@@ -74,7 +74,7 @@ pub fn load_map(world: &mut World, map_string: String) {
 
 pub fn load_sounds(world: &mut World, context: &mut Context) {
     let mut query = world.query::<&mut crate::components::AudioStore>();
-    let mut audio_store = query.iter().next().unwrap().1;
+    let audio_store = query.iter().next().unwrap().1;
 
     let sounds = ["correct", "incorrect", "wall"];
 

@@ -2,7 +2,7 @@ name: Code-samples-compile
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   calculate-matrix:
@@ -10,19 +10,21 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: set-matrix
-        run: echo "::set-output name=matrix::{\"sample_path\":$(echo [$(ls -d code/*/ | xargs printf '\"%s\",'  | tr -d ' ')])}"
+        run: echo "::set-output name=matrix::{\"sample_path\":$(echo [$(ls -d code/*/ | xargs printf '\"%s\",' | tr -d ' ')])}"
   check:
     needs: calculate-matrix
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.calculate-matrix.outputs.matrix)}}
+      matrix: ${{ fromJson(needs.calculate-matrix.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-      - run: sudo apt-get install libudev-dev libasound2-dev
+      - run: sudo apt-get install -y libudev-dev libasound2-dev
       - name: Build ${{ matrix.sample_path }}
         run: cd ${{ matrix.sample_path }} && cargo check
+      - name: Clippy ${{ matrix.sample_path }}
+        run: cd ${{ matrix.sample_path }} && cargo clippy -- -D warnings

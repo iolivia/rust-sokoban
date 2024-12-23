@@ -5,6 +5,7 @@ pub struct EntityMoved {
     pub entity: Entity,
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct BoxPlacedOnSpot {
     pub is_correct_spot: bool,
