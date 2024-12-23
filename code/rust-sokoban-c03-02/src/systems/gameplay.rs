@@ -35,7 +35,7 @@ pub fn run_gameplay_state(world: &World) {
     // game has been won
     if boxes_out_of_position == 0 {
         let mut query = world.query::<&mut Gameplay>();
-        let mut gameplay = query.iter().next().unwrap().1;
+        let gameplay = query.iter().next().unwrap().1;
         gameplay.state = GameplayState::Won;
     }
 }

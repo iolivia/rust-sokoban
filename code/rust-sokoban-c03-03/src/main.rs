@@ -40,7 +40,7 @@ impl event::EventHandler<ggez::GameError> for Game {
 
         // Run gameplay state
         {
-            systems::gameplay::run_gameplay_state(&mut self.world);
+            systems::gameplay::run_gameplay_state(&self.world);
         }
 
         // Run events processing

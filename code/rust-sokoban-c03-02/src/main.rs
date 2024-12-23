@@ -4,14 +4,10 @@
 
 use ggez::{
     conf, event,
-    graphics::{self, DrawParam, Image},
-    input::keyboard::{self, KeyCode},
     timer, Context, GameResult,
 };
-use glam::Vec2;
-use hecs::{Entity, World};
+use hecs::World;
 
-use std::collections::HashMap;
 use std::path;
 
 mod components;
@@ -40,13 +36,13 @@ impl event::EventHandler<ggez::GameError> for Game {
 
         // Run gameplay state
         {
-            systems::gameplay::run_gameplay_state(&mut self.world);
+            systems::gameplay::run_gameplay_state(&self.world);
         }
 
         // Get and update time resource
         {
             let mut query = self.world.query::<&mut crate::components::Time>();
-            let mut time = query.iter().next().unwrap().1;
+            let time = query.iter().next().unwrap().1;
             time.delta += timer::delta(context);
         }
 
