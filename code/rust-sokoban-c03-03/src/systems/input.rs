@@ -1,7 +1,4 @@
-use ggez::{
-    input::keyboard::KeyCode,
-    Context,
-};
+use ggez::{input::keyboard::KeyCode, Context};
 use hecs::{Entity, World};
 
 use std::collections::HashMap;
@@ -79,6 +76,7 @@ pub fn run_input(world: &World, context: &mut Context) {
                         Some(_id) => {
                             to_move.clear();
                             events.push(Event::PlayerHitObstacle {});
+                            break;
                         }
                         None => break,
                     }
