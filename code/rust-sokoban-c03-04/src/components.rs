@@ -92,7 +92,6 @@ pub enum GameplayState {
     Won,
 }
 
-
 impl Display for GameplayState {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(match self {
@@ -119,11 +118,14 @@ pub struct EventQueue {
     pub events: Vec<Event>,
 }
 
+// ANCHOR: audio_store
 #[derive(Default)]
 pub struct AudioStore {
     pub sounds: HashMap<String, std::boxed::Box<audio::Source>>,
 }
+// ANCHOR_END: audio_store
 
+// ANCHOR: audio_store_impl
 impl AudioStore {
     pub fn play_sound(&mut self, context: &mut Context, sound: &str) {
         if let Some(source) = self.sounds.get_mut(sound) {
@@ -133,3 +135,4 @@ impl AudioStore {
         }
     }
 }
+// ANCHOR_END: audio_store_impl

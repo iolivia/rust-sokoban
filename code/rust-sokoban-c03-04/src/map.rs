@@ -4,6 +4,7 @@ use ggez::audio::Source;
 use ggez::Context;
 use hecs::World;
 
+// ANCHOR: initialize_level
 pub fn initialize_level(world: &mut World, context: &mut Context) {
     const MAP: &str = "
     N N W W W W W W
@@ -20,6 +21,7 @@ pub fn initialize_level(world: &mut World, context: &mut Context) {
     load_map(world, MAP.to_string());
     load_sounds(world, context);
 }
+// ANCHOR_END: initialize_level
 
 pub fn load_map(world: &mut World, map_string: String) {
     // read all lines
@@ -72,6 +74,7 @@ pub fn load_map(world: &mut World, map_string: String) {
     }
 }
 
+// ANCHOR: load_sounds
 pub fn load_sounds(world: &mut World, context: &mut Context) {
     let mut query = world.query::<&mut crate::components::AudioStore>();
     let audio_store = query.iter().next().unwrap().1;
@@ -88,3 +91,4 @@ pub fn load_sounds(world: &mut World, context: &mut Context) {
             .insert(sound_name, Box::new(sound_source));
     }
 }
+// ANCHOR_END: load_sounds
