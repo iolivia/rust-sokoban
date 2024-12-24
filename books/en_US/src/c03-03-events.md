@@ -25,18 +25,11 @@ Let's discuss in more detail what events we will need:
 
 Now let's go into the implementation of events. We'll use an enum to define various event types. Now, we've used enums before (for the rendering type and the box colours) but this time we will take full advantage of the power of Rust enums. One of the most interesting things about them is that we actually attach properties to each enum variant.
 
-Let's look at our events enum.
+Let's look at the event definitions, it should be something like this.
 
 ```rust
 // events.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/events.rs:13:23}}
-```
-
-Note the second `EntityMoved` and the second `BoxPlacedOnSpot`. Those are actually struct definitions where we can attach properties. Let's look at those structs now.
-
-```rust
-// events.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/events.rs:1:11}}
+{{#include ../../../code/rust-sokoban-c03-03/src/events.rs}}
 ```
 
 ## Event queue resource
@@ -44,8 +37,8 @@ Note the second `EntityMoved` and the second `BoxPlacedOnSpot`. Those are actual
 Now let's add a resource for the event queue. We will have various systems writing to this queue and one system (the event system) consuming this queue. It's basically a multiple producer single consumer model.
 
 ```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:54:57}}
+// components.rs
+{{#include ../../../code/rust-sokoban-c03-03/src/components.rs:events}}
 ```
 
 ## Sending events
@@ -53,14 +46,36 @@ Now let's add a resource for the event queue. We will have various systems writi
 Now that we have a way to enqueue events, let's add the two events we need in the input_system: EntityMoved and PlayerHitObstacle.
 
 ```rust
-// input_system.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/systems/input_system.rs:1:42}}
-                    // ...
-                    // ...
-{{#include ../../../code/rust-sokoban-c03-03/src/systems/input_system.rs:83:124}}
+// input.rs
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:run_input}}
+
+    /// Code omitted
+    /// ......
+    /// ......
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:event_obstancle}}
+
+    /// Code omitted
+    /// ......
+    /// ......
+    ///               
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:event_moved}}
 ```
 
-I've omitted some of the code in the original file for readability, but we are really just adding two lines in the right places.
+I've omitted some of the code in the original file for readability, but we are really just adding two lines in the right places to create the events and add them to the `events` vector.
+
+Finally we need to add the events back into the world which we do at the end of the system.
+
+```rust
+// input.rs
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:run_input}}
+
+    /// Code omitted
+    /// ......
+    /// ......
+
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:event_add}}
+}
+```
 
 ## Consuming events - event system
 
@@ -73,11 +88,10 @@ Let discuss how we will handle each event:
 * Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) -> this is where the sound playing will go, but we'll come back to this when we add the audio bits
 
 ```rust
-// event_system.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:1:34}}
-{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:36:63}}
-{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:71:78}}
-
+// systems/events.rs
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/events.rs}}
 ```
+
+The end of this system is important, processing an event could lead to another event created. So we must add events back into the world again.
 
 > ***CODELINK:***  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-03).

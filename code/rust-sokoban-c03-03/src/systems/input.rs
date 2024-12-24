@@ -7,9 +7,11 @@ use crate::components::*;
 use crate::constants::*;
 use crate::events::*;
 
+// ANCHOR: run_input
 pub fn run_input(world: &World, context: &mut Context) {
     let mut to_move: Vec<(Entity, KeyCode)> = Vec::new();
     let mut events = Vec::new();
+    // ANCHOR_END: run_input
 
     // get all the movables and immovables
     let mov: HashMap<(u8, u8), Entity> = world
@@ -63,6 +65,7 @@ pub fn run_input(world: &World, context: &mut Context) {
                 (position.x, x_or_y)
             };
 
+            // ANCHOR: event_obstancle
             // find a movable
             // if it exists, we try to move it and continue
             // if it doesn't exist, we continue and try to find an immovable instead
@@ -82,6 +85,7 @@ pub fn run_input(world: &World, context: &mut Context) {
                     }
                 }
             }
+            // ANCHOR_END: event_obstancle
         }
     }
 
@@ -92,6 +96,7 @@ pub fn run_input(world: &World, context: &mut Context) {
         gameplay.moves_count += 1;
     }
 
+    // ANCHOR: event_moved
     // Now actually move what needs to be moved
     for (entity, key) in to_move {
         let mut position = world.get::<&mut Position>(entity).unwrap();
@@ -107,11 +112,14 @@ pub fn run_input(world: &World, context: &mut Context) {
         // Fire an event for the entity that just moved
         events.push(Event::EntityMoved(EntityMoved { entity }));
     }
+    // ANCHOR_END: event_moved
 
+    // ANCHOR: event_add
     // Finally add events back into the world
     {
         let mut query = world.query::<&mut EventQueue>();
         let event_queue = query.iter().next().unwrap().1;
         event_queue.events.append(&mut events);
     }
+    // ANCHOR_END: event_add
 }
