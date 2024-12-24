@@ -1,9 +1,12 @@
 use ggez::{
-    graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment}, Context,
+    graphics::{self, Canvas, Color, DrawParam, Image, PxScale, Text, TextFragment},
+    Context,
 };
 use glam::Vec2;
 use hecs::{Entity, World};
+// ANCHOR: use_itertools
 use itertools::Itertools;
+// ANCHOR_END: use_itertools
 
 use std::collections::HashMap;
 use std::time::Duration;
@@ -11,10 +14,12 @@ use std::time::Duration;
 use crate::components::*;
 use crate::constants::*;
 
+// ANCHOR: run_rendering
 pub fn run_rendering(world: &World, context: &mut Context) {
     // Clearing the screen (this gives us the background colour)
     let mut canvas =
         graphics::Canvas::from_frame(context, graphics::Color::from([0.95, 0.95, 0.95, 1.0]));
+    // ANCHOR_END: run_rendering
 
     // Get time
     let mut query = world.query::<&Time>();
@@ -26,6 +31,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     let mut rendering_data: Vec<(Entity, (&Position, &Renderable))> = query.into_iter().collect();
     rendering_data.sort_by_key(|&k| k.1 .0.z);
 
+    // ANCHOR: rendering_batches
     let mut rendering_batches: HashMap<u8, HashMap<String, Vec<DrawParam>>> = HashMap::new();
 
     // Iterate each of the renderables, determine which image path should be rendered
@@ -46,7 +52,9 @@ pub fn run_rendering(world: &World, context: &mut Context) {
             .or_default()
             .push(draw_param);
     }
+    // ANCHOR_END: rendering_batches
 
+    // ANCHOR: rendering_batches_2
     // Iterate spritebatches ordered by z and actually render each of them
     for (_z, group) in rendering_batches
         .iter()
@@ -63,6 +71,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
             canvas.draw(&mesh_batch, graphics::DrawParam::new());
         }
     }
+    // ANCHOR_END: rendering_batches_2
 
     // Render any text
     let mut query = world.query::<&Gameplay>();
@@ -70,14 +79,18 @@ pub fn run_rendering(world: &World, context: &mut Context) {
     draw_text(&mut canvas, &gameplay.state.to_string(), 525.0, 80.0);
     draw_text(&mut canvas, &gameplay.moves_count.to_string(), 525.0, 100.0);
 
+    // ANCHOR: render_fps
     // Render FPS
     let fps = format!("FPS: {:.0}", context.time.fps());
     draw_text(&mut canvas, &fps, 525.0, 120.0);
+    // ANCHOR_END: render_fps
 
+    // ANCHOR: run_rendering_end
     // Finally, present the canvas, this will actually display everything
     // on the screen.
     canvas.finish(context).expect("expected to present");
 }
+// ANCHOR_END: run_rendering_end
 
 pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
     let text = Text::new(TextFragment {
@@ -90,6 +103,7 @@ pub fn draw_text(canvas: &mut Canvas, text_string: &str, x: f32, y: f32) {
     canvas.draw(&text, Vec2::new(x, y));
 }
 
+// ANCHOR: get_image
 pub fn get_image(renderable: &Renderable, delta: Duration) -> String {
     let path_index = match renderable.kind() {
         RenderableKind::Static => {
@@ -108,3 +122,4 @@ pub fn get_image(renderable: &Renderable, delta: Duration) -> String {
 
     renderable.path(path_index)
 }
+// ANCHOR_END: get_image

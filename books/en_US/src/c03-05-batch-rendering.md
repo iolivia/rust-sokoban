@@ -9,17 +9,23 @@ Let's start by adding an FPS counter, there are two parts to this:
 1. getting or calculating the FPS value
 1. rendering the value on the screen
 
-For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/ggez/0.7.0/ggez/timer/?search=fps). For 2 we already have a way to render text in the rendering system, so we just need to get the FPS there. Let's put all this together in the code.
+For 1 luckily ggez provides a way to get the fps - see [here](https://docs.rs/ggez/latest/ggez/timer/struct.TimeContext.html#method.fps). For 2 we already have a way to render text in the rendering system, so we just need to get the FPS there. Let's put all this together in the code.
 
 ```rust
-// rendering_system.rs
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
-        ...
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:run_rendering}}
 
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:114:118}}
+    /// Code omitted
+    /// .....
+    /// .....
+    
+{{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:render_fps}}
 
-        ...
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
+    /// Code omitted
+    /// .....
+    /// .....
+
+{{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:run_rendering_end}}
 ```
 
 Run the game and move around with the keys a bit and you will see the FPS drops quite significantly from the expected 60. For me it looks to be in the range of 20-30 but depending on your machine it might be more or less.
@@ -46,21 +52,21 @@ Before we get deep into the rendering code, we will need to do some collection g
 
 ```toml
 // Cargo.toml
-{{#include ../../../code/rust-sokoban-c03-04/Cargo.toml:9:13}}
+{{#include ../../../code/rust-sokoban-c03-05/Cargo.toml:9:13}}
 ```
 
 Let's also import it in the rendering system
 
 ```rust
-// rendering_system.rs
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:11}}
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:use_itertools}}
 ```
 
 Now, remember that get_image function we wrote in the Animations chapter to figure out which image we need for every frame? We'll be able to re-use that we just need to ensure we don't actually load the image, but instead return the path to the image.
 
 ```rust
-// rendering_system.rs
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:36:53}}
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:get_image}}
 ```
 
 Now let's figure out the format we want our batched data to be in. We will use a `HashMap<u8, HashMap<String, Vec<DrawParam>>>` where:
@@ -72,27 +78,15 @@ Now let's figure out the format we want our batched data to be in. We will use a
 Let's now write the code to populate the rendering_batches hash map.
 
 ```rust
-// rendering_system.rs
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
-        ...
-
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:72:94}}
-
-        ...
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:rendering_batches}}
 ```
 
 Finally, let's actually render the batches. We will not be able to use the draw(image) function we used before but luckily ggez has a batching API - [SpriteBatch](https://docs.rs/ggez/0.7.0/ggez/graphics/spritebatch/struct.SpriteBatch.html). Also note the `sorted_by` here, that is provided to us to itertools.
 
 ```rust
-// rendering_system.rs
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:66}}
-        ...
-
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:96:112}}
-
-        ...
-{{#include ../../../code/rust-sokoban-c03-04/src/systems/rendering_system.rs:123}}
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:rendering_batches_2}}
 ```
 
 And that's it! Run the game again and you should see a shiny 60FPS and everything should feel much smoother!
