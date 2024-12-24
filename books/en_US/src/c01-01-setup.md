@@ -2,7 +2,7 @@
 
 Let's install [rustup](https://www.rust-lang.org/tools/install), this will install Rust and the Rust compiler for us. Now let's check everything is installed correctly using these two commands; the versions shouldn't matter too much so if yours are different don't worry about it.
 
-```
+```sh
 $ rustc --version
 rustc 1.40.0
 $ cargo --version
@@ -13,13 +13,13 @@ cargo 1.40.0
 
 Cargo is Rust's package manager, and we will use it to create our game project. Change into a directory where you'd like the game to live and run the following command, with this we will be creating a new project called `rust-sokoban` using cargo.
 
-```
-$ cargo init rust-sokoban
+```sh
+cargo init rust-sokoban
 ```
 
 After the command has run you should see the following folder structure.
 
-```
+```sh
 ├── src
 │   └── main.rs
 └── Cargo.toml
@@ -27,7 +27,7 @@ After the command has run you should see the following folder structure.
 
 We can now run `cargo run` in this directory and we should see something like this.
 
-```
+```sh
 $ cargo run
    Compiling rust-sokoban v0.1.0
     Finished dev [unoptimized + debuginfo] target(s) in 1.30s
@@ -36,6 +36,7 @@ Hello, world!
 ```
 
 ## Making it a game
+
 It's time to make this basic hello world project into a game! We are going to use [ggez](https://ggez.rs/) which is one of the popular 2D game engines out there.
 
 Remember that `Cargo.toml` file we saw in our directory? That file is used for dependency management, so if we want to use any Rust crates we'll have to add them there. Let's add [ggez](https://github.com/ggez/ggez) as one of our dependencies.
@@ -47,10 +48,9 @@ Remember that `Cargo.toml` file we saw in our directory? That file is used for d
 {{#include ../../../code/rust-sokoban-c01-01/Cargo.toml:10}}
 ```
 
-
 Now let's run `cargo run` again and you should see something like this. It should take slightly longer this time as it will be fetching these new dependencies from [crates.io](https://crates.io), then compiling them and finally linking them into our lib.
 
-```
+```sh
 cargo run
     Updating crates.io index
     Downloaded ....
@@ -81,6 +81,7 @@ You should see something like this.
 Now that we have our basic window, let's delve into the code we have in main and understand the underlying Rust concepts and syntax.
 
 ### Importing
+
 Hopefully this should be a familiar concept from other languages you might know, but to bring types and namespaces into the scope from our dependent packages (or crates) we simply `use` them.
 
 ```rust
@@ -89,14 +90,15 @@ Hopefully this should be a familiar concept from other languages you might know,
 ```
 
 ### Declaring a struct
+
 ```rust
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:4:7}}
 ```
 
 > **_MORE:_**  Read more about structs [here](https://doc.rust-lang.org/book/ch05-00-structs.html).
 
-
 ### Implementing a trait
+
 A trait is much like an interface in other languages, it allows us to associate some behaviour with a particular type. In this case we want to implement the EventHandler trait and add that behaviour to our Game struct.
 
 ```rust
@@ -105,19 +107,20 @@ A trait is much like an interface in other languages, it allows us to associate 
 
 > **_MORE:_**  Read more about traits [here](https://doc.rust-lang.org/book/ch10-02-traits.html).
 
-
 ### Functions
+
 We are also learning how to declare functions in Rust.
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:14:17}}
 ```
 
-You might be wondering what the self is, in this case self means that the update function is a member function, it belongs to an instance of the game struct and it cannot be called in a static context. 
+You might be wondering what the self is, in this case self means that the update function is a member function, it belongs to an instance of the game struct and it cannot be called in a static context.
 
 > **_MORE:_**  Read more about functions [here](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html).
 
 ### Mut syntax
+
 You might also be wondering what the `&mut` is in the `&mut self` in the update function. Mutability of an object simply says whether or not that object can be modified or not. Check out the example below when declaring variables.
 
 ```rust
@@ -146,7 +149,6 @@ impl X {
 ```
 
 > **_MORE:_**  Read more about mutability [here](https://web.mit.edu/6.005/www/fa15/classes/09-immutability/) (this lecture uses Java but the concepts should apply to any language), and read more about Rust mutability and variables [here](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html).
-
 
 After that gentle intro to Rust syntax and code, we are now ready to move on! See you in the next section!
 
