@@ -49,7 +49,7 @@ Let's add the images to our project. We'll add a `resources` folder which will h
 
 ## World creation
 
-Finally, let's tie everything together. We'll need to create a specs::World object, we'll add that to our Game struct and we will initialize it first thing in our main. Here is the full code, running now should render the same blank window, but we've made tremendous progress in actually setting up our game components and entities! Next up, we'll get to rendering so we'll finally see something on screen!
+Finally, let's tie everything together. We'll need to create a hecs::World object, we'll add that to our Game struct and we will initialize it first thing in our main. Here is the full code, running now should render the same blank window, but we've made tremendous progress in actually setting up our game components and entities! Next up, we'll get to rendering so we'll finally see something on screen!
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-03/src/main.rs:main}}
