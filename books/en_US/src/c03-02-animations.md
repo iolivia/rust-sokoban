@@ -133,7 +133,7 @@ Now let's update our rendering system. We will get the kind from the renderable,
 Let's first add a function to enapsulate this logic of getting the correct image.
 
 ```rust
-// rendering_system.rs
+// rendering.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering.rs:get_image}}
 ```
 

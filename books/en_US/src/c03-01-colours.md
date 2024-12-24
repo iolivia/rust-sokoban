@@ -25,10 +25,10 @@ The directory structure should look like this (notice we've removed the old defa
 │       └── wall.png
 ├── src
 │   ├── systems
-│   │   ├── gameplay_state_system.rs
-│   │   ├── input_system.rs
+│   │   ├── gameplay.rs
+│   │   ├── input.rs
 │   │   ├── mod.rs
-│   │   └── rendering_system.rs
+│   │   └── rendering.rs
 │   ├── components.rs
 │   ├── constants.rs
 │   ├── entities.rs

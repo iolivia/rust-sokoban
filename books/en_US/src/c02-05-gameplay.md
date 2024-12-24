@@ -47,7 +47,7 @@ We can increment `Gameplay`'s `moves_count` field to track the number of turns t
 We already have a system dealing with user input in the input system, so let's adapt that for this purpose.
 
 ```rust
-// input_system.rs
+// systems/input.rs
 {{#include ../../../code/rust-sokoban-c02-05/src/systems/input.rs:run_input_begin}}
     // Movement code omitted for clarity
     // .....
@@ -74,7 +74,7 @@ If all box spots have a corresponding box at the same position, the game is over
 Otherwise, the game is still in play.
 
 ```rust
-// gameplay_state_system.rs
+// systems/gameplay.rs
 {{#include ../../../code/rust-sokoban-c02-05/src/systems/gameplay.rs}}
 ```
 
@@ -106,15 +106,15 @@ Next, we'll add a `draw_text` method to rendering system, so it can print
 
 ```rust
 // rendering_systems.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:draw_text}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering.rs:draw_text}}
 ```
 
 ...and then we'll add the `Gameplay` resource to `RenderingSystem` so we can
 call `draw_text`, and use it all to render the state and number of moves.
 
 ```rust
-// rendering_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:draw_gameplay_state}}
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering.rs:draw_gameplay_state}}
 ```
 
 At this point, the game will provide basic feedback to the user:
