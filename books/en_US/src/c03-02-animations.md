@@ -62,6 +62,9 @@ Let's also add two new functions to construct the two types of renderables, eith
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable}}
+
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable_impl}}
+}
 ```
 
 Next, we need a way of telling if a renderable is animated or static, which we will use in the rendering system. We could leave the paths member variable public and allow the rendering system to get the length of the paths and infer based on the length, but there is a more idiomatic way. We can add an enum for the kind of renderable, and add a method on the renderable to get that kind, in this way we encapsulate the logic of the kind within the renderable, and we can keep paths private. You can put the kind declaration anywhere in the components.rs, but ideally next to the renderable declaration.
@@ -83,13 +86,6 @@ And finally, because we made paths private, we need to allow users of renderable
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable_path_fn}}
-```
-
-Finally, we add a way to construct renderables based on one or more paths.
-
-```rust
-// components.rs
-{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable_new_fn}}
 ```
 
 ## Entity creation
