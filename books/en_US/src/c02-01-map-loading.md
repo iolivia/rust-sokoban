@@ -6,7 +6,7 @@ Last chapter we left off at creating some entities to test our rendering system,
 
 First step, let's try to load a level based on a 2d map that looks like this.
 
-```
+```rust
 {{#include ../../../code/rust-sokoban-c02-01/src/main.rs:map}}
 
 where:

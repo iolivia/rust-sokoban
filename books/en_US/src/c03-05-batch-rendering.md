@@ -34,7 +34,7 @@ Currently, for every renderable entity, we figure out which image to render and 
 
 How can we fix this? Well, we can use a technique called batch rendering. With this technique, what we have to do is only load the image once, and tell ggez to render it in all the 20 positions where it needs to be rendered. This way we not only load the image once, but we also only call render once per image, which will speed things up significantly. As a side note, some engines will do this render batching under the hood for you, but ggez doesn't, hence why we need to care.
 
-## Batch rendering
+## Batch rendering implementation
 
 Here is what we'll have to do to implement batch rendering:
 

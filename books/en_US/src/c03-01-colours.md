@@ -13,7 +13,7 @@ First let's add the new assets, right click and download these as images, or cre
 
 The directory structure should look like this (notice we've removed the old default box and default spot).
 
-```
+```sh
 ├── resources
 │   └── images
 │       ├── box_blue.png

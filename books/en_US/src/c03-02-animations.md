@@ -37,7 +37,7 @@ Let's add the new assets for the player, it should then look like this. Notice w
 ![Player 2](./images/player_2.png)
 ![Player 3](./images/player_3.png)
 
-```
+```sh
 ├── resources
 │   └── images
 │       ├── box_blue.png
