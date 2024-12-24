@@ -48,14 +48,6 @@ Now let's add a resource for the event queue. We will have various systems writi
 {{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:54:57}}
 ```
 
-And as always let's register this resource.
-
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:14:18}}
-{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:20}}
-```
-
 ## Sending events
 
 Now that we have a way to enqueue events, let's add the two events we need in the input_system: EntityMoved and PlayerHitObstacle.

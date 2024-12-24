@@ -30,16 +30,7 @@ current state of the game (is the game still in play, or has the player won?) an
 the number of moves made.  `state` is described by an `enum`.
 
 The eagle-eyed reader will note that we used a macro to derive the `Default` trait
-for `Gameplay`, but not for the `GameplayState` enum. If we want to use `Gameplay`
-as a resource, it must implement `Default`.
-
-So, what will we do? Since Rust macros can't derive `Default` for enums
-automatically, we must implement `Default` for `Gameplay` ourselves.
-
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/components.rs:gameplay_state_impl_default}}
-```
+for `Gameplay`, and a `#[default]` annotation for the  `GameplayState` enum. All this annotation does is tell the compiler that if we ever call `GameplayState::default()` we should get back `GameplayState::Playing`, which makes sense.
 
 Now, when the game is started, the `Gameplay` resource will look like this:
 
@@ -57,8 +48,12 @@ We already have a system dealing with user input in the input system, so let's a
 
 ```rust
 // input_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/input_system.rs}}
-        ...
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/input.rs:run_input_begin}}
+    // Movement code omitted for clarity
+    // .....
+    // .....
+    
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/input.rs:run_input_update_moves}}
 ```
 
 Since we've already done the work to check if a player character will move in

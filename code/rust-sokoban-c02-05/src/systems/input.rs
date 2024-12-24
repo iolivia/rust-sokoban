@@ -6,9 +6,11 @@ use std::collections::HashMap;
 use crate::components::*;
 use crate::constants::*;
 
+// ANCHOR: run_input_begin
 pub fn run_input(world: &World, context: &mut Context) {
     let mut to_move: Vec<(Entity, KeyCode)> = Vec::new();
 
+    // ANCHOR_END: run_input_begin
     // get all the movables and immovables
     let mov: HashMap<(u8, u8), Entity> = world
         .query::<(&Position, &Movable)>()
@@ -78,7 +80,7 @@ pub fn run_input(world: &World, context: &mut Context) {
             }
         }
     }
-
+    // ANCHOR: run_input_update_moves
     // Update gameplay moves
     if !to_move.is_empty() {
         let mut query = world.query::<&mut Gameplay>();
@@ -99,3 +101,4 @@ pub fn run_input(world: &World, context: &mut Context) {
         }
     }
 }
+// ANCHOR_END: run_input_update_moves
