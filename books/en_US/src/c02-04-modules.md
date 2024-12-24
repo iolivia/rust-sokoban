@@ -4,7 +4,7 @@ The main file is getting quite big and as you can imagine, that will not be very
 
 For now, let's aim for this folder structure. Eventually as we get more components and systems, we'll probably want more than one file, but this should be a pretty good place to start.
 
-```
+```sh
 ├── resources
 │   └── images
 │       ├── box.png

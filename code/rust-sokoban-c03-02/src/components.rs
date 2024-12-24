@@ -22,6 +22,7 @@ pub enum RenderableKind {
 }
 // ANCHOR_END: renderable_kind
 
+// ANCHOR: renderable_impl
 impl Renderable {
     // ANCHOR: renderable_new_fn
     pub fn new_static(path: &str) -> Self {
@@ -36,6 +37,7 @@ impl Renderable {
         }
     }
     // ANCHOR_END: renderable_new_fn
+    // ANCHOR_END: renderable_impl
 
     // ANCHOR: renderable_kind_fn
     pub fn kind(&self) -> RenderableKind {
@@ -96,7 +98,6 @@ pub enum GameplayState {
     Won,
 }
 
-
 impl Display for GameplayState {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(match self {
@@ -113,7 +114,9 @@ pub struct Gameplay {
     pub moves_count: u32,
 }
 
+// ANCHOR: create_time
 #[derive(Default)]
 pub struct Time {
     pub delta: Duration,
 }
+// ANCHOR_END: create_time

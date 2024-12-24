@@ -88,7 +88,6 @@ pub enum GameplayState {
     Won,
 }
 
-
 impl Display for GameplayState {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(match self {
@@ -110,7 +109,9 @@ pub struct Time {
     pub delta: Duration,
 }
 
+// ANCHOR: events
 #[derive(Default)]
 pub struct EventQueue {
     pub events: Vec<Event>,
 }
+// ANCHOR_END: events

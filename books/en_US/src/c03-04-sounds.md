@@ -13,22 +13,19 @@ Now in order to play the sound the wav files need to be loaded. To avoid loading
 We'll use a resource for the audio store.
 
 ```rust
-// audio.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:6:9}}
+{{#include ../../../code/rust-sokoban-c03-04/src/components.rs:audio_store}}
 ```
 
-And as always let's register this resource.
+And let's add the code for initializing the store, which means pre-loading all the sounds needed for the game.
 
 ```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/resources.rs:14:20}}
+{{#include ../../../code/rust-sokoban-c03-04/src/map.rs:load_sounds}}
 ```
 
-And let's add the code for initializing the store.
+And then call this function when we are initializing the level.
 
 ```rust
-// audio.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:21:32}}
+{{#include ../../../code/rust-sokoban-c03-04/src/map.rs:initialize_level}}
 ```
 
 ## Playing audio
@@ -36,17 +33,14 @@ And let's add the code for initializing the store.
 Finally, let's add the ability to play the sound in the store.
 
 ```rust
-// audio.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/audio.rs:11:19}}
+{{#include ../../../code/rust-sokoban-c03-04/src/components.rs:audio_store_impl}}
 ```
 
 And now let's play in the event system.
 
 ```rust
-    // event_system.rs
-{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:24:37}}
-                        // ...
-{{#include ../../../code/rust-sokoban-c03-03/src/systems/event_system.rs:61:73}}
+// systems/events.rs
+{{#include ../../../code/rust-sokoban-c03-04/src/systems/events.rs}}
 ```
 
 Now let's run the game and enjoy those sound effects!
