@@ -1,10 +1,11 @@
-# 模块化
 
-`main.rs`文件已经太大了，随着功能的增加，这样下去还会越来越大，越来越难于维护．怎么办呢?还好Rust支持`模块`，可以把程序按照功能拆分到不同的文件中．
+# 模块
 
-那么现在就让我们开始拆分吧，先看下目录结构：
+主文件已经变得相当大了，可以想象，随着我们的项目增长，这种方式将无法维持下去。幸运的是，Rust 提供了模块的概念，可以让我们根据关注点将功能整齐地拆分到单独的文件中。
 
-```
+目前，我们的目标是实现以下文件夹结构。随着我们添加更多的组件和系统，我们可能需要不止一个文件，但这是一个不错的起点。
+
+```sh
 ├── resources
 │   └── images
 │       ├── box.png
@@ -14,9 +15,9 @@
 │       └── wall.png
 ├── src
 │   ├── systems
-│   │   ├── input_system.rs
-│   │   ├── mod.rs
-│   │   └── rendering_system.rs
+│   │   ├── input.rs
+│   │   ├── rendering.rs
+│   │   └── mod.rs
 │   ├── components.rs
 │   ├── constants.rs
 │   ├── entities.rs
@@ -26,61 +27,52 @@
 └── Cargo.toml
 ```
 
-> **_MORE:_**  想了解更多关于模块的知识可以点 [这里](https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html).
+> **_更多：_**  阅读更多关于模块和管理增长项目的信息 [这里](https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html)。
 
-接下来我们就开始把每一个组件放到一个文件中．放到单独的文件中后除了要把属性声明成`public`的，也没什么不一样的．之所以现在需要把属性声明成`public`的是因为先前都在一个文件中，刚开始可以都放在一个文件中，但随着文件越来越大我们就需要把代码拆分到不同的文件中了，为了保证不同的文件（模块）间还能互相访问的到就需要把属性声明成`public`的,这样代码就不会报错了．我们后面也会介绍另外一种拆分方式．另外把注册组件的代码放到文件的下面．拆分好后如果需要修改或者增加组件只需要修改对应的文件就可以了．
+首先，让我们将所有组件移到一个文件中。除了将某些字段设置为公共的之外，不会有任何更改。需要将字段设置为公共的原因是，当所有内容都在同一个文件中时，所有内容可以相互访问，这在开始时很方便，但现在我们将内容分开，我们需要更加注意可见性。目前我们将字段设置为公共以使其正常工作，但稍后我们会讨论一种更好的方法。我们还将组件注册移动到了该文件的底部，这样当我们添加组件时，只需要更改这个文件就可以了。
 
 ```rust
 // components.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/components.rs:}}
 ```
 
-下面是资源文件:
-
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-04/src/resources.rs:}}
-```
-
-接下来我们把常量也拆分到一个单独文件中．先前地图的维度信息是在代码中硬编码的，最好是根据加载地图的维度动态设置.
+接下来，让我们将常量移到它们自己的文件中。目前我们硬编码了地图的尺寸，这在移动时需要知道我们何时到达地图的边缘，但作为改进，我们可以稍后存储地图的尺寸，并根据地图加载动态设置它们。
 
 ```rust
 // constants.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/constants.rs}}
 ```
 
-接下来把创建实体的代码放到`entities.rs`文件中:
+接下来，实体创建代码现在移到了一个实体文件中。
 
 ```rust
 // entities.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/entities.rs}}
 ```
 
-下面是地图加载的代码:
+现在是地图加载。
 
 ```rust
 // map.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/map.rs}}
 ```
 
-最后我们再把渲染代码放到`randering_system.rs`文件中，把输入处理代码放到`input_system.rs`文件中，其实也就是复制粘贴改下导入语句.
+最后，我们将系统代码移到它们自己的文件中（`RenderingSystem` 到 `rendering.rs`，`InputSystem` 到 `input.rs`）。这应该只是从主文件中复制粘贴并移除一些导入，因此可以直接进行。
 
-现在还有个有意思的事，在一个文件夹下包含了多个文件．如果不做些其它操作在`main.rs`文件中要使用`RenderingSystem`或者`InputSystem`程序会报错的．咋办呢?只需在文件夹下添加一个`mod.rs`文件告诉Rust当前这个文件夹下包含那些内容.这样在外部就可以访问RenderingSystem和InputSystem了．
-
+我们需要更新 `mod.rs`，告诉 Rust 我们想将所有系统导出到外部（在这里是主模块）。
 
 ```rust
 // systems/mod.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/systems/mod.rs}}
 ```
 
-齐活了！现在再看`main.rs`是不是清爽多了！注意我们用了一些`mod`告诉Rust需要用到的模块.
+太棒了，现在我们完成了这些操作，以下是简化后的主文件的样子。注意导入后的 `mod` 和 `use` 声明，它们再次告诉 Rust 我们想要使用这些模块。
 
 ```rust
 // main.rs
 {{#include ../../../code/rust-sokoban-c02-04/src/main.rs}}
 ```
 
-至此拆分模块的任务就完成了，运行下代码应该跟先前的功能是一样的，但代码没那么臃肿了也方便后续添加新功能了．
+此时可以运行，所有功能应该与之前完全相同，不同的是，现在我们的代码更加整洁，为更多令人惊叹的 Sokoban 功能做好了准备。
 
-> **_CODELINK:_**  点 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04)获取当前完整代码.
-
+> **_CODELINK:_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04) 查看本示例的完整代码。

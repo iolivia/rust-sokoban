@@ -1,47 +1,45 @@
+
 # 组件和实体
-嗨，少年！看你骨骼惊奇接下来就开始一起学习怎么结合`specs`创建、注册组件和实体。
+
+在本节中，我们将创建组件，学习如何创建实体，并注册所有内容以确保 `specs` 正常工作。
 
 ## 定义组件
-我们先从定义组件开始。先前我们提到过`位置组件`、`可渲染组件`和`动作组件`(这个后面再讲哈)。我们需要用一些组件标识实体，比如可以让一个实体包含墙组件标识它是墙。
 
-可以直接简单的说：位置组件其实就是用来存储地图坐标的x、y、z值的可以用来定位；渲染组件就是使用字符串存储一个需要绘制的图片的路径；另外一些组件基本都是 [标记型组件](https://specs.amethyst.rs/docs/tutorials/11_advanced_component.html?highlight=marker#marker-components)并不存储数据。
+我们先从定义组件开始。之前我们讨论了 `Position`（位置组件）、`Renderable`（可渲染组件）和 `Movement`（动作组件），但暂时我们会跳过动作组件。我们还需要一些组件来标识每个实体。例如，我们需要一个 `Wall`（墙）组件，通过它来标识一个实体是墙。
 
-
-```rust
-{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:13:42}}
-```
-
-`#[storage(VecStorage)]`这原来没见过是不是? 恭喜你，少年！你已经使用到了一个Rust很强大的功能`过程宏`。这种宏是一些可以在代码`编译时`对代码进行处理并生成新代码的特殊函数。
-
-> **_MORE:_**  如果你想更深入的了解宏，可以看 [这里](https://doc.rust-lang.org/book/ch19-06-macros.html).
-
-## 注册组件
-在`specs`中使用组件前需要先注册组件，就像这样：
-
-> 把组件注册到world
+希望这很直观：位置组件存储 x、y 和 z 坐标，用于告诉我们某物在地图上的位置；可渲染组件会接收一个字符串路径，指向一张可以渲染的图片。所有其他组件都是 [标记型组件](https://specs.amethyst.rs/docs/tutorials/11_advanced_component.html?highlight=marker#marker-components)，暂时不包含任何数据。
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:61:69}}
+{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:components}}
 ```
+
+在熟悉的 Rust 代码中，我们使用了一些新语法。我们使用了一个强大的 Rust 功能，称为“过程宏”（`Procedural Macros`），例如 `#[storage(VecStorage)]`。这种宏本质上是一些函数，在编译时会处理某些语法并生成新的语法。
+
+> **更多内容:** 想了解更多关于过程宏的信息，请参阅 [这里](https://doc.rust-lang.org/book/ch19-06-macros.html)。
 
 ## 创建实体
-实体就是代表一系列组件，所以我们创建实体的方法就是简单地指定它们包含哪些组件。就像这个样子：
+
+实体只是一个与一组组件相关联的数字标识符。因此，我们创建实体的方法是简单地指定它们包含哪些组件。
+
+现在，创建实体的代码如下所示：
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:71:124}}
+{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:entities}}
 ```
 
-## 素材
+## 资源
 
-睿智如你应该已经注意到了，我们还引用了些用于创建实体的素材，就是图片什么的。当然你要是觉得我们准备的素材不好看，也可以使用自己的素材。我们准备的素材就在下面了，你可以右键另存为下载到电脑上:
+您可能已经注意到，我们在上面的实体创建中引用了要使用的资源。您可以自由创建自己的资源，或者下载我们提供的资源（右键点击图片并选择“另存为”）。
 
-![地板](../images/floor.png)
-![墙](../images/wall.png)
-![玩家](../images/player.png)
-![箱子](../images/box.png)
-![方形斑点](../images/box_spot.png)
+![地板图块](./images/floor.png)
+![墙图块](./images/wall.png)
+![玩家图块](./images/player.png)
+![箱子图块](./images/box.png)
+![目标点图块](./images/box_spot.png)
 
-接下来把这些图片放到我们的项目中。在项目目录中新建`resources`目录，用于存放项目需要用到的资源，目前我们只有图片资源需要存储，以后还会有配置文件啊，音频文件（[第三章的第3小节会用到](/c03-03-sounds-events.html))啊什么的。为了区分不同的资源文件，在`resources`目录下再新建一个`images`目录，用于存放我们的png图片。你也可以按照自己的喜欢命名目录，除了只要你开心就好，还要记得在代码中引用这些资源时要写出正确的路径。一波操作下来后，我们项目的目录结构大概是这个样子地：
+让我们将这些图片添加到项目中。创建一个 `resources` 文件夹，用于存放所有资源。目前，这些资源仅包括图片，但将来我们可能会添加配置文件或音频文件（继续阅读，您将在 [第三章第三节](/c03-03-sounds-events.html) 学习如何播放声音）。在 `resources` 文件夹下再创建一个 `images` 文件夹，将我们的 PNG 图片放入其中。您也可以使用不同的文件夹结构，但在本节后续部分使用图片时，请确保路径正确。
+
+项目的目录结构如下所示：
 
 ```
 ├── resources
@@ -56,13 +54,14 @@
 └── Cargo.toml
 ```
 
-## 创建游戏世界（World）
-最后，当然只是本小节的最后，接下来在main函数的第一行就创建一个`specs::World`对象，把先前创建的实体还有素材都整合到一起。
+## 创建游戏世界
+
+最后，让我们将所有内容整合在一起。我们需要创建一个 `specs::World` 对象，将其添加到我们的 `Game` 结构中，并在主函数中首先初始化它。以下是完整代码，现在运行时仍会显示一个空白窗口，但我们在设置游戏组件和实体方面已经取得了巨大进展！接下来，我们将进入渲染部分，最终在屏幕上看到内容！
 
 ```rust
-{{#include ../../../code/rust-sokoban-c01-03/src/main.rs}}
+{{#include ../../../code/rust-sokoban-c01-03/src/main.rs:main}}
 ```
 
-然后你就可以执行`cargo run`运行看下效果，当你满怀期待却发现看到的依然是一个空白的窗口，控制台里可能还多了些警告信息。这是因为我们还没有编写渲染的代码也就是还没有绘制这些实体。少侠，莫急！下一节，我们就开始绘制。到时这些因为引入而没有使用的警告也就自然消失了。
+注意：运行时，控制台可能会报告一些关于未使用导入或字段的警告，不用担心这些问题，我们将在后续章节中修复它们。
 
-> **_CODELINK:_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-03)找到本小节完整的代码.
+> **_CODELINK:_** 您可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-03) 查看本节完整代码。

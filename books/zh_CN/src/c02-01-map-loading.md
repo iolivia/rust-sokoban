@@ -1,46 +1,44 @@
-# 加载地图
 
-在上一章中为了测试渲染系统是否正常,我们编写了一些实体.接下来是时候渲染一个合适的地图了.在这一节中我们就先创建一个文本格式的地图配置文件,后面再加载这个配置文件．以此学习怎么创建加载地图.
+# 地图加载
+
+上一章我们创建了一些实体来测试我们的渲染系统，但现在是时候渲染一个正式的地图了。在本节中，我们将创建一个基于文本的地图配置并加载它。
 
 ## 地图配置
-首先让我们看一个二维的地图：
 
-```
-{{#include ../../../code/rust-sokoban-c02-01/src/main.rs:181:189}}
-
-where:
-. is an empty spot
-W is a wall
-P is the player
-B is a box
-S is a box spot
-N is nothing: used for the outer edges of the map
-```
-
-为了简单起见我们直接使用一个字符串常量保存地图信息，就不把它放在一个文件中再读取了：
+第一步，让我们尝试基于如下所示的二维地图加载一个关卡。
 
 ```rust
-{{#include ../../../code/rust-sokoban-c02-01/src/main.rs:179:193}}
+{{#include ../../../code/rust-sokoban-c02-01/src/main.rs:map}}
+
+其中：
+. 是空白位置
+W 是墙
+P 是玩家
+B 是箱子
+S 是箱子放置点
+N 是空：用于地图的外边缘
 ```
 
-接下来是编写加载地图(函数load_map)的代码:
+最终我们可以从文件中加载，但为了简单起见，现在我们先用代码中的常量。
+
+以下是加载地图的实现。
 
 ```rust
-{{#include ../../../code/rust-sokoban-c02-01/src/main.rs:195:234}}
+{{#include ../../../code/rust-sokoban-c02-01/src/main.rs:init}}
 ```
 
-这里特别适合使用Rust提供的特别有意思的功能`match`.不过这里我们只是用简单的模式匹配功能分别处理地图配置中的每一个字符，模式匹配(match)还有很多更高级的用法，比如：条件判断，类型匹配等.
+这里最有趣的 Rust 概念可能是 `match`。我们在这里使用了模式匹配的基本功能，仅仅是匹配地图配置中每个标记的值，但我们可以进行更高级的条件或类型模式匹配。
 
-> **_MORE:_**  想了解更多模式匹配的功能可以看 [这里](https://doc.rust-lang.org/book/ch06-02-match.html).
+> **_更多：_**  阅读更多关于模式匹配的信息 [这里](https://doc.rust-lang.org/book/ch06-02-match.html)。
 
-现在可以运行下我们的游戏，如果你是跟这我们一起编写的，它看起来应该像这样：
+现在运行游戏，看看我们的地图是什么样子。
 
-![Screenshot](./images/map.png)
+![截图](./images/map.png)
 
-下面是完整代码：
+以下是最终代码。
 
 ```rust
 {{#include ../../../code/rust-sokoban-c02-01/src/main.rs}}
 ```
 
-> **_CODELINK:_**  可以从[这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-01)获取当前实例的完整代码.
+> **_CODELINK:_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-01) 查看本示例的完整代码。
