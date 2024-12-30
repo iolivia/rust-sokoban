@@ -41,4 +41,4 @@ N 是空：用于地图的外边缘
 {{#include ../../../code/rust-sokoban-c02-01/src/main.rs}}
 ```
 
-> **_代码链接：_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-01) 查看本示例的完整代码。
+> **_CODELINK:_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-01) 查看本示例的完整代码。

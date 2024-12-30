@@ -75,4 +75,4 @@
 
 此时可以运行，所有功能应该与之前完全相同，不同的是，现在我们的代码更加整洁，为更多令人惊叹的 Sokoban 功能做好了准备。
 
-> **_代码链接：_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04) 查看本示例的完整代码。
+> **_CODELINK:_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-04) 查看本示例的完整代码。

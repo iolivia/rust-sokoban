@@ -64,4 +64,4 @@
 
 注意：运行时，控制台可能会报告一些关于未使用导入或字段的警告，不用担心这些问题，我们将在后续章节中修复它们。
 
-> **代码链接:** 您可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-03) 查看本节完整代码。
+> **_CODELINK:_** 您可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c01-03) 查看本节完整代码。

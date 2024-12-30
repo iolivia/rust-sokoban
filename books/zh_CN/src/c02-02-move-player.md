@@ -65,4 +65,4 @@ LEFT
 
 现在一切都按预期工作了！
 
-> **_代码链接：_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-02) 查看本示例的完整代码。
+> **_CODELINK:_**  你可以在 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c02-02) 查看本示例的完整代码。

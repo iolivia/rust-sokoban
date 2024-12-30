@@ -133,4 +133,4 @@ pub trait PartialEq {
 
 ![索科班游戏](./images/colours.gif)
 
-> **_代码链接：_** 你可以在[这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-01)看到这个示例的完整代码。
+> **_CODELINK:_** 你可以在[这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-01)看到这个示例的完整代码。

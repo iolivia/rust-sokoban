@@ -54,4 +54,4 @@
     <source src="./videos/audio.mov" type="video/mp4">
 </video>
 
-> **_CODELINK:_**  You can see the full code in this example [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-04).
+> **_CODELINK:_**  你可以在[这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-04).
