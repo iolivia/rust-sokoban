@@ -14,6 +14,7 @@
 - [开发高级功能](./c03-00-intro.md)
     - [不一样颜色的盒子](./c03-01-colours.md)
     - [动画效果](./c03-02-animations.md)
-    - [声音和事件](./c03-03-sounds-events.md)
-    - [批量渲染](./c03-04-batch-rendering.md)
+    - [声音和事件](./c03-03-events.md)
+    - [声音和事件](./c03-04-sounds.md)
+    - [批量渲染](./c03-05-batch-rendering.md)
 
