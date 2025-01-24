@@ -17,32 +17,17 @@
 我们之所以选择使用`资源（resource）`保存游戏状态，是因为游戏状态信息不跟任何一个实体绑定.接下来我们就开始定义一个`Gameplay`资源．
 
 ```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:38:43}}
+// components.rs
+{{#include ../../../code/rust-sokoban-c02-05/src/components.rs:gameplay_state}}
 ```
 
 `Gameplay` 有俩个属性: `state` 和 `moves_count`. 分别用于保存当前游戏状态(当前游戏正在进行还是已经有了赢家)和玩家操作的步数． `state` 是`枚举（enum）`类型, 可以这样定义:
 
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:17:20}}
-```
 
-眼尖的你应该已经发现，我们使用了宏为`Gameplay`实现了`Default`特征，但是枚举`GameplayState`却没有.如果我们需要把`Gameplay`用做资源，那它必须具备`Default`特征．Rust并没有提供为枚举类型实现`Default`特征的宏，我们只能自己为枚举`GameplayState`实现`Default`特征了.
 
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:32:36}}
-```
+细心的读者会注意到，我们使用了一个宏来为 `Gameplay` 派生 `Default` 特性，并为 `GameplayState` 枚举使用了 `#[default]` 注解。这个注解的作用是告诉编译器，如果我们调用 `GameplayState::default()`，我们应该得到 `GameplayState::Playing`，这是合理的。
 
-定义好资源别忘了注册下:
-
-```rust
-// resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:12:15}}
-```
-
-当游戏开始时，资源`Gameplay`应该是这样地：
+现在，当游戏启动时，`Gameplay` 资源将如下所示：
 
 ```rust
 Gameplay {
@@ -59,7 +44,7 @@ Gameplay {
 
 ```rust
 // input_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/input_system.rs:0:25}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/input.rs:run_input_begin}}
         ...
 ```
 
@@ -68,25 +53,24 @@ Gameplay {
 ```rust
 // input_system.rs
         ...
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/input_system.rs:83:105}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/input.rs:run_input_update_moves}}
+
 ```
 
 ## Gameplay System
 
-接下来是添加一个`GamePlayStateSystem`用于检查所有的箱子是否已经推到了目标点，如果已经推到了就赢了．除了 `Gameplay`, 要完成这个功能还需要只读访问`Position`, `Box`, 和 `BoxSpot`.这里使用 `Join`  结合`Box（箱子）` 和 `Position（位置）`创建一个包含每个箱子位置信息的`Vector`（集合）.我们只需要遍历这个集合判断每个箱子是否在目标点上，如果在就胜利了，如果不在游戏继续.
+接下来是添加一个`GamePlayStateSystem`用于检查所有的箱子是否已经推到了目标点，如果已经推到了就赢了．除了 `Gameplay`, 要完成这个功能还需要对`Position`, `Box`, 和 `BoxSpot`进行**只读**访问.这里使用 `Join`  结合`Box（箱子）` 和 `Position（位置）`创建一个包含每个箱子位置信息的`Vector`（集合）.我们只需要通过遍历这个集合来判断每个箱子是否在目标点上，如果在就胜利了，如果不在，则游戏继续.
 
 ```rust
-// gameplay_state_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/gameplay_state_system.rs::}}
+// systems/gameplay.rs
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/gameplay.rs}}
 ```
 
 最后还需要在渲染循环中执行我们的代码:
 
 ```rust
 // main.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/main.rs:24:39}}
-    // ...
-{{#include ../../../code/rust-sokoban-c02-05/src/main.rs:63}}
+{{#include ../../../code/rust-sokoban-c02-05/src/main.rs}}
 ```
 
 
@@ -98,21 +82,21 @@ Gameplay {
 
 ```rust
 // resources.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/resources.rs:21:30}}
+{{#include ../../../code/rust-sokoban-c02-05/src/components.rs:gameplay_state_impl_display}}
 ```
 
 接下来我们需要在`RenderingSystem`中添加一个方法`draw_text`,这样它就可以把游戏状态信息`GameplayState`显示到屏幕上了.
 
 ```rust
 // rendering_systems.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:16:32}}
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering.rs:draw_text}}
 ```
 
-...为了调用`drwa_text`我们还需要把资源 `Gameplay` 添加 `RenderingSystem` 中，这样 `RenderingSystem` 才能获取到资源 `Gameplay`．
+...为了调用`draw_text`我们还需要把资源 `Gameplay` 添加 `RenderingSystem` 中，这样 `RenderingSystem` 才能获取到资源 `Gameplay`．
 
 ```rust
-// rendering_system.rs
-{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering_system.rs:35:71}}
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c02-05/src/systems/rendering.rs:draw_gameplay_state}}
 ```
 
 至此我们编写的推箱子游戏已经可以向玩家展示基本的信息了:

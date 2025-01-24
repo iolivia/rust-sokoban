@@ -9,36 +9,41 @@
 1. 获取或计算 FPS 值
 2. 在屏幕上渲染这个值
 
-对于第1点，幸运的是 ggez 提供了获取 fps 的方法 - 参见[这里](https://docs.rs/ggez/latest/ggez/timer/struct.TimeContext.html#method.fps)。对于第2点，我们在渲染系统中已经有了渲染文本的方法，所以我们只需要在那里获取 FPS。让我们在代码中把这些都组合起来。
+现在，
+1. 幸运的是，ggez提供了获取FPS的方法 - 参见[这里](https://docs.rs/ggez/latest/ggez/timer/struct.TimeContext.html#method.fps)。  
+2. 我们已经在渲染系统中实现了文本渲染功能，只需将FPS显示出来即可。  
+
+让我们把这些整合到代码中。
 
 ```rust
 // rendering.rs
 {{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:run_rendering}}
 
-    /// 代码省略
+    /// Code omitted
     /// .....
     /// .....
     
 {{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:render_fps}}
 
-    /// 代码省略
+    /// Code omitted
     /// .....
     /// .....
 
 {{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:run_rendering_end}}
 ```
 
-运行游戏并用按键移动一下，你会看到 FPS 从预期的 60 显著下降。对我来说，它看起来在 20-30 范围内，但根据你的机器可能会更多或更少。
+
+运行游戏并用按键移动一下，你会发现FPS从预期的60明显下降。在我的机器上，FPS大约在20-30之间，但根据你的设备，可能会有所不同。
 
 ![低fps](./images/low_fps.png)
 
 ## 是什么导致了 FPS 下降？
 
-现在你可能会问自己，我们做了什么导致 FPS 这么低？我们有一个相当简单的游戏，我们的输入和移动逻辑实际上并不复杂，我们也没有太多的实体或组件来导致如此大的 FPS 下降。要理解这一点，我们需要更深入地了解我们当前的渲染系统是如何工作的。
+你可能会问，是什么导致FPS这么低？我们的游戏逻辑并不复杂，输入和移动处理也不难，实体和组件数量也不多，不至于造成如此大的FPS下降。要理解这个问题，我们需要深入分析当前渲染系统的工作原理。
 
-目前，对于每个可渲染的实体，我们都要确定要渲染哪个图像并渲染它。这意味着如果我们有 20 个地板贴图，我们将加载地板图像 20 次并发出 20 个单独的渲染调用。这太昂贵了，这就是导致我们 FPS 大幅下降的原因。
+目前，对于每个可渲染的实体，我们都会确定要渲染的图像并渲染它。这意味着如果有20个地板图块，我们会加载地板图像20次，并发出20次单独的渲染调用。这种做法开销太大，正是导致FPS大幅下降的原因。
 
-我们如何解决这个问题？我们可以使用一种叫做批量渲染的技术。使用这种技术，我们要做的就是只加载一次图像，并告诉 ggez 在所有需要渲染的 20 个位置渲染它。这样我们不仅只加载一次图像，而且每个图像只调用一次渲染，这将大大提高速度。作为旁注，一些引擎会在底层为你完成这种渲染批处理，但 ggez 不会，这就是为什么我们需要关注这一点。
+如何解决这个问题？我们可以使用一种称为批量渲染的技术。通过这种技术，我们只需加载图像一次，并告诉ggez在所有需要渲染的20个位置渲染它。这样不仅图像只加载一次，而且每种图像只需调用一次渲染，这将显著提升性能。顺便提一下，有些引擎会自动处理这种批量渲染，但ggez不会，所以我们需要手动优化。
 
 ## 批量渲染实现
 
@@ -48,7 +53,7 @@
 * 将所有（图像，DrawParams）保存为一个方便的格式
 * 按照 z 轴排序遍历（图像，DrawParams），每个图像只进行一次渲染调用
 
-在深入渲染代码之前，我们需要做一些集合分组和排序，我们将使用 itertools crate 来完成这个任务。我们可以自己实现这个分组，但没有必要重新发明轮子。让我们将 itertools 作为依赖项添加到我们的项目中。
+在深入渲染代码之前，我们需要进行一些集合的分组和排序操作，为此我们将使用itertools库。虽然我们可以自己实现分组功能，但没有必要重复造轮子。让我们将itertools添加为项目的依赖。
 
 ```toml
 // Cargo.toml
@@ -62,35 +67,37 @@
 {{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:use_itertools}}
 ```
 
-还记得我们在动画章节中编写的用来确定每一帧需要哪个图像的 get_image 函数吗？我们可以重用它，只需要确保我们不实际加载图像，而是返回图像的路径。
+还记得我们在动画章节中编写的`get_image`函数吗？它用于确定每一帧所需的图像。我们可以复用这个函数，只需确保它不实际加载图像，而是返回图像的路径。
 
 ```rust
 // rendering.rs
 {{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:get_image}}
 ```
 
-现在让我们确定我们想要的批处理数据的格式。我们将使用 `HashMap<u8, HashMap<String, Vec<DrawParam>>>`，其中：
+现在让我们确定批量数据的格式。我们将使用`HashMap<u8, HashMap<String, Vec<DrawParam>>>`，其中：
 
-* 第一个键（`u8`）是 z 位置 - 记住我们需要遵守 z 位置并从最高到最小的 z 绘制以确保正确的顺序（例如地板应该在玩家下面等）
-* 值是另一个 `HashMap`，其中第二个键（`String`）是图像的路径
-* 最后，最后的值是一个 `Vec<DrawParam>`，它包含了我们必须渲染该特定图像的所有参数
 
-让我们现在编写代码来填充 rendering_batches 哈希映射。
+* 第一个键（`u8`）是z值 - 记住我们需要按z值从高到低渲染，以确保正确的顺序（例如地板应该在玩家下方等）。  
+* 另一个值是`HashMap`，其中第二个键（`String`）是图像的路径。  
+* 最后，值是`Vec<DrawParam>`，表示需要渲染该图像的所有位置参数。
+
+现在我们来编写代码，填充`rendering_batches`哈希表。
 
 ```rust
 // rendering.rs
 {{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:rendering_batches}}
 ```
 
-最后，让我们实际渲染这些批次。我们不能使用之前使用的 draw(image) 函数，但幸运的是 ggez 有一个批处理 API - [SpriteBatch](https://docs.rs/ggez/0.7.0/ggez/graphics/spritebatch/struct.SpriteBatch.html)。另外注意这里的 `sorted_by`，这是 itertools 提供给我们的。
+最后，我们来实现批量渲染。之前使用的`draw(image)`函数不再适用，但幸运的是ggez提供了批量渲染API - [SpriteBatch](https://docs.rs/ggez/0.7.0/ggez/graphics/spritebatch/struct.SpriteBatch.html)。另外注意这里的`sorted_by`，这是itertools提供的功能。
 
 ```rust
 // rendering.rs
 {{#include ../../../code/rust-sokoban-c03-05/src/systems/rendering.rs:rendering_batches_2}}
 ```
 
-就是这样！再次运行游戏，你应该看到闪亮的 60FPS，一切都应该感觉更流畅！
+搞定！再次运行游戏，你应该会看到稳定的60FPS，操作也会更加流畅！
+
 
 ![高fps](./images/high_fps.png)
 
-> **_CODELINK:_** 你可以在[这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-05)看到这个示例的完整代码。
+> **_代码链接:_** 你可以在[这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-05)看到这个示例的完整代码。

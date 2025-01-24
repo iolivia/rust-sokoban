@@ -51,4 +51,116 @@
 │       └── wall.png
 ```
 
-[继续文档的其余部分...]
+## 可渲染特性
+
+现在，让我们更新可渲染组件，把他们变成一个路径列表以接收多个帧
+
+我们还要添加两个新函数，用于构建两种类型的可渲染对象：一种是单一路径，另一种是多个路径。这两个函数是关联函数，因为它们与结构体 `Renderable` 相关联，但它们相当于其他语言中的静态函数，因为它们不操作实例（注意它们没有接收 `&self` 或 `&mut self` 作为第一个参数，这意味着我们可以在结构体的上下文中调用它们，而不是在结构体实例中调用）。它们也类似于工厂函数，因为它们封装了实际构建对象之前所需的逻辑和验证。
+
+> **_更多:_**  了解更多关于关联函数的信息。[这里](https://doc.rust-lang.org/book/ch05-03-method-syntax.html#associated-functions).
+
+```rust
+// components.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable}}
+
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable_impl}}
+}
+```
+
+接下来，我们需要一种方法来判断可渲染对象是动画还是静态的，这将在渲染系统中使用。我们可以将 `paths` 成员变量设为公共，让渲染系统获取 `paths` 的长度并根据长度推断，但有一种更符合语言习惯的方式。我们可以为**可渲染对象**的类型添加一个枚举，并在**可渲染对象**上添加一个方法来获取该类型。这样，我们将类型的逻辑封装在**可渲染对象**内部，同时可以保持 `paths` 私有。你可以将类型的声明放在 `components.rs` 的任何位置，但最好放在 `Renderable` 声明的旁边。
+
+```rust
+// components.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable_kind}}
+```
+
+现在让我们添加一个函数，根据内部的 `paths` 告诉我们可渲染对象的类型。
+
+```rust
+// components.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable_kind_fn}}
+```
+
+最后，由于我们将 `paths` 设为私有，因此需要让可渲染对象的使用者能够从列表中获取特定路径。对于静态可渲染对象，这将是第 0 个路径（唯一的一个），而对于动画路径，我们将让渲染系统根据时间决定应该渲染哪个路径。唯一需要注意的地方是，如果请求的帧数超出了我们拥有的范围，我们将通过对长度取模来循环处理。
+
+```rust
+// components.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:renderable_path_fn}}
+```
+
+## 实体创建
+
+接下来，我们将更新玩家实体的创建，以考虑多个路径。请注意，现在我们使用 `new_animated` 函数来构建可渲染对象
+
+```rust
+// entities.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/entities.rs:create_box}}
+```
+
+并且让我们更新所有其他部分以使用 `new_static` 函数——以下是我们如何在墙壁实体创建中实现这一点的示例，请随意将其应用到其他静态实体中。
+
+
+```rust
+// entities.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/entities.rs}}
+```
+
+## 时间
+
+我们还需要另一个组件来记录时间。时间与此有什么关系？它又是如何与帧率联系起来的呢？基本思路是这样的：ggez 控制渲染系统的调用频率，这取决于帧率，而帧率又取决于我们在游戏循环的每次迭代中做了多少工作。由于我们无法控制这一点，在一秒钟内，渲染系统可能会被调用 60 次、57 次，甚至可能只有 30 次。这意味着我们的动画系统不能基于帧率，而需要基于时间。
+
+正因如此，我们需要记录增量时间（delta time），也就是上一次循环和当前循环之间经过的时间。由于增量时间比我们设定的动画帧间隔（我们决定为 250 毫秒）要小得多，因此我们需要累积增量时间，也就是从游戏启动开始到现在经过的总时间。
+
+> **_更多:_**  了解更多关于增量时间、帧率和游戏循环的详细介绍 [这里](https://medium.com/@dr3wc/understanding-delta-time-b53bf4781a03#:~:text=Delta%20time%20describes%20the%20time,drawn%20and%20the%20current%20frame.&text=If%20you%20read%20my%20article,until%20the%20game%20is%20stopped.), [here](https://www.reddit.com/r/pcmasterrace/comments/29qcqr/an_explanation_of_game_loops_fps_and_delta_time/) or [here](https://www.youtube.com/watch?v=pctGOMDW-HQ&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=37) .
+
+现在，我们为时间添加一个资源。这并不适合放入组件模型中，因为时间只是一些需要维护的全局状态。
+
+
+```rust
+// components.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/components.rs:create_time}}
+```
+
+现在，让我们在主循环中更新时间。幸运的是，ggez 提供了一个函数来获取增量时间，所以我们只需要累积它即可。
+
+```rust
+// main.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/main.rs:update}}
+```
+
+
+## 渲染系统
+
+现在，我们来更新渲染系统。我们将从可渲染对象中获取类型，如果是静态的，我们直接使用第一帧；否则，我们根据增量时间来确定要使用哪一帧。
+
+首先，我们添加一个函数来封装获取正确图像的逻辑。
+
+```rust
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering.rs:get_image}}
+```
+
+最后，我们在 `run` 函数中使用新的 `get_image` 函数（我们还需要将时间添加到 `SystemData` 定义中，并添加一些导入，但基本上就是这样了）。
+
+```rust
+// rendering.rs
+{{#include ../../../code/rust-sokoban-c03-02/src/systems/rendering.rs:run_rendering}}
+```
+
+## 箱体动画
+
+现在我们已经学会了如何实现这一点，接下来我们将其扩展到让箱子也实现动画效果。我们只需要添加新的资源并调整实体创建部分，其他部分应该就能正常工作了。以下是我使用的资源，你可以随意复用或创建新的资源！
+
+![Box red 1](./images/box_red_1.png)
+![Box red 2](./images/box_red_2.png)
+![Box blue 1](./images/box_blue_1.png)
+![Box blue 2](./images/box_blue_2.png)
+
+
+## 总结一下
+
+这一部分内容比较长，但希望你喜欢！以下是游戏现在应该呈现的效果。
+
+![Sokoban animations](./images/animations.gif)
+
+> **_代码链接:_**  在这个例子中你可以看到完整的代码 [here](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-02).

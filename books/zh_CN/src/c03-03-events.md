@@ -16,7 +16,12 @@
 
 ## 事件实现
 
-让我们开始 discussing how we will implement events。
+让我们从讨论如何实现事件开始。我们不会使用组件或实体（尽管可以），而是使用一种与输入队列非常相似的资源。需要将事件加入队列的代码部分需要访问这个资源，然后我们将有一个系统来处理这些事件并采取相应的操作。
+
+## 实现什么事件
+
+让我们更详细地讨论一下需要哪些事件：
+
 
 1.  玩家击打障碍 - 这可以是事件本身，通过输入系统当玩家试图移动但无法移动时会引发
 2.  箱放在正确或错误的位置 - 我们可以将其表示为一个单独的事件，其中包含是否 correct_spot 的属性（我稍后再解释这个属性）
@@ -29,32 +34,54 @@
 
 ```rust
 // events.rs
-{{#include '../../../code/rust-sokoban-c03-03/src/events.rs'}}
+{{#include ../../../code/rust-sokoban-c03-03/src/events.rs}}
 ```
 
-## 事件资源
+## 事件队列资源
 
 现在，我们需要一个resource来接收事件。这将是一个多生产者单消费者模型。我们会有多个系统添加事件，而一个system（events system）会只消费该事件。
 
 ```rust
 // components.rs
-{{#include '../../../code/rust-sokoban-c03-03/src/components.rs:events'}}
+{{#include ../../../code/rust-sokoban-c03-03/src/components.rs:events}}
 ```
 
 ## 发送事件
 
 现在，我们需要将两个事件在input_system中添加：EntityMoved和PlayerHitObstacle。
-
 ```rust
 // input.rs
-{{#include '../../../code/rust-sokoban-c03-03/src/systems/input.rs:run_input}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:run_input}}
 
     /// Code omitted
     /// ......
     /// ......
-{{#include '../../../code/rust-sokoban-c03-03/src/systems/input.rs:event_add}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:event_obstancle}}
+
+    /// Code omitted
+    /// ......
+    /// ......
+    ///               
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:event_moved}}
+```
+
+为了便于阅读，我省略了原始文件中的部分代码，但实际上我们只是在正确的位置添加了两行代码来创建事件并将它们添加到 `events` 向量中。
+
+最后，我们需要将事件添加回世界中，这一步在系统的末尾完成。
+
+```rust
+// input.rs
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:run_input}}
+
+    /// Code omitted
+    /// ......
+    /// ......
+
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/input.rs:event_add}}
 }
 ```
+
+
 
 ## 消费事件 - events系统
 
@@ -62,15 +89,17 @@
 
 我们将会对每个事件做出以下决策：
 
-*   Event::PlayerHitObstacle -> 这是声音播放的位置，但我们在添加音频部分之前要等
-*   Event::EntityMoved(EntityMoved { id }) -> 这是我们将在其中添加逻辑来检查移动的实体是否为box，并且它是否位于一个 spot 上
-*   Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) -> 这是声音播放的位置，但在增加音频部分之前要等
+*   Event::PlayerHitObstacle -> 这是播放音效的地方，但我们会在添加音频部分时再回到这里。
+
+*   Event::EntityMoved(EntityMoved { id }) -> 这是添加逻辑的地方，用于检查刚刚移动的实体是否是一个箱子，以及它是否在正确的位置上。
+ 
+*   Event::BoxPlacedOnSpot(BoxPlacedOnSpot { is_correct_spot }) -> 这是播放音效的地方，但我们会在添加音频部分时再回到这里。
 
 ```rust
 // systems/events.rs
-{{#include '../../../code/rust-sokoban-c03-03/src/systems/events.rs'}}
+{{#include ../../../code/rust-sokoban-c03-03/src/systems/events.rs}}
 ```
 
 事件处理系统的结尾很重要，因为处理一个事件可能会导致另一个事件被创建。因此，我们必须将事件添加回世界。
 
-> ***CODELINK***：您可以在这个示例中看到完整代码 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-03).
+> ***代码链接***：您可以在这个示例中看到完整代码 [这里](https://github.com/iolivia/rust-sokoban/tree/master/code/rust-sokoban-c03-03).

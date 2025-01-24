@@ -1,21 +1,18 @@
 
 # 组件和实体
 
-在本节中，我们将创建组件，学习如何创建实体，并注册所有内容以确保 `specs` 正常工作。
+在本节中，我们将创建组件，学习如何创建实体，并注册所有内容以确保 `hecs` 正常工作。
 
 ## 定义组件
 
 我们先从定义组件开始。之前我们讨论了 `Position`（位置组件）、`Renderable`（可渲染组件）和 `Movement`（动作组件），但暂时我们会跳过动作组件。我们还需要一些组件来标识每个实体。例如，我们需要一个 `Wall`（墙）组件，通过它来标识一个实体是墙。
 
-希望这很直观：位置组件存储 x、y 和 z 坐标，用于告诉我们某物在地图上的位置；可渲染组件会接收一个字符串路径，指向一张可以渲染的图片。所有其他组件都是 [标记型组件](https://specs.amethyst.rs/docs/tutorials/11_advanced_component.html?highlight=marker#marker-components)，暂时不包含任何数据。
+希望这很直观：位置组件存储 x、y 和 z 坐标，用于告诉我们某物在地图上的位置；可渲染组件会接收一个字符串路径，指向一张可以渲染的图片。所有其他组件都是`marker`组件。`marker`组件这个名字听起来可能有些吓人，但它本质上只是一个没有任何其他数据字段的标签。
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-03/src/main.rs:components}}
 ```
 
-在熟悉的 Rust 代码中，我们使用了一些新语法。我们使用了一个强大的 Rust 功能，称为“过程宏”（`Procedural Macros`），例如 `#[storage(VecStorage)]`。这种宏本质上是一些函数，在编译时会处理某些语法并生成新的语法。
-
-> **更多内容:** 想了解更多关于过程宏的信息，请参阅 [这里](https://doc.rust-lang.org/book/ch19-06-macros.html)。
 
 ## 创建实体
 
@@ -41,7 +38,7 @@
 
 项目的目录结构如下所示：
 
-```
+```sh
 ├── resources
 │   └── images
 │       ├── box.png
