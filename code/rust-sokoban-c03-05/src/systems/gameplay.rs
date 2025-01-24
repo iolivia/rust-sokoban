@@ -24,7 +24,7 @@ pub fn run_gameplay_state(world: &World) {
                     1
                 }
             } else {
-                0
+                1
             }
         })
         .collect::<Vec<usize>>()
