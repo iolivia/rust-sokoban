@@ -2,7 +2,7 @@
 
 建议使用[rustup](https://www.rust-lang.org/tools/install)安装管理Rust。安装好Rust后可以在命令行输入以下俩条命令，检查确认是否安装成功:
 
-```
+```sh
 $ rustc --version
 rustc 1.40.0
 $ cargo --version
@@ -15,13 +15,13 @@ cargo 1.40.0
 
 Cargo是Rust的包管理工具，可以使用它创建我们的游戏项目。首先切换到游戏项目存储路径，然后再输入以下命令：
 
-```
+```sh
 $ cargo init rust-sokoban
 ```
 
 命令执行成功后，会在当前目录下创建一个名称为`rust-sokoban`的文件夹。文件夹内部是这个样子的：
 
-```
+```sh
 ├── src
 │   └── main.rs
 └── Cargo.toml
@@ -29,7 +29,7 @@ $ cargo init rust-sokoban
 
 切换到文件夹`rust-sokoban`并运行命令 `cargo run` ，你会看到类似下面的输出信息：
 
-```
+```sh
 $ cargo run
    Compiling rust-sokoban v0.1.0
     Finished dev [unoptimized + debuginfo] target(s) in 1.30s
@@ -38,6 +38,7 @@ Hello, world!
 ```
 
 ## 添加游戏开发依赖
+
 接下来让我们一起把默认生成的项目修改成一个游戏项目! 我们使用当前最受欢迎的2D游戏引擎之一的[ggez](https://ggez.rs/) 
 
 还记得我们刚才在项目目录里看到的`Cargo.toml`文件吧？这个文件是用来管理项目依赖的，所以需要把我们需要使用到的`crate`添加到这个文件中。就像这样添加 [ggez](https://github.com/ggez/ggez) 依赖：
@@ -51,7 +52,7 @@ Hello, world!
 
 接下来再次执行`cargo run`.这次执行的会长一点，因为需要从[crates.io](https://crates.io)下载我们配置的依赖库并编译链接到我们库中。
 
-```
+```sh
 cargo run
     Updating crates.io index
     Downloaded ....
@@ -96,8 +97,8 @@ cargo run
 > **_MORE:_**  查看更多结构体相关信息可以点 [这里](https://doc.rust-lang.org/book/ch05-00-structs.html).
 
 
-### 实现特征
-特征类似其它语言中的接口，就是用来表示具备某些行为的特定类型。在我们的示例中需要结构体Game实现EventHandler特征。
+### 实现特征（Trait）
+特征类似其它语言中的接口，就是用来表示具备某些行为的特定类型。在这个例子中，我们希望实现```EventHandler``` trait，并将这种行为添加到我们的```Game```结构体中。
 
 ```rust
 {{#include ../../../code/rust-sokoban-c01-01/src/main.rs:9:23}}
