@@ -26,7 +26,7 @@ pub fn run_rendering(world: &World, context: &mut Context) {
 **注意：** 我们将在这里添加 [glam](https://lib.rs/crates/glam) 作为依赖项，这是一个简单快速的 3D 库，可以提供一些性能改进。
 
 ```
-{{#include ../../../code/rust-sokoban-c01-03/Cargo.toml:9:11}}
+{{#include ../../../code/rust-sokoban-c01-04/Cargo.toml:9:11}}
 ```
 
 以下是渲染系统的实现。它完成以下几个任务：
