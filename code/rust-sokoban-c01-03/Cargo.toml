@@ -8,4 +8,5 @@ edition = "2018"
 
 [dependencies]
 ggez = "0.9.3"
+glam = { version = "0.24", features = ["mint"] }
 hecs = "0.10.5"
