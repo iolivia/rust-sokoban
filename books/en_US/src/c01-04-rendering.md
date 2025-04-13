@@ -25,7 +25,7 @@ Running the game now should compile, but it will probably not do anything yet, s
 **Note:** We're going to add [glam](https://lib.rs/crates/glam) as a dependency here that is a simple and fast 3D library that offers some performance improvements.
 
 ```
-{{#include ../../../code/rust-sokoban-c01-03/Cargo.toml:9:11}}
+{{#include ../../../code/rust-sokoban-c01-04/Cargo.toml:9:11}}
 ```
 
 Here is the implementation of the rendering system. It does a few things:
